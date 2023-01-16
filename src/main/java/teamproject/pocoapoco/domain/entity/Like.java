@@ -15,7 +15,7 @@ public class Like {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
-\
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "crew_id")
     private Crew crew;
