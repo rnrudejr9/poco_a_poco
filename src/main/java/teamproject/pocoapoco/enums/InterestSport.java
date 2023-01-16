@@ -1,5 +1,8 @@
 package teamproject.pocoapoco.enums;
 
 public enum InterestSport {
-    SOCCER
+    SOCCER,
+    JOGGING,
+    TENNIS
+    ;
 }
