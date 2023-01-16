@@ -2,6 +2,7 @@ server:
   servlet:
     encoding:
       force-response: true
+
 spring:
   jpa:
     hibernate:
@@ -12,9 +13,6 @@ spring:
 
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: localhost
-    username: root
-    password: 1q2w3e4r
 
   mvc:
     pathmatch:
