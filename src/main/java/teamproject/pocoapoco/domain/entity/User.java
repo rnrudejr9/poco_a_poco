@@ -1,10 +1,6 @@
 package teamproject.pocoapoco.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.lang.UsesSunHttpServer;
 import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.UserRole;
 
@@ -14,8 +10,7 @@ import java.util.List;
 
 @Entity
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@Table(name = "Users")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +22,8 @@ public class User {
     private UserRole role;
 
     @OneToMany(mappedBy = "user")
-    @Builder.Default
     private List<Crew> crews = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    @Builder.Default
     private List<Like> likes = new ArrayList<>();
 }
