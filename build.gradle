@@ -21,14 +21,11 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
-    testImplementation 'org.projectlombok:lombok:1.18.22'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-
-    implementation 'org.mockito:mockito-inline:4.11.0'
 
     // Security
     implementation 'org.springframework.boot:spring-boot-starter-security'
@@ -36,14 +33,6 @@ dependencies {
 
     // JWT
     implementation 'io.jsonwebtoken:jjwt:0.9.1'
-
-    // Swagger
-    implementation group: 'io.springfox', name: 'springfox-swagger-ui', version: '3.0.0'
-    implementation 'io.springfox:springfox-boot-starter:3.0.0'
-
-////test 롬복
-//    testCompileOnly 'org.projectlombok:lombok'
-//    testAnnotationProcessor 'org.projectlombok:lombok'
 
 }
 
