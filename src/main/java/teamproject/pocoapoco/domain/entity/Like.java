@@ -1,6 +1,5 @@
 package teamproject.pocoapoco.domain.entity;
 
-import lombok.Getter;
 import teamproject.pocoapoco.enums.AlarmType;
 
 import javax.persistence.*;
