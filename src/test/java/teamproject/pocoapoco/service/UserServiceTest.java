@@ -5,12 +5,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import teamproject.pocoapoco.configuration.EncrypterConfig;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.user.UserJoinResponse;
 import teamproject.pocoapoco.enums.InterestSport;
+import teamproject.pocoapoco.exception.AppException;
+import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.security.config.EncrypterConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
@@ -91,7 +93,7 @@ class UserServiceTest {
 
         UserJoinResponse response = UserJoinResponse.builder()
                 .userId("아이디")
-                .message("닉네임님이 회원가입 되었습니다.").build();
+                .message("회원가입 되었습니다.").build();
 
 
         when(userRepository.save(any())).thenReturn(user1);
@@ -120,12 +122,12 @@ class UserServiceTest {
 
         userRepository.save(user1);
 
-        when(userRepository.save(any())).thenThrow(new RuntimeException("존재하는 아이디입니다."));
+        when(userRepository.save(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage()));
 
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class,
                 () -> service.addUser(request2));
 
-        assertEquals(exception.getMessage(), "존재하는 아이디입니다.");
+        assertEquals(exception.getMessage(), "이미 존재하는 아이디 입니다.");
 
     }
 
@@ -146,12 +148,12 @@ class UserServiceTest {
 
         userRepository.save(user1);
 
-        when(userRepository.save(any())).thenThrow(new RuntimeException("존재하는 닉네임입니다."));
+        when(userRepository.save(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
 
         RuntimeException exception = Assertions.assertThrows(RuntimeException.class,
                 () -> service.addUser(request2));
 
-        assertEquals(exception.getMessage(), "존재하는 닉네임입니다.");
+        assertEquals(exception.getMessage(), "이미 존재하는 닉네임 입니다.");
     }
 
 }

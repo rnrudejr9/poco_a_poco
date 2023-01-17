@@ -1,14 +1,15 @@
 package teamproject.pocoapoco.service;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import teamproject.pocoapoco.configuration.EncrypterConfig;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.user.UserJoinResponse;
 import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.UserRole;
+import teamproject.pocoapoco.exception.AppException;
+import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.security.config.EncrypterConfig;
 
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findByUserName(userName);
 
         if(userOptional.isEmpty()){
-            throw new RuntimeException("user가 존재하지 않습니다.");
+            throw new AppException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage());
         }
 
         return userOptional.get();
@@ -41,12 +42,12 @@ public class UserService {
 
 
         if (userRepository.findByUserId(request.getUserId()).isPresent()){
-            throw new RuntimeException("존재하는 아이디입니다.");
+            throw new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage());
 
         } // 아이디 중복 확인 버튼 생성?
 
         if (userRepository.findByUserName(request.getUserName()).isPresent()){
-            throw new RuntimeException("존재하는 닉네임입니다.");
+            throw new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage());
 
         }
 
@@ -108,7 +109,7 @@ public class UserService {
         User saved = userRepository.save(user);
 
 
-        UserJoinResponse response = new UserJoinResponse(saved.getUserId(), saved.getUserName() + "님이 회원가입 되었습니다.");
+        UserJoinResponse response = new UserJoinResponse(saved.getUserId(), "회원가입 되었습니다.");
 
         return response;
 

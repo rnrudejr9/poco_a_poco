@@ -3,7 +3,6 @@ package teamproject.pocoapoco.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +14,8 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 import teamproject.pocoapoco.domain.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.user.UserJoinResponse;
+import teamproject.pocoapoco.exception.AppException;
+import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.UserService;
 
@@ -82,7 +83,7 @@ class UserControllerTest {
 
         UserJoinResponse response = UserJoinResponse.builder()
                 .userId("아이디")
-                .message("닉네임님이 회원가입 되었습니다.").build();
+                .message("회원가입 되었습니다.").build();
 
 
         when(userService.addUser(any()))
@@ -94,7 +95,7 @@ class UserControllerTest {
                         .content(objectMapper.writeValueAsBytes(request1)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.userId").value("아이디"))
-                .andExpect(jsonPath("$.message").value("닉네임님이 회원가입 되었습니다."))
+                .andExpect(jsonPath("$.message").value("회원가입 되었습니다."))
                 .andDo(print());
 
 
@@ -108,7 +109,7 @@ class UserControllerTest {
 
         userService.addUser(request1);
 
-        when(userService.addUser(any())).thenThrow(new RuntimeException("존재하는 아이디입니다."));
+        when(userService.addUser(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage()));
 
         // runtime exception을 throw 할 때 bad request가 발생하도록 설정 -> 4XX exception이 발생하는지 확인
 
@@ -117,7 +118,7 @@ class UserControllerTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request2)))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().string("존재하는 아이디입니다."))
+                .andExpect(content().string(ErrorCode.DUPLICATED_USERID.name() + " 이미 존재하는 아이디 입니다."))
                 .andDo(print());
 
 
@@ -130,14 +131,14 @@ class UserControllerTest {
 
         userService.addUser(request1);
 
-        when(userService.addUser(any())).thenThrow(new RuntimeException("존재하는 닉네임입니다."));
+        when(userService.addUser(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
 
         mockMvc.perform(post("/api/v1/users/join")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsBytes(request3)))
                 .andExpect(status().is4xxClientError())
-                .andExpect(content().string("존재하는 닉네임입니다."))
+                .andExpect(content().string(ErrorCode.DUPLICATED_USERNAME.name() + " 이미 존재하는 닉네임 입니다."))
                 .andDo(print());
 
     }
