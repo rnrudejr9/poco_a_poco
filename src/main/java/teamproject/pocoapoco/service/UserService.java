@@ -1,15 +1,19 @@
 package teamproject.pocoapoco.service;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.user.UserJoinResponse;
+import teamproject.pocoapoco.domain.user.UserLoginRequest;
+import teamproject.pocoapoco.domain.user.UserLoginResponse;
 import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.config.EncrypterConfig;
+import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import java.util.Optional;
 
@@ -34,6 +38,23 @@ public class UserService {
 
         return userOptional.get();
     }
+
+    public UserLoginResponse login(UserLoginRequest userLoginRequest) {
+
+        // userName 유효성 확인
+        User user = userRepository.findByUserId(userLoginRequest.getUserId())
+                .orElseThrow(() -> {throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
+                });
+
+        // password 유효성 확인
+        if (!encrypterConfig.encoder().matches(userLoginRequest.getPassword(), user.getPassword())) {
+            throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        }
+
+        //token 발행
+        return new UserLoginResponse(new JwtProvider().generateToken(user));
+    }
+
 
 
     public UserJoinResponse addUser(UserJoinRequest request){
