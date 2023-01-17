@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.domain.entity.dto;
+package teamproject.pocoapoco.domain.dto.error;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

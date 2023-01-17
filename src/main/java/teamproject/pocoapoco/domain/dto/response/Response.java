@@ -1,7 +1,8 @@
-package teamproject.pocoapoco.domain.entity.dto;
+package teamproject.pocoapoco.domain.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import teamproject.pocoapoco.domain.dto.error.ErrorResponse;
 
 @AllArgsConstructor
 @Getter
