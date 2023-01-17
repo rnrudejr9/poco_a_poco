@@ -24,8 +24,8 @@ public class Crew {
     private String strict;
     private String title;
     private String content;
-    private Integer crew_limit;
-    private Integer chatroom_id;
+    private Integer crewLimit;
+    private Integer chatroomId;
     // participant_id 추후 추가예정
 
     @ManyToOne(fetch = FetchType.LAZY)
