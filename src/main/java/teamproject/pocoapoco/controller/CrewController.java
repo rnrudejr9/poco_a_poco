@@ -1,5 +1,6 @@
 package teamproject.pocoapoco.controller;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.PageImpl;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.crew.CrewAddRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewAddResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.service.CrewService;
 
@@ -42,6 +44,13 @@ public class CrewController {
     @DeleteMapping("/{crewId}")
     public Response deleteCrew(@PathVariable Long crewId, Authentication authentication) {
         CrewAddResponse response = crewService.deleteCrew(crewId, authentication.getName());
+        return Response.success(response);
+    }
+
+    // 크루 게시물 상세 조회
+    @GetMapping("/{crewId}")
+    public Response detaileCrew(@PathVariable Long crewId, Authentication authentication) {
+        CrewDetailResponse response = crewService.detailePost(crewId);
         return Response.success(response);
     }
 

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.crew.CrewAddRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewAddResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.UserRole;
@@ -62,7 +63,7 @@ public class CrewService {
         // DB 저장
         crewRepository.save(crewAddRequest.toEntity(user));
 
-        return new CrewAddResponse("Crew 수정 완료", 1L);
+        return new CrewAddResponse("Crew 수정 완료", crewId);
     }
 
     // 크루 게시글 삭제
@@ -85,5 +86,14 @@ public class CrewService {
         crewRepository.delete(crew);
 
         return new CrewAddResponse("Crew 삭제 완료", crewId);
+    }
+
+    public CrewDetailResponse detailePost(Long crewId) {
+
+        // 크루 게시글 존재 확인
+        Crew crew = crewRepository.findById(crewId)
+                .orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
+
+        return CrewDetailResponse.fromEntity(crew);
     }
 }
