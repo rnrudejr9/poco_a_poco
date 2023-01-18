@@ -41,9 +41,10 @@ public class UserService {
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
 
-        // userId 유효성 확인
+        // userName 유효성 확인
         User user = userRepository.findByUserId(userLoginRequest.getUserId())
-                .orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+                .orElseThrow(() -> {throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
+                });
 
         // password 유효성 확인
         if (!encrypterConfig.encoder().matches(userLoginRequest.getPassword(), user.getPassword())) {
