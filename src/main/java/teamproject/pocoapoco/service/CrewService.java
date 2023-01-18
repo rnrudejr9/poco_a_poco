@@ -65,22 +65,25 @@ public class CrewService {
         return new CrewAddResponse("Crew 수정 완료", 1L);
     }
 
-//    // 크루 게시글 삭제
-//    public CrewAddResponse deleteCrew(Long crewId, String userName) {
-//
-//        // User 존재 확인
-//        User user = userRepository.findByUserName(userName)
-//                .orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
-//
-//        // 크루 게시글 존재 확인
-//        Crew crew = crewRepository.findById(crewId)
-//                .orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
-//
-//        // 해당 게시글 작성자 확인, 권한 확인
-//        if (!user.getCrews().contains(crew) && user.getRole().equals(UserRole.ROLE_USER)) {
-//            throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 게시글에 접근 권한이 없습니다.");
-//        }
-//
-//        //
-//    }
+    // 크루 게시글 삭제
+    public CrewAddResponse deleteCrew(Long crewId, String userName) {
+
+        // User 존재 확인
+        User user = userRepository.findByUserName(userName)
+                .orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+
+        // 크루 게시글 존재 확인
+        Crew crew = crewRepository.findById(crewId)
+                .orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
+
+        // 해당 게시글 작성자 확인, 권한 확인
+        if (!user.getCrews().contains(crew) && user.getRole().equals(UserRole.ROLE_USER)) {
+            throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 게시글에 접근 권한이 없습니다.");
+        }
+
+        // 크루 게시글 삭제
+        crewRepository.delete(crew);
+
+        return new CrewAddResponse("Crew 삭제 완료", crewId);
+    }
 }

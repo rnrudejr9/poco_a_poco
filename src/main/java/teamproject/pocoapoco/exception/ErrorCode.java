@@ -27,7 +27,6 @@ public enum ErrorCode {
      */
     CREW_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 모임이 없습니다."),
     LIMIT_NUMBER_EXCEED(HttpStatus.CONFLICT,"모임 인원수를 초과하였습니다."),
-
     /**
      * 접근 권한 예외
      */
