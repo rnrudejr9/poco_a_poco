@@ -24,11 +24,24 @@ public class CrewController {
     private final CrewService crewService;
 
 
-    // Crew 게시글 등록
+    // 크루 게시글 등록
     @PostMapping()
-    public Response addCrew(@RequestBody CrewAddRequest request, Authentication authentication) {
-        log.info(request.getTitle());
-        CrewAddResponse response = crewService.addCrew(request, authentication.getName());
+    public Response addCrew(@RequestBody CrewAddRequest crewAddRequest, Authentication authentication) {
+        CrewAddResponse response = crewService.addCrew(crewAddRequest, authentication.getName());
+        return Response.success(response);
+    }
+
+    // 크루 게시글 수정
+    @PostMapping("/{crewId}")
+    public Response updateCrew(@PathVariable Long crewId, @RequestBody CrewAddRequest crewAddRequest, Authentication authentication) {
+        CrewAddResponse response = crewService.updateCrew(crewId, crewAddRequest, authentication.getName());
+        return Response.success(response);
+    }
+
+    // 크루 게시글 삭제
+    @DeleteMapping("/{crewId}")
+    public Response deleteCrew(@PathVariable Long crewId, Authentication authentication) {
+        CrewAddResponse response = crewService.deleteCrew(crewId, authentication.getName());
         return Response.success(response);
     }
 
