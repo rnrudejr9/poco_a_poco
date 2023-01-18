@@ -50,8 +50,15 @@ public class CrewController {
     // 크루 게시물 상세 조회
     @GetMapping("/{crewId}")
     public Response detaileCrew(@PathVariable Long crewId, Authentication authentication) {
-        CrewDetailResponse response = crewService.detailePost(crewId);
+        CrewDetailResponse response = crewService.detailCrew(crewId);
         return Response.success(response);
     }
 
+    // 크루 게시물 전체 조회
+    @GetMapping()
+    public Response getAllPosts(@PageableDefault(page = 0,
+            size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+        List<CrewDetailResponse> crews = crewService.allCrew(pageable);
+        return Response.success(new PageImpl<>(crews));
+    }
 }

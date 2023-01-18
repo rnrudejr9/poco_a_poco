@@ -4,6 +4,8 @@ package teamproject.pocoapoco.service;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.crew.CrewAddRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewAddResponse;
@@ -15,6 +17,9 @@ import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -61,7 +66,8 @@ public class CrewService {
         }
 
         // DB 저장
-        crewRepository.save(crewAddRequest.toEntity(user));
+        crew.update(crewAddRequest);
+        crewRepository.save(crew);
 
         return new CrewAddResponse("Crew 수정 완료", crewId);
     }
@@ -88,12 +94,23 @@ public class CrewService {
         return new CrewAddResponse("Crew 삭제 완료", crewId);
     }
 
-    public CrewDetailResponse detailePost(Long crewId) {
+    // 크루 게시물 상세 조회
+    public CrewDetailResponse detailCrew(Long crewId) {
 
         // 크루 게시글 존재 확인
         Crew crew = crewRepository.findById(crewId)
                 .orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
 
         return CrewDetailResponse.fromEntity(crew);
+    }
+
+    // 크루 게시물 전체 조회
+    public List<CrewDetailResponse> allCrew(Pageable pageable) {
+        Page<Crew> crews = crewRepository.findAll(pageable);
+        List<CrewDetailResponse> responsesList = crews
+                .stream()
+                .map(p -> CrewDetailResponse.fromEntity(p))
+                .collect(Collectors.toList());
+        return responsesList;
     }
 }
