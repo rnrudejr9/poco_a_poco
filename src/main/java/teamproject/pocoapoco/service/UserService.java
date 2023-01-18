@@ -22,7 +22,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final EncrypterConfig encrypterConfig;
 
-    public  UserService(UserRepository userRepository, EncrypterConfig encrypterConfig) {
+    public UserService(UserRepository userRepository, EncrypterConfig encrypterConfig) {
         this.userRepository = userRepository;
         this.encrypterConfig = encrypterConfig;
     }
@@ -43,8 +43,7 @@ public class UserService {
 
         // userId 유효성 확인
         User user = userRepository.findByUserId(userLoginRequest.getUserId())
-                .orElseThrow(() -> {throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
-                });
+                .orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
         // password 유효성 확인
         if (!encrypterConfig.encoder().matches(userLoginRequest.getPassword(), user.getPassword())) {

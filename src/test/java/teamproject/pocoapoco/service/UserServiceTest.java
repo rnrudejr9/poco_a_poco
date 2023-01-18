@@ -2,9 +2,12 @@ package teamproject.pocoapoco.service;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import teamproject.pocoapoco.domain.entity.User;
@@ -22,26 +25,101 @@ import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.mockStatic;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
+    @Mock
+    private UserRepository userRepository;
 
     @Mock
-    UserRepository userRepository;
+    private EncrypterConfig config;
 
     @Mock
-    EncrypterConfig config;
+    private JwtProvider jwtProvider;
 
-    @Mock
-    JwtProvider jwtProvider;
+    @InjectMocks
+    UserService userService = new UserService(userRepository, config);
+
+
+    @Value("${jwt.token.secret}") String secretKey;
+
+
+    @Nested
+    @DisplayName("로그인 Test")
+    class Login {
+
+        UserLoginRequest userLoginRequest = new UserLoginRequest("userId1234", "pass1234");
+
+        UserLoginResponse userLoginResponse = new UserLoginResponse("token");
+
+
+        User user = User.builder()
+                .id(1L)
+                .userId("userId1234")
+                .userName("닉네임")
+                .password("pass1234")
+                .address("서울시 강남구")
+                .sport(InterestSport.SOCCER)
+                .manner(1)
+                .role(UserRole.ROLE_USER)
+                .build();
+
+        @Test
+        @DisplayName("로그인 성공")
+        public void 로그인테스트1() {
+
+            MockedStatic<JwtProvider> jwtTokenUtilMockedStatic = mockStatic(JwtProvider.class);
+
+            given(userRepository.findByUserName(userLoginRequest.getUserId())).willReturn(Optional.of(user));
+            given(config.encoder().matches(userLoginRequest.getPassword(), user.getPassword())).willReturn(true);
+            given(jwtProvider.generateToken(user)).willReturn("token");
+
+            UserLoginResponse response = userService.login(userLoginRequest);
+
+            assertThat(response.getJwt()).isEqualTo("token");
+
+            jwtTokenUtilMockedStatic.close();
+//            //given
+//            Mockito.lenient().when(userRepository.findByUserId(userLoginRequest.getUserId())).thenReturn(Optional.of(user));
+//            //when(config.encoder().matches("123", "123")).thenReturn(true);
+//            Mockito.lenient().when(jwtProvider.generateToken(user)).thenReturn("token");
+//
+//            //when
+//            UserLoginResponse response = userService.login(userLoginRequest);
+//
+//            //then
+//            assertEquals(response.getJwt(), "token");
+
+        }
+
+        @Test
+        @DisplayName("로그인 실패1 - 해당 아이디 없음")
+        public void 로그인테스트2() {
+
+            //given
+            Mockito.lenient().when(userRepository.findByUserId(userLoginRequest.getUserId())).thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+
+            //when
+            UserLoginResponse response = userService.login(userLoginRequest);
+
+            //then
+            assertEquals(HttpStatus.NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getHttpStatus());
+        }
+
+    }
+
 
     @Nested
     @DisplayName("회원가입 Test")
     class Join {
+
         // 전역 변수 선언
         UserJoinRequest request1 = UserJoinRequest.builder()
                 .userId("아이디")
@@ -166,56 +244,5 @@ class UserServiceTest {
     }
 
 
-    @Nested
-    @DisplayName("로그인 Test")
-    class Login {
 
-        UserService service = new UserService(userRepository, config);
-
-        // 로그인 전역 변수 선언
-        UserLoginRequest request = new UserLoginRequest("userId1234", "pass1234");
-
-        UserLoginResponse response = new UserLoginResponse("token");
-
-        User user = User.builder()
-                .id(1L)
-                .userId("userId1234")
-                .userName("닉네임")
-                .password("비밀번호")
-                .address("서울시 강남구")
-                .sport(InterestSport.SOCCER)
-                .manner(1)
-                .role(UserRole.ROLE_USER)
-                .build();
-
-        @Test
-        @DisplayName("로그인 성공")
-        public void 로그인테스트1() {
-
-            // userId 유효성 확인
-            Mockito.lenient().when(userRepository.findByUserId(request.getUserId())).thenReturn(Optional.ofNullable(user));
-
-            // password 확인
-            //when(config.encoder().matches("123", "123")).thenReturn(true);
-
-            //토큰 발행 확인
-            Mockito.lenient().when(jwtProvider.generateToken(user)).thenReturn("token");
-
-
-            assertAll(
-                    () -> assertEquals(request.getUserId(), user.getUserId()),
-                    () -> assertEquals("token", response.getJwt()));
-
-        }
-
-        @Test
-        @DisplayName("로그인 실패1 - 해당 아이디 없음")
-        public void 로그인테스트2() {
-
-            Mockito.lenient().when(userRepository.findByUserId(request.getUserId())).thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
-
-            assertEquals(HttpStatus.NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getHttpStatus());
-        }
-
-    }
 }
