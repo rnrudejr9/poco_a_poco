@@ -39,6 +39,12 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Like> likes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Alarm> alarms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<Comment> comments = new ArrayList<>();
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<GrantedAuthority>(List.of(new SimpleGrantedAuthority(role.name())));
