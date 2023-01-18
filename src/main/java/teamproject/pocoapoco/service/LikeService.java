@@ -20,8 +20,8 @@ public class LikeService {
     private final UserRepository userRepository;
 
     public LikeResponse goodCrew(Long crewId, String userName){
-        User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.INVALID_PASSWORD,""));
-        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.INVALID_PASSWORD,""));
+        User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
+        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
         LikeResponse goodResponse = new LikeResponse();
         if(user.getLikes().stream().anyMatch(like -> like.equals(crew))){
             likeRepository.deleteByUserAndCrew(user,crew);
