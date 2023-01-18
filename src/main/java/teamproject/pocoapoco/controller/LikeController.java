@@ -2,6 +2,7 @@ package teamproject.pocoapoco.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,15 +12,15 @@ import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.service.LikeService;
 
 @RestController
-@RequestMapping("/api/v1/crew")
+@RequestMapping("/api/v1/crews")
 @RequiredArgsConstructor
 public class LikeController {
     private final LikeService likeService;
 
     @PostMapping("/{crewId}/like")
-    public Response<LikeResponse> likeCrew(@PathVariable Long crewId){
-        Long loginId = 1L; //  임의로그인한 아이디
-        LikeResponse goodResponse = likeService.goodCrew(crewId,loginId);
+    public Response<LikeResponse> likeCrew(@PathVariable Long crewId, Authentication authentication){
+
+        LikeResponse goodResponse = likeService.goodCrew(crewId,authentication.getName());
         return Response.success(goodResponse);
     }
 }

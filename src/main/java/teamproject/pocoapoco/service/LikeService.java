@@ -7,6 +7,8 @@ import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.Like;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.exception.AppException;
+import teamproject.pocoapoco.exception.ErrorCode;
+import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.LikeRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
@@ -17,9 +19,9 @@ public class LikeService {
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
 
-    public LikeResponse goodCrew(Long crewId, Long userId){
-        User user = userRepository.findById(userId).orElseThrow(()->new AppException());
-        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException());
+    public LikeResponse goodCrew(Long crewId, String userName){
+        User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.INVALID_PASSWORD,""));
+        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.INVALID_PASSWORD,""));
         LikeResponse goodResponse = new LikeResponse();
         if(user.getLikes().stream().anyMatch(like -> like.equals(crew))){
             likeRepository.deleteByUserAndCrew(user,crew);
