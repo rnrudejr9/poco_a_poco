@@ -29,9 +29,12 @@ public class User implements UserDetails {
     private String userName;
     private String password;
     private String address;
-    private InterestSport sport;
+//    private InterestSport sport;
     private Integer manner;
-    private UserRole role;
+    private UserRole role = UserRole.ROLE_USER;
+
+    @OneToOne
+    private Sport sport;
 
     @OneToMany(mappedBy = "user")
     private List<Crew> crews = new ArrayList<>();
@@ -44,6 +47,8 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
