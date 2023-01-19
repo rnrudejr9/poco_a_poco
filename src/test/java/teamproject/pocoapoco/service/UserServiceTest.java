@@ -1,10 +1,7 @@
 package teamproject.pocoapoco.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -27,6 +24,7 @@ import teamproject.pocoapoco.security.config.EncrypterConfig;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import java.util.Optional;
+import java.util.regex.PatternSyntaxException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -113,32 +111,25 @@ class UserServiceTest {
 
         @Test
         @DisplayName("회원가입 성공")
-        public void 회원가입테스트1(){
+        public void 회원가입테스트1() {
 
             //given
-            UserJoinResponse response = UserJoinResponse.builder()
+            UserJoinResponse userJoinResponse = UserJoinResponse.builder()
                     .userId("아이디")
                     .message("회원가입 되었습니다.").build();
 
-
-
-            //then
-            assertThat(response.getJwt()).isEqualTo("token");
 
             // when
             when(userRepository.save(any())).thenReturn(user1);
             UserJoinResponse result = userService.addUser(userJoinRequest1);
 
-        @Test
-        @DisplayName("로그인 실패1 - 해당 아이디 없음")
-        public void 로그인테스트2() {
-
-            //then
+            // then
             assertAll(
-                    () -> assertEquals(response.getUserId(), result.getUserId()),
-                    () -> assertEquals(response.getMessage(), result.getMessage()));
-
+                    () -> assertEquals(userJoinResponse.getUserId(), result.getUserId()),
+                    () -> assertEquals(userJoinResponse.getMessage(), result.getMessage()));
         }
+
+
 
         @Test
         @DisplayName("회원가입 실패1 - 아이디 중복")
@@ -255,6 +246,7 @@ class UserServiceTest {
             assertThat(response.getJwt()).isEqualTo("token");
 
         }
+
 
         @Test
         @DisplayName("로그인 실패1 - 해당 아이디 없음")
