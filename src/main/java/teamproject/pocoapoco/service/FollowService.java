@@ -32,6 +32,27 @@ public class FollowService {
             followRepository.save(new Follow(followingUser,user));
         return user.getUsername()+"님을 팔로우 합니다.";
 
+    }
+    public String unFollow(String unFollowingUserId, String userId){
+        User unFollowingUser = userRepository.findByUserId(unFollowingUserId).orElseThrow(()->
+        {throw new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage());
+        });
+
+        User user = userRepository.findByUserId(userId).orElseThrow(()->
+        {throw new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage());
+        });
+        if(userId.equals(unFollowingUserId)){
+            throw new AppException(ErrorCode.WRONG_PATH,"자기 자신을 팔로우 취소할 수 없습니다.");
+        }
+
+        Follow follow = followRepository.findByFollowingUserIdAndFollowedUserId(unFollowingUser.getId(),user.getId()).orElseThrow(()->
+        {throw new AppException(ErrorCode.WRONG_PATH,"해당 유저를 팔로우 하고 있지 않습니다");
+
+        });
+        followRepository.delete(follow);
+
+        return user.getUsername()+"님을 팔로우 취소합니다.";
+
 
     }
 

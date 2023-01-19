@@ -23,9 +23,9 @@ public class FollowController {
      return Response.success(followService.follow(authentication.getName(),userId));
     }
 
-//    @PostMapping("/{userId}/unfollow")
-//    public Response<?> unFollow(@PathVariable String userId, Authentication authentication){
-//
-//        return Response.success(followService.unFollow(authentication.getName(),userId));
-//    }
+    @PostMapping("/{userId}/unfollow")
+    public Response<?> unFollow(@PathVariable String userId, Authentication authentication){
+
+        return Response.success(followService.unFollow(authentication.getName(),userId));
+    }
 }
