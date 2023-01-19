@@ -1,9 +1,9 @@
 package teamproject.pocoapoco.service;
 
+import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.user.UserJoinResponse;
@@ -21,6 +21,7 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
+@AllArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
     private final EncrypterConfig encrypterConfig;
@@ -82,5 +83,5 @@ public class UserService {
     }
 
 
-
 }
+
