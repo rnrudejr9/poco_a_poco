@@ -149,6 +149,7 @@ class UserServiceTest {
         @DisplayName("회원가입 실패2 - 닉네임 중복")
         public void 회원가입테스트3() {
 
+
             //given
             userRepository.save(user1);
 
