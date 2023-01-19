@@ -1,6 +1,10 @@
 package teamproject.pocoapoco.service;
 
-import org.junit.jupiter.api.*;
+import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -44,6 +48,8 @@ class UserServiceTest {
         @Mock
         EncrypterConfig config;
 
+        @Mock
+        private JwtProvider jwtProvider;
 
         UserJoinRequest userJoinRequest1 = UserJoinRequest.builder()
                 .userId("아이디")
@@ -92,6 +98,7 @@ class UserServiceTest {
 
         UserService userService;
 
+        private UserLoginResponse userLoginResponse;
 
         // encoder 설정
         @BeforeEach
@@ -115,11 +122,16 @@ class UserServiceTest {
 
 
 
+            //then
+            assertThat(response.getJwt()).isEqualTo("token");
 
             // when
             when(userRepository.save(any())).thenReturn(user1);
             UserJoinResponse result = userService.addUser(userJoinRequest1);
 
+        @Test
+        @DisplayName("로그인 실패1 - 해당 아이디 없음")
+        public void 로그인테스트2() {
 
             //then
             assertAll(
