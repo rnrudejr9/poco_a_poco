@@ -49,4 +49,21 @@ class LikeControllerTest {
                 .andDo(print());
     }
 
+    @Test
+    @WithMockUser
+    @DisplayName("좋아요 취소")
+    public void good_Cancel() throws Exception {
+        when(likeService.goodCrew(any(),any())).thenReturn(new LikeResponse("취소"));
+
+        mockMvc.perform(post("/api/v1/crew/2/like")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(1L)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.message").value("취소"))
+                .andDo(print());
+    }
+
+
+
 }
