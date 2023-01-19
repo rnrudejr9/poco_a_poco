@@ -7,6 +7,8 @@ import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.user.UserJoinRequest;
 import teamproject.pocoapoco.enums.UserRole;
 
+import java.util.ArrayList;
+
 @AllArgsConstructor
 @Getter
 public class UserEntityFixture {
@@ -21,6 +23,7 @@ public class UserEntityFixture {
                 .address(userJoinRequest.getAddress())
                 .sport(Sport.setSport(userJoinRequest.getLikeSoccer(), userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis()))
                 .role(UserRole.ROLE_USER)
+                .likes(new ArrayList<>())
                 .build();
     }
     public static User getADMIN(UserJoinRequest userJoinRequest){
