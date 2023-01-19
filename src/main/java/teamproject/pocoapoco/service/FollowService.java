@@ -55,6 +55,13 @@ public class FollowService {
 
 
     }
+    public Integer followedCount(Long userId){ //해당 유저를 팔로우 하고 있는 유저의 수
+        return followRepository.countByFollowedUserId(userId);
+    }
+
+    public Integer followingCount(Long userId){ //해당 유자가 팔로잉 하고 있는 유저의 수
+        return followRepository.countByFollowingUserId(userId);
+    }
 
 
 }
