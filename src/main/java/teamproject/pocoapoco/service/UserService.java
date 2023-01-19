@@ -21,10 +21,11 @@ import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@AllArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
+
     private final EncrypterConfig encrypterConfig;
+    private final UserRepository userRepository;
+
 
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
