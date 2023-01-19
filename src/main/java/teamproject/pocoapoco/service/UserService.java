@@ -67,15 +67,9 @@ public class UserService {
         }
 
 
-        User user = User.builder()
-                .userId(userJoinRequest.getUserId())
-                .userName(userJoinRequest.getUserName())
-                .address(userJoinRequest.getAddress())
-                .role(UserRole.ROLE_USER)
-                .address(userJoinRequest.getAddress())
-                .sport(Sport.setSport(userJoinRequest.getLikeSoccer(), userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis()))
-                .password(encodedPassword)
-                .build();
+        User user = User.toEntity(userJoinRequest.getUserId(), userJoinRequest.getUserName(), userJoinRequest.getAddress(),
+                userJoinRequest.getPassword(), userJoinRequest.getLikeSoccer(),
+                userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis());
 
         User saved = userRepository.save(user);
 
