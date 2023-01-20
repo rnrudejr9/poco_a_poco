@@ -6,19 +6,6 @@ import lombok.Setter;
 
 @Builder
 public class TestInfoFixture {
-    public static TestInfo get() {
-        return TestInfo.builder()
-                .userId(1L)
-                .postId(1L)
-                .commentId(1L)
-                .likeId(1L)
-                .alarmId(1L)
-                .userName("name")
-                .password("password")
-                .title("title")
-                .body("body")
-                .build();
-    }
 
     @Getter
     @Setter
@@ -34,4 +21,20 @@ public class TestInfoFixture {
         private String title;
         private String body;
     }
+
+    public static TestInfo get() {
+        return TestInfo.builder()
+                .userId(1L)
+                .postId(1L)
+                .commentId(1L)
+                .likeId(1L)
+                .alarmId(1L)
+                .userName("name")
+                .password("password")
+                .title("title")
+                .body("body")
+                .build();
+    }
+
+
 }

@@ -13,6 +13,8 @@ public enum ErrorCode {
      */
     DUPLICATED_USERID(HttpStatus.CONFLICT,"이미 존재하는 아이디 입니다."),
     DUPLICATED_USERNAME(HttpStatus.CONFLICT, "이미 존재하는 닉네임 입니다."),
+    NOT_MATCH_PASSWORD(HttpStatus.UNAUTHORIZED, "패스워드가 일치하지 않습니다."),
+
 
     /**
      *  로그인 로직 예외
