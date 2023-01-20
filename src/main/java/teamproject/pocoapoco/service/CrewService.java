@@ -6,7 +6,6 @@ import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
@@ -14,7 +13,6 @@ import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.CrewStrictRequest;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
@@ -55,7 +53,7 @@ public class CrewService {
 
         Crew crew = getCrewFindBy(crewId);
 
-        checkUserAndRole(user, crew);
+        checkUser(user, crew);
 
         crew.update(crewRequest);
         crewRepository.save(crew);
@@ -70,7 +68,7 @@ public class CrewService {
 
         Crew crew = getCrewFindBy(crewId);
 
-        checkUserAndRole(user, crew);
+        checkUser(user, crew);
 
         crewRepository.delete(crew);
 
@@ -84,7 +82,7 @@ public class CrewService {
 
         Crew crew = getCrewFindBy(crewId);
 
-        return CrewDetailResponse.fromEntity(crew);
+        return CrewDetailResponse.of(crew);
     }
 
     // 크루 게시물 전체 조회
@@ -94,7 +92,7 @@ public class CrewService {
 
         List<CrewDetailResponse> responsesList = crews
                 .stream()
-                .map(crew -> CrewDetailResponse.fromEntity(crew))
+                .map(crew -> CrewDetailResponse.of(crew))
                 .collect(Collectors.toList());
 
         return responsesList;
@@ -107,7 +105,7 @@ public class CrewService {
 
         List<CrewDetailResponse> responsesList = crews
                 .stream()
-                .map(crew -> CrewDetailResponse.fromEntity(crew))
+                .map(crew -> CrewDetailResponse.of(crew))
                 .collect(Collectors.toList());
 
         return responsesList;
@@ -125,13 +123,11 @@ public class CrewService {
                 .orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
     }
 
-    // 해당 게시글 작성자 확인, 권한 확인
-    private void checkUserAndRole(User user, Crew crew) {
-        if (!user.getCrews().contains(crew) && user.getRole().equals(UserRole.ROLE_USER)) {
+    // 해당 게시글 작성자 확인
+    private void checkUser(User user, Crew crew) {
+        if (!user.getCrews().contains(crew)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 게시글에 접근 권한이 없습니다.");
         }
     }
-
-
 
 }

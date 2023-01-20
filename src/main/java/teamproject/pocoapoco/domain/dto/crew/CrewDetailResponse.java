@@ -18,7 +18,7 @@ public class CrewDetailResponse {
     private String content;
     private Integer crewLimit;
 
-    public static CrewDetailResponse fromEntity(Crew crew) {
+    public static CrewDetailResponse of(Crew crew) {
         return CrewDetailResponse.builder()
                 .strict(crew.getStrict())
                 .title(crew.getTitle())
