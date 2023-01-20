@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.domain.user;
+package teamproject.pocoapoco.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,6 +1,5 @@
 package teamproject.pocoapoco.service;
 
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,10 +7,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.domain.user.*;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
@@ -21,7 +19,6 @@ import teamproject.pocoapoco.security.config.EncrypterConfig;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import java.util.Optional;
-import java.util.regex.PatternSyntaxException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -100,7 +97,7 @@ class UserServiceTest {
         public void 세팅(){
 
             when(config.encoder()).thenReturn(new BCryptPasswordEncoder());
-            userService = new UserService(config, userRepository);
+            userService = new UserService(userRepository, config);
 
 
         }
@@ -194,7 +191,7 @@ class UserServiceTest {
         private JwtProvider jwtProvider;
 
         @InjectMocks
-        UserService userService = new UserService(config, userRepository);
+        UserService userService = new UserService(userRepository, config);
 
         @Value("${jwt.token.secret}") String secretKey;
 

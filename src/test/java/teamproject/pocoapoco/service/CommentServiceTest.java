@@ -9,6 +9,9 @@ import teamproject.pocoapoco.domain.dto.comment.CommentDeleteResponse;
 import teamproject.pocoapoco.domain.dto.comment.CommentRequest;
 import teamproject.pocoapoco.domain.dto.comment.CommentResponse;
 import teamproject.pocoapoco.domain.entity.Comment;
+import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.fixture.CommentEntityFixture;
@@ -35,6 +38,8 @@ class CommentServiceTest {
     Comment commentEntity;
     private TestInfoFixture.TestInfo fixture;
     private CommentRequest commentRequest;
+    private User userEntityFixture;
+    private Crew crewEntityFixure;
     private String userName = "이름";
     private String password = "비밀번호";
 
@@ -43,6 +48,11 @@ class CommentServiceTest {
     void setUp() {
         commentEntity = CommentEntityFixture.get(userName, userName);
         commentService = new CommentService(commentRepository, userRepository, crewRepository);
+        userEntityFixture = UserEntityFixture.get(UserJoinRequest.builder()
+                .userName(userName)
+                .password(password)
+                .build());
+        crewEntityFixure = CrewEntityFixture.get(1L);
         fixture = TestInfoFixture.get();
         commentRequest = new CommentRequest("댓글작성");
     }
@@ -55,8 +65,8 @@ class CommentServiceTest {
         @DisplayName("댓글 작성 성공")
         void success() {
             //given
-            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(UserEntityFixture.get(userName, userName)));
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(userEntityFixture));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.save(any())).willReturn(commentEntity);
 
             //when
@@ -74,7 +84,7 @@ class CommentServiceTest {
         @DisplayName("댓글 작성 실패 - 크루 모집 없음")
         void fail() {
             //given
-            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(UserEntityFixture.get(userName, userName)));
+            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(userEntityFixture));
             given(crewRepository.findById(any())).willThrow(new AppException(
                     ErrorCode.CREW_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
             given(commentRepository.save(any())).willReturn(commentEntity);
@@ -92,7 +102,7 @@ class CommentServiceTest {
         void fail_1() {
             //given
             given(userRepository.findByUserName(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.save(any())).willReturn(commentEntity);
 
             //when
@@ -107,8 +117,8 @@ class CommentServiceTest {
         @DisplayName("댓글 작성 실패 - DB 에러")
         void fail_3() {
             //given
-            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(UserEntityFixture.get(userName, userName)));
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(userEntityFixture));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.save(any())).willThrow(new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
 
             //when
@@ -126,7 +136,7 @@ class CommentServiceTest {
         @DisplayName("댓글 수정 성공")
         void success() {
             //given
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willReturn(Optional.ofNullable(commentEntity));
 
             //when
@@ -160,7 +170,7 @@ class CommentServiceTest {
         @DisplayName("댓글 수정 실패 - comment 없음")
         void fail_1() {
             //given
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willThrow(new AppException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
 
             //when
@@ -174,7 +184,7 @@ class CommentServiceTest {
         @DisplayName("댓글 수정 실패 - 작성자 불일치")
         void fail_2() {
             //given
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willReturn(Optional.ofNullable(commentEntity));
 
             //when
@@ -190,8 +200,8 @@ class CommentServiceTest {
         @DisplayName("댓글 수정 실패 - DB 에러")
         void fail_3() {
             //given
-            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(UserEntityFixture.get(userName, userName)));
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(userEntityFixture));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willThrow(new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
 
             //when
@@ -210,7 +220,7 @@ class CommentServiceTest {
         @DisplayName("댓글 삭제 성공")
         void success() {
             //given
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willReturn(Optional.ofNullable(commentEntity));
 
             //when
@@ -242,7 +252,7 @@ class CommentServiceTest {
         @DisplayName("댓글 삭제 실패 - comment 없음")
         void fail_1() {
             //given
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willThrow(new AppException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
 
             //when
@@ -256,7 +266,7 @@ class CommentServiceTest {
         @DisplayName("댓글 삭제 실패 - 작성자 불일치")
         void fail_2() {
             //given
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willReturn(Optional.ofNullable(commentEntity));
 
             //when
@@ -272,8 +282,8 @@ class CommentServiceTest {
         @DisplayName("댓글 삭제 실패 - DB 에러")
         void fail_3() {
             //given
-            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(UserEntityFixture.get(userName, userName)));
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(userEntityFixture));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willThrow(new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
 
             //when
@@ -292,7 +302,7 @@ class CommentServiceTest {
         @DisplayName("댓글 조회 성공")
         void success() {
             //given
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willReturn(Optional.ofNullable(commentEntity));
 
             //when
@@ -324,7 +334,7 @@ class CommentServiceTest {
         @DisplayName("댓글 조회 실패 - comment 없음")
         void fail_1() {
             //given
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willThrow(new AppException(ErrorCode.COMMENT_NOT_FOUND, ErrorCode.COMMENT_NOT_FOUND.getMessage()));
 
             //when
@@ -339,8 +349,8 @@ class CommentServiceTest {
         @DisplayName("댓글 조회 실패 - DB 에러")
         void fail_3() {
             //given
-            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(UserEntityFixture.get(userName, userName)));
-            given(crewRepository.findById(any())).willReturn(Optional.of((CrewEntityFixture.get(userName, password))));
+            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(userEntityFixture));
+            given(crewRepository.findById(any())).willReturn(Optional.of((crewEntityFixure)));
             given(commentRepository.findById(any())).willThrow(new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
 
             //when

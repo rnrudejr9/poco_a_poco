@@ -16,7 +16,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
     private final String SECRET = "asdfknsadfksadnvckasdncksnadkcnklvnzldkknvklxnzsdnnbvklzdfkzfkdnfvk";
-    private final long EXPIRATION = 1000 * 60 * 10;
+    private final long EXPIRATION = 1000 * 60 * 30;
     private final String USERNAME_KEY = "username";
 
     private final String USERID_KEY = "userid";

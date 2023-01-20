@@ -1,18 +1,11 @@
 package teamproject.pocoapoco.controller;
 
-import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.domain.user.*;
+import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.security.provider.JwtProvider;
-import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor

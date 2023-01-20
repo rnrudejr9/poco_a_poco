@@ -5,26 +5,20 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.test.context.support.WithMockUser;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.Like;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.domain.user.UserJoinRequest;
+import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.fixture.CrewEntityFixture;
-import teamproject.pocoapoco.fixture.LikeEntityFixture;
-import teamproject.pocoapoco.fixture.TestInfoFixture;
 import teamproject.pocoapoco.fixture.UserEntityFixture;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.LikeRepository;
 import teamproject.pocoapoco.repository.UserRepository;
-import teamproject.pocoapoco.security.config.EncrypterConfig;
 
-import javax.swing.text.html.Option;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -59,7 +53,7 @@ class LikeServiceTest {
 
         likeService = new LikeService(likeRepository,crewRepository,userRepository);
         user = UserEntityFixture.get(userJoinRequest1);
-        crew = CrewEntityFixture.get(TestInfoFixture.get().getUserName(),TestInfoFixture.get().getPassword());
+        crew = CrewEntityFixture.get(1L);
     }
 
     @Test

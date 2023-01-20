@@ -1,15 +1,9 @@
 package teamproject.pocoapoco.service;
 
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.data.domain.Pageable;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.domain.user.*;
-import teamproject.pocoapoco.enums.InterestSport;
-import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -25,18 +19,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EncrypterConfig encrypterConfig;
-    private final UserRepository userRepository;
-
-
-
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
-
         // userName 유효성 확인
         User user = userRepository.findByUserId(userLoginRequest.getUserId())
                 .orElseThrow(() -> {throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
                 });
-
         // password 유효성 확인
         if (!encrypterConfig.encoder().matches(userLoginRequest.getPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
@@ -49,11 +37,8 @@ public class UserService {
 
 
     public UserJoinResponse addUser(UserJoinRequest userJoinRequest){
-
         String encodedPassword = encrypterConfig.encoder().encode(userJoinRequest.getPassword());
-
         // 비밀번호 확인 로직 추가
-
         if (!userJoinRequest.getPassword().equals(userJoinRequest.getPasswordConfirm())){
 
             throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
