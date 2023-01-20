@@ -1,26 +1,28 @@
 package teamproject.pocoapoco.controller;
 
+import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.user.UserJoinRequest;
-import teamproject.pocoapoco.domain.user.UserJoinResponse;
-import teamproject.pocoapoco.domain.user.UserLoginRequest;
-import teamproject.pocoapoco.domain.user.UserLoginResponse;
+import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.user.*;
+import teamproject.pocoapoco.security.provider.JwtProvider;
+import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
 
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
+//    private final UserPhotoService userPhotoService;
+
 
     @GetMapping("/hello")
     public String hello(){
@@ -37,12 +39,46 @@ public class UserController {
 
     }
     @PostMapping("/join")
-    public ResponseEntity<UserJoinResponse> userAdd(@RequestBody UserJoinRequest request){
+    public Response userAdd(@RequestBody UserJoinRequest request){
 
-        UserJoinResponse response = userService.addUser(request);
+        UserJoinResponse userJoinResponse = userService.addUser(request);
 
-        return ResponseEntity.ok().body(response);
+        return Response.success(userJoinResponse);
 
     }
+
+
+    // 내 프로필 수정
+    @PutMapping("/revise")
+    public Response userInfoModify(@RequestHeader(value = "Authorization", required = false) String token, @RequestBody UserProfileRequest userProfileRequest){
+
+        UserProfileResponse userProfileResponse = userService.modifyMyUserInfo(token, userProfileRequest);
+        return Response.success(userProfileResponse);
+
+    }
+
+
+    // 내 프로필 조회
+    @GetMapping("/profile/my")
+    public Response userMyInfoList(@RequestHeader("Authorization") String token){
+
+        JwtProvider jwtProvider =new JwtProvider();
+        Long myId = jwtProvider.getId(token);
+
+        UserProfileResponse userProfileResponse = userService.selectUserInfo(myId);
+
+        return Response.success(userProfileResponse);
+
+    }
+
+    // 상대방의 프로필 조회
+    @GetMapping("/profile/{id}")
+    public Response userInfoList(@PathVariable Long id){
+
+        UserProfileResponse userProfileResponse = userService.selectUserInfo(id);
+        return Response.success(userProfileResponse);
+
+    }
+
 
 }

@@ -29,7 +29,7 @@ public class User implements UserDetails {
     private Integer manner;
     private UserRole role = UserRole.ROLE_USER;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     private Sport sport;
     private String profilePath;
 
@@ -75,11 +75,12 @@ public class User implements UserDetails {
         return false;
     }
 
-    public static User toEntity(String userId, String userName, String address, String password, boolean likeSoccer, boolean likeJogging, boolean likeTennis){
+    public static User toEntity(String userId, String userName, String address, String password, Boolean likeSoccer, Boolean likeJogging, Boolean likeTennis){
         return User.builder()
                 .userId(userId)
                 .userName(userName)
                 .address(address)
+                .role(UserRole.ROLE_USER)
                 .sport(Sport.setSport(likeSoccer, likeJogging, likeTennis))
                 .password(password)
                 .build();
