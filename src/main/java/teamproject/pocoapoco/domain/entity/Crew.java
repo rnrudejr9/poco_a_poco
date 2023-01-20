@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.Nullable;
-import teamproject.pocoapoco.enums.InterestSport;
+import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
 
 import javax.persistence.*;
-import javax.persistence.criteria.CriteriaBuilder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -36,4 +33,12 @@ public class Crew {
 
     @OneToMany(mappedBy = "crew")
     private List<Like> likes = new ArrayList<>();
+
+    public void update(CrewRequest request) {
+        this.strict = request.getStrict();
+        this.title = request.getTitle();
+        this.content =request.getContent();
+        this.crewLimit = request.getCrewLimit();
+        this.chatroomId = 1;
+    }
 }
