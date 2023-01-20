@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.user.*;
 import teamproject.pocoapoco.enums.InterestSport;
@@ -26,6 +25,8 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EncrypterConfig encrypterConfig;
+    private final UserRepository userRepository;
+
 
 
 
@@ -150,5 +151,5 @@ public class UserService {
 //    }
 
 
-
 }
+

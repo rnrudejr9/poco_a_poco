@@ -100,7 +100,7 @@ class UserServiceTest {
         public void 세팅(){
 
             when(config.encoder()).thenReturn(new BCryptPasswordEncoder());
-            userService = new UserService(userRepository, config);
+            userService = new UserService(config, userRepository);
 
 
         }
@@ -194,8 +194,7 @@ class UserServiceTest {
         private JwtProvider jwtProvider;
 
         @InjectMocks
-        UserService userService = new UserService(userRepository, config);
-
+        UserService userService = new UserService(config, userRepository);
 
         @Value("${jwt.token.secret}") String secretKey;
 

@@ -16,10 +16,8 @@ import teamproject.pocoapoco.service.LikeService;
 @RequiredArgsConstructor
 public class LikeController {
     private final LikeService likeService;
-
     @PostMapping("/{crewId}/like")
     public Response<LikeResponse> likeCrew(@PathVariable Long crewId, Authentication authentication){
-
         LikeResponse goodResponse = likeService.goodCrew(crewId,authentication.getName());
         return Response.success(goodResponse);
     }
