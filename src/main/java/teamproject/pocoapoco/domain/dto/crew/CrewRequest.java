@@ -8,7 +8,7 @@ import teamproject.pocoapoco.domain.entity.User;
 @NoArgsConstructor
 @Getter
 @Builder
-public class CrewAddRequest {
+public class CrewRequest {
 
     private String strict;
     private String title;
@@ -21,7 +21,7 @@ public class CrewAddRequest {
                 .title(this.title)
                 .content(this.content)
                 .crewLimit(this.crewLimit)
-                .chatroomId(1) // 채팅룸 Entity를 따로 make?
+                .chatroomId(null)
                 .user(user)
                 .build();
     }
