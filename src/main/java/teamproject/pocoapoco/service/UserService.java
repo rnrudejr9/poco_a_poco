@@ -1,5 +1,7 @@
 package teamproject.pocoapoco.service;
 
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.entity.User;
@@ -18,26 +20,13 @@ import teamproject.pocoapoco.security.provider.JwtProvider;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
-    private final UserRepository userRepository;
+
     private final EncrypterConfig encrypterConfig;
+    private final UserRepository userRepository;
 
-    public UserService(UserRepository userRepository, EncrypterConfig encrypterConfig) {
-        this.userRepository = userRepository;
-        this.encrypterConfig = encrypterConfig;
-    }
 
-    // 토큰 까는 method
-    public User getUserByUserName(String userName) {
-
-        Optional<User> userOptional = userRepository.findByUserName(userName);
-
-        if(userOptional.isEmpty()){
-            throw new AppException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage());
-        }
-
-        return userOptional.get();
-    }
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
 
@@ -57,86 +46,43 @@ public class UserService {
 
 
 
-    public UserJoinResponse addUser(UserJoinRequest request){
+    public UserJoinResponse addUser(UserJoinRequest userJoinRequest){
 
-        String encodedPassword = encrypterConfig.encoder().encode(request.getPassword());
+        String encodedPassword = encrypterConfig.encoder().encode(userJoinRequest.getPassword());
+
+        // 비밀번호 확인 로직 추가
+
+        if (!userJoinRequest.getPassword().equals(userJoinRequest.getPasswordConfirm())){
+
+            throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
+        }
 
 
-        if (userRepository.findByUserId(request.getUserId()).isPresent()){
+        if (userRepository.findByUserId(userJoinRequest.getUserId()).isPresent()){
             throw new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage());
 
         } // 아이디 중복 확인 버튼 생성?
 
-        if (userRepository.findByUserName(request.getUserName()).isPresent()){
+        if (userRepository.findByUserName(userJoinRequest.getUserName()).isPresent()){
             throw new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage());
 
         }
 
 
-        User user;
-
-        if(request.getLikeSoccer()){
-             user = User.builder()
-                    .userId(request.getUserId())
-                    .userName(request.getUserName())
-                    .address(request.getAddress())
-                    .role(UserRole.ROLE_USER)
-                    .address(request.getAddress())
-                    .sport(InterestSport.SOCCER)
-                    .password(encodedPassword)
-                    .build();
-
-
-
-        } else if (request.getLikeJogging()) {
-            user = User.builder()
-                    .userId(request.getUserId())
-                    .userName(request.getUserName())
-                    .address(request.getAddress())
-                    .role(UserRole.ROLE_USER)
-                    .address(request.getAddress())
-                    .sport(InterestSport.JOGGING)
-                    .password(encodedPassword)
-                    .build();
-
-
-        } else if (request.getLikeTennis()) {
-            user = User.builder()
-                    .userId(request.getUserId())
-                    .userName(request.getUserName())
-                    .address(request.getAddress())
-                    .role(UserRole.ROLE_USER)
-                    .address(request.getAddress())
-                    .sport(InterestSport.TENNIS)
-                    .password(encodedPassword)
-                    .build();
-
-
-
-        } else {
-
-            user = User.builder()
-                    .userId(request.getUserId())
-                    .userName(request.getUserName())
-                    .address(request.getAddress())
-                    .role(UserRole.ROLE_USER)
-                    .address(request.getAddress())
-                    .password(encodedPassword)
-                    .build();
-
-
-        }
+        User user = User.toEntity(userJoinRequest.getUserId(), userJoinRequest.getUserName(), userJoinRequest.getAddress(),
+                userJoinRequest.getPassword(), userJoinRequest.getLikeSoccer(),
+                userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis());
 
         User saved = userRepository.save(user);
 
 
-        UserJoinResponse response = new UserJoinResponse(saved.getUserId(), "회원가입 되었습니다.");
+        UserJoinResponse userJoinResponse = new UserJoinResponse(saved.getUserId(), "회원가입 되었습니다.");
 
-        return response;
+        return userJoinResponse;
 
 
     }
 
 
-
 }
+

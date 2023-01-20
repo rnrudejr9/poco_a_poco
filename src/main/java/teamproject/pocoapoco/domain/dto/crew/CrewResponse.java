@@ -6,7 +6,7 @@ import lombok.Getter;
 
 @AllArgsConstructor
 @Getter
-public class CrewAddResponse {
+public class CrewResponse {
     private String message;
     private Long crewId;
 }

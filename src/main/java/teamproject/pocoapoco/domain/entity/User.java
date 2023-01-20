@@ -26,9 +26,12 @@ public class User implements UserDetails {
     private String userName;
     private String password;
     private String address;
-    private InterestSport sport;
     private Integer manner;
-    private UserRole role;
+    private UserRole role = UserRole.ROLE_USER;
+
+    @OneToOne
+    private Sport sport;
+    private String profilePath;
 
     @OneToMany(mappedBy = "user")
     private List<Crew> crews = new ArrayList<>();
@@ -71,4 +74,15 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return false;
     }
+
+    public static User toEntity(String userId, String userName, String address, String password, boolean likeSoccer, boolean likeJogging, boolean likeTennis){
+        return User.builder()
+                .userId(userId)
+                .userName(userName)
+                .address(address)
+                .sport(Sport.setSport(likeSoccer, likeJogging, likeTennis))
+                .password(password)
+                .build();
+    }
+
 }

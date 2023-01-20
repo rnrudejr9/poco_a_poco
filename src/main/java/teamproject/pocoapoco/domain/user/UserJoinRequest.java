@@ -16,6 +16,7 @@ public class UserJoinRequest {
     private String userId;
     private String userName;
     private String password;
+    private String passwordConfirm;
     private String address;
     private Boolean likeSoccer;
     private Boolean likeJogging;
