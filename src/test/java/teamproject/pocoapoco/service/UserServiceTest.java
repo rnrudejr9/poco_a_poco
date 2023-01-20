@@ -56,7 +56,6 @@ class UserServiceTest {
         @InjectMocks
         UserService userService = new UserService(userRepository, config);
 
-
         @Value("${jwt.token.secret}") String secretKey;
 
         private User user;

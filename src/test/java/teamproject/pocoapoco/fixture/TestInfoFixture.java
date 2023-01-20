@@ -8,7 +8,7 @@ public class TestInfoFixture {
     public static TestInfo get() {
         return TestInfo.builder()
                 .userId(1L)
-                .postId(1L)
+                .crewId(1L)
                 .commentId(1L)
                 .likeId(1L)
                 .alarmId(1L)
@@ -23,7 +23,7 @@ public class TestInfoFixture {
     @Setter
     @Builder
     public static class TestInfo {
-        private Long postId;
+        private Long crewId;
         private Long userId;
         private Long commentId;
         private Long likeId;
