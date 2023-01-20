@@ -7,6 +7,5 @@ import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 
 public interface CrewRepository extends JpaRepository<Crew, Long> {
-    Page<Crew> findByStrictContaining(Pageable pageable, String strict);
 
 }

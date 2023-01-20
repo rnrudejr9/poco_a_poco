@@ -6,12 +6,25 @@ import lombok.Setter;
 
 @Builder
 public class TestInfoFixture {
+    public static TestInfo get() {
+        return TestInfo.builder()
+                .userId(1L)
+                .crewId(1L)
+                .commentId(1L)
+                .likeId(1L)
+                .alarmId(1L)
+                .userName("name")
+                .password("password")
+                .title("title")
+                .body("body")
+                .build();
+    }
 
     @Getter
     @Setter
     @Builder
     public static class TestInfo {
-        private Long postId;
+        private Long crewId;
         private Long userId;
         private Long commentId;
         private Long likeId;
