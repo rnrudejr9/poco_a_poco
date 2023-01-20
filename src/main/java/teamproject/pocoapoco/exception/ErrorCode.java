@@ -39,11 +39,12 @@ public enum ErrorCode {
      */
     WRONG_PATH(HttpStatus.UNAUTHORIZED,"잘못된 경로 입니다."),
     INVALID_PERMISSION(HttpStatus.UNAUTHORIZED, "회원가입 후 진행가능합니다."),
-    COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글이 없습니다."),
-    DB_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러입니다."),
-    // 수정 시 일치하지 않는 작성자일경우 사용
-    NOT_MATCH(HttpStatus.NOT_FOUND, "작성자가 아닙니다.")
 
+    INVALID_PHOTO_FORM(HttpStatus.BAD_REQUEST, "이미지 형식이 맞지 않습니다."),
+
+    FILE_CONVERSION_FAILURE(HttpStatus.INTERNAL_SERVER_ERROR, "파일을 변환하면서 문제가 발생했습니다."),
+
+    FILE_NOT_FOUND(HttpStatus.NOT_FOUND, "파일을 찾을 수 없습니다.")
     ;
 
 

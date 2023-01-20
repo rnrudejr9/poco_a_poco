@@ -18,6 +18,8 @@ public class JwtProvider {
     private final String SECRET = "asdfknsadfksadnvckasdncksnadkcnklvnzldkknvklxnzsdnnbvklzdfkzfkdnfvk";
     private final long EXPIRATION = 1000 * 60 * 10;
     private final String USERNAME_KEY = "username";
+
+    private final String USERID_KEY = "userid";
     private final String ID_KEY = "id";
     private final String ROLE_KEY = "role";
 
@@ -30,6 +32,7 @@ public class JwtProvider {
         claims.put(ID_KEY, user.getId());
         claims.put(USERNAME_KEY, user.getUsername());
         claims.put(ROLE_KEY, user.getRole().name());
+        claims.put(USERID_KEY, user.getUserId());
 
         return Jwts.builder()
                 .setClaims(claims)
@@ -67,5 +70,17 @@ public class JwtProvider {
                 .build();
 
         return new UsernamePasswordAuthenticationToken(user, token, user.getAuthorities());
+    }
+
+    public String getUserId(String token){
+
+        Claims claims = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
+        return claims.get(USERID_KEY, String.class);
+    }
+
+    public Long getId(String token){
+
+        Claims claims = Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token).getBody();
+        return claims.get(ID_KEY, Long.class);
     }
 }
