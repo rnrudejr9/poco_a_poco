@@ -76,7 +76,7 @@ public class CrewService {
     }
 
     // 크루 게시물 전체 조회
-    public Page<CrewDetailResponse> findallCrew(Pageable pageable) {
+    public Page<CrewDetailResponse> findAllCrews(Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findAll(pageable);
 
@@ -84,7 +84,7 @@ public class CrewService {
     }
 
     // 크루 게시물 지역 검색 조회
-    public Page<CrewDetailResponse> findallCrewWithStrict(CrewStrictRequest crewStrictRequest, Pageable pageable) {
+    public Page<CrewDetailResponse> findAllCrewsWithStrict(CrewStrictRequest crewStrictRequest, Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
 

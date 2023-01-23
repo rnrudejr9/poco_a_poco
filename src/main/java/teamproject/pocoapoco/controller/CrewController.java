@@ -62,20 +62,20 @@ public class CrewController {
 
     // 크루 게시물 전체 조회
     @GetMapping()
-    public Response findallCrew(@PageableDefault(page = 0,
+    public Response findAllCrew(@PageableDefault(page = 0,
             size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<CrewDetailResponse> crews = crewService.findallCrew(pageable);
+        Page<CrewDetailResponse> crews = crewService.findAllCrews(pageable);
 
         return Response.success(crews);
     }
 
     // 크루 게시물 지역 검색 조회
     @PostMapping("/strict")
-    public Response findallCrewWithStrict(@RequestBody CrewStrictRequest crewStrictRequest,
-            @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public Response findAllCrewWithStrict(@RequestBody CrewStrictRequest crewStrictRequest,
+                                          @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        Page<CrewDetailResponse> crews = crewService.findallCrewWithStrict(crewStrictRequest, pageable);
+        Page<CrewDetailResponse> crews = crewService.findAllCrewsWithStrict(crewStrictRequest, pageable);
 
         return Response.success(crews);
     }
