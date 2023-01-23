@@ -1,23 +1,30 @@
+# ?? ??? ?? ??
 server:
+  port: 8080
   servlet:
     encoding:
       force-response: true
 
 spring:
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: true
-    format_sql: true
-    use_sql_comments: true
-
+  # DB ?? ??
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-
+    url: <host>
+    username: root
+    password: <host>
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  # JPA ??
+  jpa:
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+    database: mysql
+    hibernate:
+      ddl-auto: update
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+
 jwt:
-  token:
-    secret: "secreteKey"
+  secret: hello.world.key
