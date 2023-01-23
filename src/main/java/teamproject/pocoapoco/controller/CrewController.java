@@ -2,6 +2,7 @@ package teamproject.pocoapoco.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -67,9 +68,9 @@ public class CrewController {
     public Response getAllCrews(@PageableDefault(page = 0,
             size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<CrewDetailResponse> crews = crewService.allCrew(pageable);
+        Page<CrewDetailResponse> crews = crewService.allCrew(pageable);
 
-        return Response.success(new PageImpl<>(crews));
+        return Response.success(crews);
     }
 
     // 크루 게시물 지역 검색 조회
@@ -77,8 +78,8 @@ public class CrewController {
     public Response getAllCrewWithStrict(@RequestBody CrewStrictRequest crewStrictRequest,
             @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        List<CrewDetailResponse> crews = crewService.allCrewWithSport(crewStrictRequest, pageable);
+        Page<CrewDetailResponse> crews = crewService.allCrewWithSport(crewStrictRequest, pageable);
 
-        return Response.success(new PageImpl<>(crews));
+        return Response.success(crews);
     }
 }

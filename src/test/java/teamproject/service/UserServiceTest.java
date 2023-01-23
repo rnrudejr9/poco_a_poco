@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.service;
+package teamproject.service;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +17,7 @@ import teamproject.pocoapoco.fixture.UserEntityFixture;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.config.EncrypterConfig;
 import teamproject.pocoapoco.security.provider.JwtProvider;
+import teamproject.pocoapoco.service.UserService;
 
 import java.util.Optional;
 

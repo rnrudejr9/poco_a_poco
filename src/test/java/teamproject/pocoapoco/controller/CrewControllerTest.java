@@ -10,13 +10,10 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
-import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
-import teamproject.pocoapoco.fixture.CrewEntityFixture;
 import teamproject.pocoapoco.service.CrewService;
 
 import static org.mockito.ArgumentMatchers.any;

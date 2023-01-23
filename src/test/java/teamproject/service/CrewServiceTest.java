@@ -1,10 +1,11 @@
-package teamproject.pocoapoco.service;
+package teamproject.service;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.service.CrewService;
 
 import static org.junit.jupiter.api.Assertions.*;
 

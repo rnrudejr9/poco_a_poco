@@ -2,7 +2,6 @@ package teamproject.pocoapoco.service;
 
 
 import lombok.RequiredArgsConstructor;
-import lombok.ToString;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,15 +17,11 @@ import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
-import java.util.List;
-import java.util.stream.Collectors;
+import java.time.LocalDateTime;
 
 
 @Service
-// DTO => Entity
-// Entity => DTO
 @RequiredArgsConstructor
-@ToString
 @Slf4j
 public class CrewService {
 
@@ -38,7 +33,6 @@ public class CrewService {
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
 
         User user = getUserFindBy(userName);
-
         Crew crew = crewRequest.toEntity(user);
 
         crewRepository.save(crew);
@@ -50,12 +44,10 @@ public class CrewService {
     public CrewResponse updateCrew(Long crewId, CrewRequest crewRequest, String userName) {
 
         User user = getUserFindBy(userName);
-
         Crew crew = getCrewFindBy(crewId);
-
         checkUser(user, crew);
 
-        crew.update(crewRequest);
+        crew.of(crewRequest);
         crewRepository.save(crew);
 
         return new CrewResponse("Crew 수정 완료", crewId);
@@ -65,12 +57,11 @@ public class CrewService {
     public CrewResponse deleteCrew(Long crewId, String userName) {
 
         User user = getUserFindBy(userName);
-
         Crew crew = getCrewFindBy(crewId);
-
         checkUser(user, crew);
 
-        crewRepository.delete(crew);
+        crew.deleteSoftly(LocalDateTime.now());
+        crewRepository.save(crew);
 
         return new CrewResponse("Crew 삭제 완료", crewId);
     }
@@ -79,37 +70,27 @@ public class CrewService {
     public CrewDetailResponse detailCrew(Long crewId, String userName) {
 
         User user = getUserFindBy(userName);
-
         Crew crew = getCrewFindBy(crewId);
 
         return CrewDetailResponse.of(crew);
     }
 
     // 크루 게시물 전체 조회
-    public List<CrewDetailResponse> allCrew(Pageable pageable) {
+    public Page<CrewDetailResponse> allCrew(Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findAll(pageable);
 
-        List<CrewDetailResponse> responsesList = crews
-                .stream()
-                .map(crew -> CrewDetailResponse.of(crew))
-                .collect(Collectors.toList());
-
-        return responsesList;
+        return crews.map(CrewDetailResponse::of);
     }
 
     // 크루 게시물 지역 검색 조회
-    public List<CrewDetailResponse> allCrewWithSport(CrewStrictRequest crewStrictRequest, Pageable pageable) {
+    public Page<CrewDetailResponse> allCrewWithSport(CrewStrictRequest crewStrictRequest, Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
 
-        List<CrewDetailResponse> responsesList = crews
-                .stream()
-                .map(crew -> CrewDetailResponse.of(crew))
-                .collect(Collectors.toList());
-
-        return responsesList;
+        return crews.map(CrewDetailResponse::of);
     }
+
 
     // User 존재 확인
     private User getUserFindBy(String userName) {
