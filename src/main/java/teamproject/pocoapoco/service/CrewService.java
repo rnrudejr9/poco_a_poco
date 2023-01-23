@@ -32,7 +32,7 @@ public class CrewService {
     // 크루 게시글 등록
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
 
-        User user = getUserFindBy(userName);
+        User user = findByUserName(userName);
         Crew crew = crewRequest.toEntity(user);
 
         crewRepository.save(crew);
@@ -41,11 +41,11 @@ public class CrewService {
     }
 
     // 크루 게시글 수정
-    public CrewResponse updateCrew(Long crewId, CrewRequest crewRequest, String userName) {
+    public CrewResponse modifyCrew(Long crewId, CrewRequest crewRequest, String userName) {
 
-        User user = getUserFindBy(userName);
-        Crew crew = getCrewFindBy(crewId);
-        checkUser(user, crew);
+        User user = findByUserName(userName);
+        Crew crew = findByCrewId(crewId);
+        findByUserAndCrewContaining(user, crew);
 
         crew.of(crewRequest);
         crewRepository.save(crew);
@@ -56,9 +56,9 @@ public class CrewService {
     // 크루 게시글 삭제
     public CrewResponse deleteCrew(Long crewId, String userName) {
 
-        User user = getUserFindBy(userName);
-        Crew crew = getCrewFindBy(crewId);
-        checkUser(user, crew);
+        User user = findByUserName(userName);
+        Crew crew = findByCrewId(crewId);
+        findByUserAndCrewContaining(user, crew);
 
         crew.deleteSoftly(LocalDateTime.now());
         crewRepository.save(crew);
@@ -69,14 +69,14 @@ public class CrewService {
     // 크루 게시물 상세 조회
     public CrewDetailResponse detailCrew(Long crewId, String userName) {
 
-        User user = getUserFindBy(userName);
-        Crew crew = getCrewFindBy(crewId);
+        User user = findByUserName(userName);
+        Crew crew = findByCrewId(crewId);
 
         return CrewDetailResponse.of(crew);
     }
 
     // 크루 게시물 전체 조회
-    public Page<CrewDetailResponse> allCrew(Pageable pageable) {
+    public Page<CrewDetailResponse> findallCrew(Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findAll(pageable);
 
@@ -84,7 +84,7 @@ public class CrewService {
     }
 
     // 크루 게시물 지역 검색 조회
-    public Page<CrewDetailResponse> allCrewWithSport(CrewStrictRequest crewStrictRequest, Pageable pageable) {
+    public Page<CrewDetailResponse> findallCrewWithStrict(CrewStrictRequest crewStrictRequest, Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
 
@@ -93,19 +93,19 @@ public class CrewService {
 
 
     // User 존재 확인
-    private User getUserFindBy(String userName) {
+    private User findByUserName(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
     }
 
     // 크루 게시글 존재 확인
-    private Crew getCrewFindBy(Long crewId ) {
+    private Crew findByCrewId(Long crewId ) {
         return crewRepository.findById(crewId)
                 .orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
     }
 
     // 해당 게시글 작성자 확인
-    private void checkUser(User user, Crew crew) {
+    private void findByUserAndCrewContaining(User user, Crew crew) {
         if (!user.getCrews().contains(crew)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 게시글에 접근 권한이 없습니다.");
         }

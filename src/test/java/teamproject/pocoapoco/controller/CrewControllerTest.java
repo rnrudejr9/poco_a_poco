@@ -107,7 +107,7 @@ class CrewControllerTest {
         @DisplayName("크루 게시글 수정 성공")
         void update1() throws Exception {
 
-            when(crewService.updateCrew(any(), any(), any()))
+            when(crewService.modifyCrew(any(), any(), any()))
                     .thenReturn(new CrewResponse("Crew 수정 완료", 1L));
 
             mockMvc.perform(post("/api/v1/crews/1")
@@ -126,7 +126,7 @@ class CrewControllerTest {
         @DisplayName("크루 게시글 수정 실패1 :  해당 아이디 없음")
         void update2() throws Exception {
 
-            when(crewService.updateCrew(any(), any(), any()))
+            when(crewService.modifyCrew(any(), any(), any()))
                     .thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
             mockMvc.perform(post("/api/v1/crews/1")
@@ -143,7 +143,7 @@ class CrewControllerTest {
         @DisplayName("크루 게시글 수정 실패2 : 해당 게시글 없음")
         void update3() throws Exception {
 
-            when(crewService.updateCrew(any(), any(), any()))
+            when(crewService.modifyCrew(any(), any(), any()))
                     .thenThrow(new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
 
             mockMvc.perform(post("/api/v1/crews/1")
@@ -161,7 +161,7 @@ class CrewControllerTest {
         @DisplayName("크루 게시글 수정 실패3 : 권한 없음")
         void update4() throws Exception {
 
-            when(crewService.updateCrew(any(), any(), any()))
+            when(crewService.modifyCrew(any(), any(), any()))
                     .thenThrow(new AppException(ErrorCode.INVALID_PERMISSION, ErrorCode.INVALID_PERMISSION.getMessage()));
 
             mockMvc.perform(post("/api/v1/crews/1")
