@@ -1,5 +1,7 @@
 package teamproject.pocoapoco.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.response.Response;
@@ -10,6 +12,7 @@ import teamproject.pocoapoco.service.UserService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
+@Api(tags = {"Join&Login Controller"})
 public class UserController {
 
     private final UserService userService;
@@ -24,6 +27,7 @@ public class UserController {
 
 
     @PostMapping("/login")
+    @ApiOperation(value = "로그인", notes = "")
     public Response userLogin(@RequestBody UserLoginRequest userLoginRequest){
 
         UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
