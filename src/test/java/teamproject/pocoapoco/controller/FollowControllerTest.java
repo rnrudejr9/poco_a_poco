@@ -2,6 +2,7 @@ package teamproject.pocoapoco.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -27,8 +28,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @DisplayName("팔로우 테스트")
 @WebMvcTest(FollowController.class)
@@ -44,10 +44,11 @@ class FollowControllerTest {
     FollowService followService;
     private TestInfoFixture.TestInfo fixture;
     private FollowingResponse followingResponse;
+
     @Test
     @WithMockUser
     @DisplayName("팔로잉")
-    public void following_Success() throws Exception {
+    public void followingSuccess() throws Exception {
         //given
         fixture = TestInfoFixture.get();
         //when
@@ -65,7 +66,7 @@ class FollowControllerTest {
     @Test
     @WithMockUser
     @DisplayName("언팔로잉")
-    public void unFollowing_Success() throws Exception {
+    public void unFollowingSuccess() throws Exception {
         //given
         fixture = TestInfoFixture.get();
         //when
@@ -78,6 +79,38 @@ class FollowControllerTest {
                         .content(objectMapper.writeValueAsBytes(1L)))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.result").value(fixture.getUserName()+"님을 팔로우 취소 합니다."))
+                .andDo(print());
+    }
+    @Test
+    @WithMockUser
+    @DisplayName("팔로잉,언팔로잉 실패 - 해당 아이디 없음")
+    void followFail1() throws Exception {
+
+        when(followService.follow(any(), any()))
+                .thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+
+        mockMvc.perform(post("/api/v1/social/1/follow")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(1L)))
+                .andExpect(status().isNotFound())
+                .andExpect(content().string(ErrorCode.USERID_NOT_FOUND.name() + " " + ErrorCode.USERID_NOT_FOUND.getMessage()))
+                .andDo(print());
+    }
+    @Test
+    @WithMockUser
+    @DisplayName("팔로잉,언팔로잉 실패 - 본인 팔로잉/언팔로잉")
+    void followFail2() throws Exception {
+
+        when(followService.follow(any(), any()))
+                .thenThrow(new AppException(ErrorCode.WRONG_PATH, ErrorCode.WRONG_PATH.getMessage()));
+
+        mockMvc.perform(post("/api/v1/social/1/follow")
+                        .with(csrf())
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsBytes(1L)))
+                .andExpect(status().isUnauthorized())
+                .andExpect(content().string(ErrorCode.WRONG_PATH.name() + " " + ErrorCode.WRONG_PATH.getMessage()))
                 .andDo(print());
     }
     @Test
