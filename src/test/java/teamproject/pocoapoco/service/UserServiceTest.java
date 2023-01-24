@@ -120,7 +120,7 @@ class UserServiceTest {
 
             // when
 
-            UserJoinResponse result = userService.addUser(userJoinRequest1);
+            UserJoinResponse result = userService.saveUser(userJoinRequest1);
 
             // then
             assertAll(
@@ -141,7 +141,7 @@ class UserServiceTest {
 
             //when
             RuntimeException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.addUser(userJoinRequest2));
+                    () -> userService.saveUser(userJoinRequest2));
 
             //then
             assertEquals(exception.getMessage(), "이미 존재하는 아이디 입니다.");
@@ -160,7 +160,7 @@ class UserServiceTest {
 
             // when
             RuntimeException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.addUser(userJoinRequest3));
+                    () -> userService.saveUser(userJoinRequest3));
 
             //then
             assertEquals(exception.getMessage(), "이미 존재하는 닉네임 입니다.");
@@ -176,7 +176,7 @@ class UserServiceTest {
 
             //when
             RuntimeException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.addUser(userJoinRequest4));
+                    () -> userService.saveUser(userJoinRequest4));
 
             //then
             assertEquals(exception.getMessage(), "패스워드가 잘못되었습니다.");
@@ -332,7 +332,7 @@ class UserServiceTest {
 
 
             // when
-            UserProfileResponse result = userService.modifyMyUserInfo(user1.getUsername(), userProfileRequest1);
+            UserProfileResponse result = userService.updateUserInfoByUserName(user1.getUsername(), userProfileRequest1);
 
             // then
             assertAll(
@@ -353,7 +353,7 @@ class UserServiceTest {
 
             //when
             AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.modifyMyUserInfo(userProfileRequest2.getUserName(), userProfileRequest2));
+                    () -> userService.updateUserInfoByUserName(userProfileRequest2.getUserName(), userProfileRequest2));
 
             //then
             assertEquals(exception.getMessage(), "패스워드가 일치하지 않습니다.");
@@ -371,7 +371,7 @@ class UserServiceTest {
             //when
 
             AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.modifyMyUserInfo(userProfileRequest1.getUserName(), userProfileRequest1));
+                    () -> userService.updateUserInfoByUserName(userProfileRequest1.getUserName(), userProfileRequest1));
 
             //then
             assertEquals(exception.getMessage(), "아이디가 존재하지 않습니다.");
@@ -446,7 +446,7 @@ class UserServiceTest {
 
 
             // when
-            UserProfileResponse result = userService.selectUserInfo(user1.getUsername());
+            UserProfileResponse result = userService.getUserInfoByUserName(user1.getUsername());
 
             // then
             assertAll(
@@ -464,7 +464,7 @@ class UserServiceTest {
             //when
 
             AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.selectUserInfo(userProfileRequest1.getUserName()));
+                    () -> userService.getUserInfoByUserName(userProfileRequest1.getUserName()));
 
             //then
             assertEquals(exception.getMessage(), "아이디가 존재하지 않습니다.");

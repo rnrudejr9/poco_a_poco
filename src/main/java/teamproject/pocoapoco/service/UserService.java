@@ -41,7 +41,7 @@ public class UserService {
 
 
 
-    public UserJoinResponse addUser(UserJoinRequest userJoinRequest){
+    public UserJoinResponse saveUser(UserJoinRequest userJoinRequest){
 
         String encodedPassword = encrypterConfig.encoder().encode(userJoinRequest.getPassword());
 
@@ -79,7 +79,7 @@ public class UserService {
     }
 
     @Transactional(rollbackOn = AppException.class)
-    public UserProfileResponse modifyMyUserInfo(String userName, UserProfileRequest userProfileRequest) {
+    public UserProfileResponse updateUserInfoByUserName(String userName, UserProfileRequest userProfileRequest) {
 
         // 비밀번호 확인 로직 따로 빼야할 필요 있음
         if (!userProfileRequest.getPassword().equals(userProfileRequest.getPasswordConfirm())){
@@ -114,7 +114,7 @@ public class UserService {
 
     }
 
-    public UserProfileResponse selectUserInfo(String userName) {
+    public UserProfileResponse getUserInfoByUserName(String userName) {
 
        Optional<User> selectedUserOptional = userRepository.findByUserName(userName);
 
@@ -127,13 +127,6 @@ public class UserService {
         return UserProfileResponse.fromEntity(selectedUser);
 
     }
-
-
-//    public UserProfileResponse selectMyFollower() {
-//    }
-//
-//    public UserProfileResponse selectMyFollowing() {
-//    }
 
 
 

@@ -78,7 +78,7 @@ class UserControllerTest {
                     .userId("아이디")
                     .message("회원가입 되었습니다.").build();
 
-            given(userService.addUser(any())).willReturn(userJoinResponse);
+            given(userService.saveUser(any())).willReturn(userJoinResponse);
 
             // when
             mockMvc.perform(post("/api/v1/users/join")
@@ -101,9 +101,9 @@ class UserControllerTest {
 
             // given
 
-            userService.addUser(userJoinRequest1);
+            userService.saveUser(userJoinRequest1);
 
-            given(userService.addUser(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage()));
+            given(userService.saveUser(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage()));
 
             // when
             mockMvc.perform(post("/api/v1/users/join")
@@ -124,8 +124,8 @@ class UserControllerTest {
         public void 회원가입테스트3() throws Exception {
 
             // given
-            userService.addUser(userJoinRequest1);
-            given(userService.addUser(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
+            userService.saveUser(userJoinRequest1);
+            given(userService.saveUser(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
 
 
             //when
@@ -146,7 +146,7 @@ class UserControllerTest {
         public void 회원가입테스트4() throws Exception {
 
             // given
-            given(userService.addUser(any())).willThrow(new AppException(ErrorCode.NOT_MATCH_PASSWORD, ErrorCode.NOT_MATCH_PASSWORD.getMessage()));
+            given(userService.saveUser(any())).willThrow(new AppException(ErrorCode.NOT_MATCH_PASSWORD, ErrorCode.NOT_MATCH_PASSWORD.getMessage()));
 
             // when
             mockMvc.perform(post("/api/v1/users/join")
@@ -259,7 +259,7 @@ class UserControllerTest {
         void 프로필조회1() throws Exception {
 
             //given
-            given(userService.selectUserInfo(any())).willReturn(userProfileResponse);
+            given(userService.getUserInfoByUserName(any())).willReturn(userProfileResponse);
 
             //when
             mockMvc.perform(get("/api/v1/users/profile/my")
@@ -280,7 +280,7 @@ class UserControllerTest {
         void 프로필조회2() throws Exception {
 
             //given
-            given(userService.selectUserInfo(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+            given(userService.getUserInfoByUserName(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
 
             //when
@@ -337,7 +337,7 @@ class UserControllerTest {
         void 프로필수정1() throws Exception {
 
             //given
-            given(userService.modifyMyUserInfo(any(), any()))
+            given(userService.updateUserInfoByUserName(any(), any()))
                     .willReturn(userProfileResponse1);
 
 
@@ -360,7 +360,7 @@ class UserControllerTest {
         @DisplayName("프로필 수정 실패1 - 비밀번호 확인 실패")
         void 프로필수정2() throws Exception {
             // given: 전역변수
-            given(userService.modifyMyUserInfo(any(), any()))
+            given(userService.updateUserInfoByUserName(any(), any()))
                     .willThrow(new AppException(ErrorCode.NOT_MATCH_PASSWORD, ErrorCode.NOT_MATCH_PASSWORD.getMessage()));
 
 
@@ -384,7 +384,7 @@ class UserControllerTest {
         void 프로필수정3() throws Exception {
 
             // given:
-            given(userService.modifyMyUserInfo(any(), any()))
+            given(userService.updateUserInfoByUserName(any(), any()))
                     .willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
             //when

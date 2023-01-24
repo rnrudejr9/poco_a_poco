@@ -1,5 +1,7 @@
 package teamproject.pocoapoco.controller;
 
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
+@Api(value = "회원가입, 로그인, 프로필 조회 등 사용자와 관련된 기능이 있는 controller 입니다.")
 public class UserController {
 
     private final UserService userService;
@@ -26,7 +29,7 @@ public class UserController {
 
 //    private final UserPhotoService userPhotoService;
 
-
+    @ApiOperation(value = "hello controller", notes = "시험용 컨트롤러")
     @GetMapping("/hello")
     public String hello(){
         return "hello";
@@ -41,10 +44,12 @@ public class UserController {
         return Response.success(userLoginResponse);
 
     }
+
+    @ApiOperation(value = "회원가입", notes = "회원가입하는 메소드입니다.")
     @PostMapping("/join")
     public Response userAdd(@RequestBody UserJoinRequest request){
 
-        UserJoinResponse userJoinResponse = userService.addUser(request);
+        UserJoinResponse userJoinResponse = userService.saveUser(request);
 
         return Response.success(userJoinResponse);
 
@@ -52,31 +57,34 @@ public class UserController {
 
 
     // 내 프로필 수정
+    @ApiOperation(value = "프로필 수정", notes = "프로필 수정하는 메소드입니다.")
     @PutMapping("/revise")
     public Response userInfoModify(Authentication authentication, @RequestBody UserProfileRequest userProfileRequest){
 
-        UserProfileResponse userProfileResponse = userService.modifyMyUserInfo(authentication.getName(), userProfileRequest);
+        UserProfileResponse userProfileResponse = userService.updateUserInfoByUserName(authentication.getName(), userProfileRequest);
         return Response.success(userProfileResponse);
 
     }
 
 
     // 내 프로필 조회
+    @ApiOperation(value = "내 프로필 조회", notes = "내 프로필을 조회하는 메소드입니다.")
     @GetMapping("/profile/my")
     public Response userMyInfoList(Authentication authentication){
 
-        UserProfileResponse userProfileResponse = userService.selectUserInfo(authentication.getName());
+        UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(authentication.getName());
 
         return Response.success(userProfileResponse);
 
     }
 
     // 상대방의 프로필 조회
+    @ApiOperation(value = "프로필 조회", notes = "상대방의 프로필을 조회하는 메소드입니다.")
     @GetMapping("/profile/{userName}")
     public Response userInfoList(@PathVariable String userName){
 
 
-        UserProfileResponse userProfileResponse = userService.selectUserInfo(userName);
+        UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
         return Response.success(userProfileResponse);
 
     }
