@@ -2,12 +2,14 @@ package teamproject.pocoapoco.controller;
 
 import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.user.*;
+import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
@@ -20,6 +22,7 @@ import javax.servlet.http.HttpServletRequest;
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
 //    private final UserPhotoService userPhotoService;
 
@@ -50,9 +53,9 @@ public class UserController {
 
     // 내 프로필 수정
     @PutMapping("/revise")
-    public Response userInfoModify(@RequestHeader(value = "Authorization", required = false) String token, @RequestBody UserProfileRequest userProfileRequest){
+    public Response userInfoModify(Authentication authentication, @RequestBody UserProfileRequest userProfileRequest){
 
-        UserProfileResponse userProfileResponse = userService.modifyMyUserInfo(token, userProfileRequest);
+        UserProfileResponse userProfileResponse = userService.modifyMyUserInfo(authentication.getName(), userProfileRequest);
         return Response.success(userProfileResponse);
 
     }
@@ -60,22 +63,20 @@ public class UserController {
 
     // 내 프로필 조회
     @GetMapping("/profile/my")
-    public Response userMyInfoList(@RequestHeader("Authorization") String token){
+    public Response userMyInfoList(Authentication authentication){
 
-        JwtProvider jwtProvider =new JwtProvider();
-        Long myId = jwtProvider.getId(token);
-
-        UserProfileResponse userProfileResponse = userService.selectUserInfo(myId);
+        UserProfileResponse userProfileResponse = userService.selectUserInfo(authentication.getName());
 
         return Response.success(userProfileResponse);
 
     }
 
     // 상대방의 프로필 조회
-    @GetMapping("/profile/{id}")
-    public Response userInfoList(@PathVariable Long id){
+    @GetMapping("/profile/{userName}")
+    public Response userInfoList(@PathVariable String userName){
 
-        UserProfileResponse userProfileResponse = userService.selectUserInfo(id);
+
+        UserProfileResponse userProfileResponse = userService.selectUserInfo(userName);
         return Response.success(userProfileResponse);
 
     }

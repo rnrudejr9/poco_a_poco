@@ -25,6 +25,7 @@ import teamproject.pocoapoco.service.UserService;
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -49,6 +50,10 @@ class UserControllerTest {
     @MockBean
     UserService userService;
 
+    @MockBean
+
+    UserRepository userRepository;
+
     @Nested
     @DisplayName("회원가입 테스트")
     public class JoinTest{
@@ -67,21 +72,23 @@ class UserControllerTest {
         @DisplayName("회원가입 성공")
         public void 회원가입테스트1() throws Exception {
 
+            // given
+
             UserJoinResponse userJoinResponse = UserJoinResponse.builder()
                     .userId("아이디")
                     .message("회원가입 되었습니다.").build();
 
+            given(userService.addUser(any())).willReturn(userJoinResponse);
 
-            when(userService.addUser(any()))
-                    .thenReturn(userJoinResponse);
-
+            // when
             mockMvc.perform(post("/api/v1/users/join")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(userJoinRequest1)))
+                    //then
                     .andExpect(status().isOk())
-                    .andExpect(jsonPath("$.userId").value("아이디"))
-                    .andExpect(jsonPath("$.message").value("회원가입 되었습니다."))
+                    .andExpect(jsonPath("$.result.userId").value("아이디"))
+                    .andExpect(jsonPath("$.result.message").value("회원가입 되었습니다."))
                     .andDo(print());
 
         }
@@ -92,16 +99,18 @@ class UserControllerTest {
         @DisplayName("회원가입 실패1 - 아이디 중복")
         public void 회원가입테스트2() throws Exception {
 
+            // given
+
             userService.addUser(userJoinRequest1);
 
-            when(userService.addUser(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage()));
+            given(userService.addUser(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage()));
 
-            // runtime exception을 throw 할 때 bad request가 발생하도록 설정 -> 4XX exception이 발생하는지 확인
-
+            // when
             mockMvc.perform(post("/api/v1/users/join")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(userJoinRequest2)))
+                    // then
                     .andExpect(status().isConflict())
                     .andExpect(content().string(ErrorCode.DUPLICATED_USERID.name() + " 이미 존재하는 아이디 입니다."))
                     .andDo(print());
@@ -114,14 +123,17 @@ class UserControllerTest {
         @DisplayName("회원가입 실패2 - 닉네임 중복")
         public void 회원가입테스트3() throws Exception {
 
+            // given
             userService.addUser(userJoinRequest1);
+            given(userService.addUser(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
 
-            when(userService.addUser(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
 
+            //when
             mockMvc.perform(post("/api/v1/users/join")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(userJoinRequest3)))
+                    // then
                     .andExpect(status().isConflict())
                     .andExpect(content().string(ErrorCode.DUPLICATED_USERNAME.name() + " 이미 존재하는 닉네임 입니다."))
                     .andDo(print());
@@ -133,13 +145,15 @@ class UserControllerTest {
         @DisplayName("회원가입 실패3 - 비밀번호 확인 실패")
         public void 회원가입테스트4() throws Exception {
 
+            // given
+            given(userService.addUser(any())).willThrow(new AppException(ErrorCode.NOT_MATCH_PASSWORD, ErrorCode.NOT_MATCH_PASSWORD.getMessage()));
 
-            when(userService.addUser(any())).thenThrow(new AppException(ErrorCode.NOT_MATCH_PASSWORD, ErrorCode.NOT_MATCH_PASSWORD.getMessage()));
-
+            // when
             mockMvc.perform(post("/api/v1/users/join")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(userJoinRequest4)))
+                    //then
                     .andExpect(status().isUnauthorized())
                     .andExpect(content().string(ErrorCode.NOT_MATCH_PASSWORD.name() + " 패스워드가 일치하지 않습니다."))
                     .andDo(print());
@@ -239,20 +253,18 @@ class UserControllerTest {
                 .likeTennis(false)
                 .build();
 
-        JwtProvider jwtProvider = new JwtProvider();
-
         @Test
         @WithMockUser
         @DisplayName("프로필 조회 성공 - 내 프로필")
         void 프로필조회1() throws Exception {
 
             //given
-            when(userService.selectUserInfo(any())).thenReturn(userProfileResponse);
+            given(userService.selectUserInfo(any())).willReturn(userProfileResponse);
 
             //when
             mockMvc.perform(get("/api/v1/users/profile/my")
-                            .header("Authorization", "Bearer token.toke2n.token")
                             .with(csrf()))
+                    //then
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
                     .andExpect(jsonPath("$.result.userName").value("닉네임"))
@@ -268,19 +280,18 @@ class UserControllerTest {
         void 프로필조회2() throws Exception {
 
             //given
-            when(jwtProvider.getId(any())).thenReturn(1L);
-            when(userService.selectUserInfo(any())).thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+            given(userService.selectUserInfo(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+
 
             //when
             mockMvc.perform(get("/api/v1/users/profile/my")
-                            .header("Authorization", "Bearer token.token.token")
                             .with(csrf()))
+                    //then
                     .andExpect(status().isNotFound())
-                    .andExpect(jsonPath("$.resultCode").value("ERROR"))
+                    .andExpect(content().string(ErrorCode.USERID_NOT_FOUND.name() + " " + ErrorCode.USERID_NOT_FOUND.getMessage()))
                     .andDo(print());
 
         }
-
 
 
 
@@ -325,18 +336,18 @@ class UserControllerTest {
         @DisplayName("프로필 수정 성공")
         void 프로필수정1() throws Exception {
 
-            //given: 전역변수
+            //given
+            given(userService.modifyMyUserInfo(any(), any()))
+                    .willReturn(userProfileResponse1);
+
+
 
             // when
-            when(userService.modifyMyUserInfo(any(), any()))
-                    .thenReturn(userProfileResponse1);
-
-            // then
             mockMvc.perform(put("/api/v1/users/revise")
-                            .header("Authorization", "Bearer token.token.token")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(userProfileRequest1)))
+                    // then
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.result.userName").value("닉네임"))
                     .andExpect(jsonPath("$.result.address").value("주소"))
@@ -349,67 +360,39 @@ class UserControllerTest {
         @DisplayName("프로필 수정 실패1 - 비밀번호 확인 실패")
         void 프로필수정2() throws Exception {
             // given: 전역변수
+            given(userService.modifyMyUserInfo(any(), any()))
+                    .willThrow(new AppException(ErrorCode.NOT_MATCH_PASSWORD, ErrorCode.NOT_MATCH_PASSWORD.getMessage()));
 
-            // when
-            when(userService.modifyMyUserInfo(any(), any()))
-                    .thenThrow(new AppException(ErrorCode.NOT_MATCH_PASSWORD, ErrorCode.NOT_MATCH_PASSWORD.getMessage()));
 
-            //then
+
+
+            //when
             mockMvc.perform(put("/api/v1/users/revise")
-                            .header("Authorization", "Bearer token.token.token")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(userProfileRequest2)))
+                    //then
                     .andExpect(status().isUnauthorized())
                     .andExpect(content().string(ErrorCode.NOT_MATCH_PASSWORD.name() + " 패스워드가 일치하지 않습니다."))
                     .andDo(print());
-
-
         }
+
 
         @Test
         @WithMockUser
-        @DisplayName("프로필 수정 실패2 - 유효하지 않은 토큰")
+        @DisplayName("프로필 수정 실패2 - 사용자를 찾지 못함")
         void 프로필수정3() throws Exception {
 
-            // given: 전역변수
+            // given:
+            given(userService.modifyMyUserInfo(any(), any()))
+                    .willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
-
-            // when
-            //when(jwtProvider.validateToken(anyString())).thenThrow(new AppException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage()));
-            when(userService.modifyMyUserInfo(any(), any()))
-                    .thenThrow(new AppException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage()));
-
-            //then
+            //when
             mockMvc.perform(put("/api/v1/users/revise")
-                            .header("Authorization", "Bearer token.token.token")
-                            .with(csrf())
-                            .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(userProfileRequest1)))
-                    .andExpect(status().isUnauthorized())
-                    .andExpect(content().string(ErrorCode.INVALID_TOKEN.name() + " 잘못된 토큰입니다."))
-                    .andDo(print());
-
-        }
-
-
-        @Test
-        @WithMockUser
-        @DisplayName("프로필 수정 실패3 - 사용자를 찾지 못함")
-        void 프로필수정4() throws Exception {
-
-            // given: 전역변수
-
-            // when
-            when(userService.modifyMyUserInfo(any(), any()))
-                    .thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
-
-            //then
-            mockMvc.perform(put("/api/v1/users/revise")
-                            .header("Authorization", "Bearer token.token.token")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(objectMapper.writeValueAsBytes(userProfileRequest2)))
+                    //then
                     .andExpect(status().isNotFound())
                     .andExpect(content().string(ErrorCode.USERID_NOT_FOUND.name() + " 아이디가 존재하지 않습니다."))
                     .andDo(print());
