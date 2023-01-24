@@ -70,6 +70,7 @@ public class CommentService {
         isWriter(userName, comment);
 
         comment.deleteSoftly(LocalDateTime.now());
+        commentRepository.deleteAll(comment.getChildren());
         return CommentDeleteResponse.of(commentId);
     }
 
