@@ -25,6 +25,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.lenient;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -225,13 +226,14 @@ class UserServiceTest {
         public void 로그인테스트1() {
 
             //given
-            when(userRepository.findByUserName(userLoginRequest.getUserId())).thenReturn(Optional.of(user));
+            given(userRepository.findByUserId(any())).willReturn(Optional.of(user));
             System.out.println(user.getUserId());
             System.out.println(userLoginRequest.getPassword());
             System.out.println(user.getPassword());
+            System.out.println(userLoginRequest.toString());
 
-            when(config.encoder().matches(userLoginRequest.getPassword(), user.getPassword())).thenReturn(true);
-            when(jwtProvider.generateToken(user)).thenReturn("token");
+            //given(config.encoder().matches(any(), any())).willReturn(true);
+            given(jwtProvider.generateToken(user)).willReturn("token");
 
             //when
             UserLoginResponse response = userService.login(userLoginRequest);

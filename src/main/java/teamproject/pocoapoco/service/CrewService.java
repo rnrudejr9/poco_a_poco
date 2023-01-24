@@ -33,9 +33,8 @@ public class CrewService {
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
 
         User user = findByUserName(userName);
-        Crew crew = crewRequest.toEntity(user);
 
-        crewRepository.save(crew);
+        Crew crew = crewRepository.save(crewRequest.toEntity(user));
 
         return new CrewResponse("Crew 등록 완료", crew.getId());
     }

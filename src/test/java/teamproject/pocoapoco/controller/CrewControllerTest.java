@@ -394,7 +394,7 @@ class CrewControllerTest {
         @Test
         @WithMockUser
         @DisplayName("크루 게시글 지역 검색 조회 성공")
-        void findallCrewWithStrict1() throws Exception {
+        void findAllCrewWithStrict1() throws Exception {
 
             Page<Crew> crews = new PageImpl<>(List.of(crew));
             Page<CrewDetailResponse> crewDetailResponses = crews.map(CrewDetailResponse::of);
