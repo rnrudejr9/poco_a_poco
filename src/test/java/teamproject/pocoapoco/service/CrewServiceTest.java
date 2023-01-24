@@ -1,4 +1,4 @@
-package teamproject.service;
+package teamproject.pocoapoco.service;
 
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
