@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import teamproject.pocoapoco.security.exception.CustomAccessDeniedHandler;
 import teamproject.pocoapoco.security.exception.CustomAuthenticationEntryPointHandler;
-import teamproject.pocoapoco.security.exception.ExceptionHandlerFilter;
 import teamproject.pocoapoco.security.filter.JwtTokenFilter;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 
@@ -21,13 +20,15 @@ public class WebSecurityConfig {
     private final JwtProvider jwtProvider;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+
         return httpSecurity
                 .httpBasic().disable()
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/join", "/api/v1/users/login").permitAll()
+                .antMatchers("/api/v1/users/join", "/api/v1/users/login", "/api/v1/users/regenerateToken").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/users/regenerateToken").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
@@ -40,7 +41,7 @@ public class WebSecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .addFilterBefore(new JwtTokenFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
-                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class)
+//                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class)
                 .build();
 
     }
