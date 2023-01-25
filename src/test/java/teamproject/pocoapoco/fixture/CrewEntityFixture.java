@@ -2,6 +2,8 @@ package teamproject.pocoapoco.fixture;
 
 import teamproject.pocoapoco.domain.entity.Crew;
 
+import java.util.ArrayList;
+
 public class CrewEntityFixture {
     public static Crew get(Long crewId) {
         return Crew.builder()
@@ -11,6 +13,7 @@ public class CrewEntityFixture {
                 .content("목표는 동네 한바퀴")
                 .crewLimit(10)
                 .chatroomId(1)
+                .likes(new ArrayList<>())
                 .build();
     }
 }

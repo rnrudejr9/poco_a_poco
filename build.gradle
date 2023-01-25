@@ -2,6 +2,13 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '2.7.7'
     id 'io.spring.dependency-management' version '1.0.15.RELEASE'
+
+    // jacoco
+    id 'jacoco'
+}
+
+jacoco {
+    toolVersion = '0.8.8'   // 이 부분 전체 추가
 }
 
 group = 'teamproject'
@@ -55,12 +62,91 @@ dependencies {
     // https://mvnrepository.com/artifact/net.coobird/thumbnailator
     implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.8'
 
+    // redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
 
 
 }
 
-tasks.named('test') {
-    useJUnitPlatform()
+//tasks.named('test') {
+//    useJUnitPlatform()
+//}
+
+test {
+    useJUnitPlatform()				// JUnit5를 사용하기 위한 설정
+    finalizedBy 'jacocoTestReport'  // Test 이후 커버리지가 동작하도록 finalizedBy 추가
+}
+
+jacoco {
+    toolVersion = '0.8.8'
+}
+
+// 코드 커버리지 진행 후 결과를 리포트로 저장
+jacocoTestReport {
+    dependsOn test
+    reports {
+        html.enabled true
+        xml.enabled true
+        csv.enabled true
+
+        // html 파일 위치 지정
+        html.destination file('build/reports/myReport.html')
+    }
+    // 리포트 작성 시 특정 파일 제외
+    afterEvaluate {
+        classDirectories.setFrom(
+                files(classDirectories.files.collect {
+                    fileTree(dir: it, excludes: [
+                            '**/PocoapocoApplication',
+                            '**/*Request*',
+                            '**/*Response*',
+                            '**/Swagger*',
+                            '**/PasswordEncoderConfig*',
+                            '**/JpaAuditingConfig*'
+                            // ...
+                    ])
+                })
+        )
+    }
+    finalizedBy 'jacocoTestCoverageVerification'
+}
+jacocoTestCoverageVerification {
+    violationRules {
+        rule {
+            enabled = true // 활성화
+            element = 'CLASS' // 클래스 단위로 커버리지 체크
+            // includes = []
+
+            // 라인 커버리지 제한을 80%로 설정
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            // 브랜치 커버리지 제한을 80%로 설정
+            limit {
+                counter = 'BRANCH'
+                value = 'COVEREDRATIO'
+                minimum = 0.80
+            }
+
+            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 200
+            }
+            excludes = [
+                    '**.*PocoapocoApplication*',
+                    '**.*Request*',
+                    '**.*Response*',
+                    '**.*Swagger*',
+                    '**.*PasswordEncoder*',
+                    '**.*JpaAuditing*'
+            ]
+        }
+    }
 }
