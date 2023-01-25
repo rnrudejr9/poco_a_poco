@@ -65,7 +65,7 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
 
 
 }
