@@ -13,6 +13,7 @@ public class TestInfoFixture {
                 .commentId(1L)
                 .likeId(1L)
                 .alarmId(1L)
+                .userUserId("userId")
                 .userName("name")
                 .password("password")
                 .title("title")
@@ -30,6 +31,7 @@ public class TestInfoFixture {
         private Long likeId;
         private Long alarmId;
         private String userName;
+        private String userUserId;
         private String password;
         private String title;
         private String body;
