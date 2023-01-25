@@ -2,6 +2,7 @@ package teamproject.pocoapoco.security.config;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -18,6 +19,7 @@ import teamproject.pocoapoco.security.provider.JwtProvider;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtProvider jwtProvider;
+    private final RedisTemplate redisTemplate;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -40,8 +42,7 @@ public class WebSecurityConfig {
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
-                .addFilterBefore(new JwtTokenFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
-//                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class)
+                .addFilterBefore(new JwtTokenFilter(jwtProvider, redisTemplate), UsernamePasswordAuthenticationFilter.class)
                 .build();
 
     }

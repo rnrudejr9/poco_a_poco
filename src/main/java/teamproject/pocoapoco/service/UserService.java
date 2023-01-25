@@ -72,7 +72,7 @@ public class UserService {
 
     public UserLogoutResponse logout(UserLogoutRequest userLogoutRequest) {
         if(!jwtProvider.validateToken(userLogoutRequest.getAccessToken())) {
-            throw new AppException(ErrorCode.INVALID_TOKEN, "");
+            throw new AppException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage());
         }
         // AccessToken에서 userName 추출
         Authentication authentication = jwtProvider.getAuthentication(userLogoutRequest.getAccessToken());
