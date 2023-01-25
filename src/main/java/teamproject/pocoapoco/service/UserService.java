@@ -1,12 +1,9 @@
 package teamproject.pocoapoco.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import org.springframework.util.ObjectUtils;
-import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.user.*;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -59,21 +56,7 @@ public class UserService {
             throw new AppException(ErrorCode.INVALID_TOKEN, "Refresh Token 정보가 유효하지 않습니다");
         }
 
-        // Access Token 에서 Username 출력
-        Authentication authentication = jwtProvider.getAuthentication(currentAccessToken);
-        User user = userRepository.findByUserName(authentication.getName()).orElseThrow(() -> {
-            throw new AppException(ErrorCode.USERID_NOT_FOUND, "아이디가 존재하지 않습니다.");
-        });
-
-        // Redis 에서 UserName 을 기반으로 저장된 Refresh Token 값 호출
-        String refreshToken = redisTemplate.opsForValue().get(authentication.getName());
-        // 로그아웃되어 Redis 에 RefreshToken 이 존재하지 않는 경우 처리
-        if (ObjectUtils.isEmpty(refreshToken)) {
-            throw new AppException(ErrorCode.EXPIRED_TOKEN, "Refresh Token이 없습니다.");
-        }
-        if (!refreshToken.equals(reIssueRequest.getRefreshToken())) {
-            throw new AppException(ErrorCode.INVALID_TOKEN, "Refresh Token 정보가 일치하지 않습니다."); // refresh token이 일치하지 않음.
-        }
+    public UserJoinResponse saveUser(UserJoinRequest userJoinRequest){
 
         // 새로운 토큰 생성
         String newRefreshToken = jwtProvider.generateRefreshToken(user);
@@ -141,24 +124,16 @@ public class UserService {
     }
 
     @Transactional(rollbackOn = AppException.class)
-    public UserProfileResponse modifyMyUserInfo(String token, UserProfileRequest userProfileRequest) {
+    public UserProfileResponse updateUserInfoByUserName(String userName, UserProfileRequest userProfileRequest) {
 
         // 비밀번호 확인 로직 따로 빼야할 필요 있음
         if (!userProfileRequest.getPassword().equals(userProfileRequest.getPasswordConfirm())){
             throw new AppException(ErrorCode.NOT_MATCH_PASSWORD, ErrorCode.NOT_MATCH_PASSWORD.getMessage());
         }
 
-        JwtProvider jwtProvider = new JwtProvider();
-
-        // token이 valid한지 확인
-        if(!jwtProvider.validateToken(token)){
-            throw new AppException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage());
-        }
-
-        String userId = jwtProvider.getUserId(token);
 
         // user id 확인
-        Optional<User> myUserOptional = userRepository.findByUserId(userId);
+        Optional<User> myUserOptional = userRepository.findByUserName(userName);
 
         if(myUserOptional.isEmpty()){
             throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
@@ -168,15 +143,15 @@ public class UserService {
 
         // request에서 수정된 정보만 반영하기
 
-        String userName = (userProfileRequest.getUserName().equals(null))? beforeMyUser.getUsername(): userProfileRequest.getUserName();
-        String address = (userProfileRequest.getAddress().equals(null))? beforeMyUser.getAddress(): userProfileRequest.getAddress();
-        String password = (userProfileRequest.getPassword().equals(null))? beforeMyUser.getPassword(): userProfileRequest.getPassword();
-        Boolean likeSoccer = (userProfileRequest.getLikeSoccer().equals(beforeMyUser.getSport().isSoccer()))? beforeMyUser.getSport().isSoccer(): userProfileRequest.getLikeSoccer();
-        Boolean likeJogging = (userProfileRequest.getLikeJogging().equals(beforeMyUser.getSport().isJogging()))? beforeMyUser.getSport().isJogging(): userProfileRequest.getLikeJogging();
-        Boolean likeTennis = (userProfileRequest.getLikeTennis().equals(beforeMyUser.getSport().isTennis()))? beforeMyUser.getSport().isTennis(): userProfileRequest.getLikeTennis();
+        String revisedUserName = (userProfileRequest.getUserName().equals(null))? beforeMyUser.getUsername(): userProfileRequest.getUserName();
+        String revisedAddress = (userProfileRequest.getAddress().equals(null))? beforeMyUser.getAddress(): userProfileRequest.getAddress();
+        String revisedPassword = (userProfileRequest.getPassword().equals(null))? beforeMyUser.getPassword(): userProfileRequest.getPassword();
+        Boolean revisedLikeSoccer = (userProfileRequest.getLikeSoccer().equals(beforeMyUser.getSport().isSoccer()))? beforeMyUser.getSport().isSoccer(): userProfileRequest.getLikeSoccer();
+        Boolean revisedLikeJogging = (userProfileRequest.getLikeJogging().equals(beforeMyUser.getSport().isJogging()))? beforeMyUser.getSport().isJogging(): userProfileRequest.getLikeJogging();
+        Boolean revisedLikeTennis = (userProfileRequest.getLikeTennis().equals(beforeMyUser.getSport().isTennis()))? beforeMyUser.getSport().isTennis(): userProfileRequest.getLikeTennis();
 
 
-        User revisedMyUser = User.toEntity(beforeMyUser.getUserId(), userName, address, password, likeSoccer, likeJogging, likeTennis);
+        User revisedMyUser = User.toEntity(beforeMyUser.getUserId(), revisedUserName, revisedAddress, revisedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis);
 
         userRepository.save(revisedMyUser);
 
@@ -184,9 +159,9 @@ public class UserService {
 
     }
 
-    public UserProfileResponse selectUserInfo(Long id) {
+    public UserProfileResponse getUserInfoByUserName(String userName) {
 
-       Optional<User> selectedUserOptional = userRepository.findById(id);
+       Optional<User> selectedUserOptional = userRepository.findByUserName(userName);
 
        if(selectedUserOptional.isEmpty()){
            throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
@@ -198,12 +173,6 @@ public class UserService {
 
     }
 
-
-//    public UserProfileResponse selectMyFollower() {
-//    }
-//
-//    public UserProfileResponse selectMyFollowing() {
-//    }
 
 
 }

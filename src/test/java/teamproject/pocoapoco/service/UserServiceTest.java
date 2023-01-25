@@ -26,7 +26,8 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.lenient;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -113,11 +114,12 @@ class UserServiceTest {
             UserJoinResponse userJoinResponse = UserJoinResponse.builder()
                     .userId("아이디")
                     .message("회원가입 되었습니다.").build();
+            given(userRepository.save(any())).willReturn(user1);
 
 
             // when
-            when(userRepository.save(any())).thenReturn(user1);
-            UserJoinResponse result = userService.addUser(userJoinRequest1);
+
+            UserJoinResponse result = userService.saveUser(userJoinRequest1);
 
             // then
             assertAll(
@@ -132,12 +134,13 @@ class UserServiceTest {
         public void 회원가입테스트2(){
             // given
             userRepository.save(user1);
+            given(userRepository.save(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage()));
+
 
 
             //when
-            when(userRepository.save(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage()));
             RuntimeException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.addUser(userJoinRequest2));
+                    () -> userService.saveUser(userJoinRequest2));
 
             //then
             assertEquals(exception.getMessage(), "이미 존재하는 아이디 입니다.");
@@ -151,12 +154,12 @@ class UserServiceTest {
 
             //given
             userRepository.save(user1);
+            given(userRepository.save(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
 
 
             // when
-            when(userRepository.save(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
             RuntimeException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.addUser(userJoinRequest3));
+                    () -> userService.saveUser(userJoinRequest3));
 
             //then
             assertEquals(exception.getMessage(), "이미 존재하는 닉네임 입니다.");
@@ -167,12 +170,12 @@ class UserServiceTest {
         public void 회원가입테스트4() {
 
             //given: userJoinRequest4
+//            given(userRepository.save(any())).willThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
 
 
             //when
-            lenient().when(userRepository.save(any())).thenThrow(new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage()));
             RuntimeException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.addUser(userJoinRequest4));
+                    () -> userService.saveUser(userJoinRequest4));
 
             //then
             assertEquals(exception.getMessage(), "패스워드가 잘못되었습니다.");
@@ -308,8 +311,6 @@ class UserServiceTest {
         @Mock
         EncrypterConfig config;
 
-        @Mock
-        JwtProvider jwtProvider;
 
         UserProfileRequest userProfileRequest1 = UserProfileRequest.builder()
                 .userName("닉네임")
@@ -348,8 +349,6 @@ class UserServiceTest {
                 .sport(Sport.setSport(true, false, true))
                 .build();
 
-        String token = "Bearer token.token.token";
-
 
         // encoder 설정
         @BeforeEach
@@ -357,8 +356,6 @@ class UserServiceTest {
 
             lenient().when(config.encoder()).thenReturn(new BCryptPasswordEncoder());
             userService = new UserService(userRepository, config);
-
-            lenient().when(jwtProvider.validateToken(any())).thenReturn(true);
 
 
         }
@@ -370,10 +367,12 @@ class UserServiceTest {
 
             //given
 
+            userRepository.save(user1);
+            given(userRepository.findByUserName(any())).willReturn(Optional.of(user1));
+
 
             // when
-            lenient().when(userRepository.save(any())).thenReturn(user1);
-            UserProfileResponse result = userService.modifyMyUserInfo(token, userProfileRequest1);
+            UserProfileResponse result = userService.updateUserInfoByUserName(user1.getUsername(), userProfileRequest1);
 
             // then
             assertAll(
@@ -387,53 +386,133 @@ class UserServiceTest {
         @DisplayName("프로필 수정 실패1 - 비밀번호 확인 실패")
         public void 프로필수정테스트2(){
 
-            // given: 전역 변수
+            // given
+//            given(userRepository.findByUserName(any())).willThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
+
 
 
             //when
-            lenient().when(userRepository.save(any())).thenThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
-
             AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.modifyMyUserInfo(token, userProfileRequest2));
+                    () -> userService.updateUserInfoByUserName(userProfileRequest2.getUserName(), userProfileRequest2));
 
             //then
             assertEquals(exception.getMessage(), "패스워드가 일치하지 않습니다.");
 
         }
 
+
         @Test
-        @DisplayName("프로필 수정 실패2 - 유효하지 않은 토큰")
+        @DisplayName("프로필 수정 실패2 - 사용자를 찾지 못함")
         public void 프로필수정테스트3() {
 
             //given
-
-
-            // when
-            lenient().when(userRepository.save(any())).thenThrow(new AppException(ErrorCode.INVALID_TOKEN, ErrorCode.INVALID_TOKEN.getMessage()));
-            AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.modifyMyUserInfo(token, userProfileRequest1));
-
-            //then
-            assertEquals(exception.getMessage(), "잘못된 토큰입니다.");
-        }
-
-        @Test
-        @DisplayName("프로필 수정 실패3 - 사용자를 찾지 못함")
-        public void 프로필수정테스트4() {
-
-            //given: 전역변수
-
+//            given(userRepository.save(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
             //when
-            lenient().when(userRepository.save(any())).thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+
             AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.modifyMyUserInfo(token, userProfileRequest1));
+                    () -> userService.updateUserInfoByUserName(userProfileRequest1.getUserName(), userProfileRequest1));
 
             //then
             assertEquals(exception.getMessage(), "아이디가 존재하지 않습니다.");
         }
 
     }
+    
+    @Nested
+    @DisplayName("프로필 조회 테스트")
+    public class getProfile{
+
+        @Mock
+        UserRepository userRepository;
+
+        @Mock
+        EncrypterConfig config;
+
+
+        UserProfileRequest userProfileRequest1 = UserProfileRequest.builder()
+                .userName("닉네임")
+                .address("주소")
+                .password("비밀번호")
+                .passwordConfirm("비밀번호")
+                .likeSoccer(true)
+                .likeJogging(false)
+                .likeTennis(true)
+                .build();
+
+        UserProfileRequest userProfileRequest2 = UserProfileRequest.builder()
+                .userName("닉네임")
+                .address("주소")
+                .password("비밀번호")
+                .passwordConfirm("비밀번호123")
+                .likeSoccer(true)
+                .likeJogging(false)
+                .likeTennis(true)
+                .build();
+
+        UserProfileResponse userProfileResponse1 = UserProfileResponse.builder()
+                .userName("닉네임")
+                .address("주소")
+                .likeSoccer(true)
+                .likeJogging(false)
+                .likeTennis(true)
+                .build();
+
+        UserService userService;
+
+        User user1 = User.builder()
+                .userId("아이디")
+                .userName("닉네임")
+                .address("주소")
+                .sport(Sport.setSport(true, false, true))
+                .build();
+
+        @BeforeEach
+        public void 세팅(){
+
+            userService = new UserService(userRepository, config);
+
+        }
+        
+
+
+        @Test
+        @DisplayName("프로필 조회 성공")
+        public void 프로필조회테스트1() {
+
+            //given
+
+            given(userRepository.findByUserName(any())).willReturn(Optional.of(user1));
+
+
+            // when
+            UserProfileResponse result = userService.getUserInfoByUserName(user1.getUsername());
+
+            // then
+            assertAll(
+                    () -> assertEquals(userProfileResponse1.getUserName(), result.getUserName()),
+                    () -> assertEquals(userProfileResponse1.getAddress(), result.getAddress()));
+        }
+
+        @Test
+        @DisplayName("프로필 조회 실패1 - 사용자를 찾지 못함")
+        public void 프로필조회테스트2() {
+
+            //given: 전역변수
+            given(userRepository.findByUserName(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+
+            //when
+
+            AppException exception = Assertions.assertThrows(AppException.class,
+                    () -> userService.getUserInfoByUserName(userProfileRequest1.getUserName()));
+
+            //then
+            assertEquals(exception.getMessage(), "아이디가 존재하지 않습니다.");
+        }
+        
+        
+    }
+
 
 
 }

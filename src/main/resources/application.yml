@@ -21,6 +21,12 @@ spring:
     pathmatch:
       matching-strategy: ant_path_matcher
 
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB
+      max-request-size: 300MB
+
 jwt:
   token:
     secret: "secreteKey"

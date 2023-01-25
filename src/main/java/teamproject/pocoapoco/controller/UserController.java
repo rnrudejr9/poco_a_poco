@@ -1,24 +1,31 @@
 package teamproject.pocoapoco.controller;
 
+import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.models.Model;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.dto.user.*;
+import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.user.*;
+import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 import teamproject.pocoapoco.service.UserService;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
-@Api(tags = {"Join&Login Controller"})
+@Api(value = "회원가입, 로그인, 프로필 조회 등 사용자와 관련된 기능이 있는 controller 입니다.")
 public class UserController {
 
     private final UserService userService;
+    private final UserRepository userRepository;
 
 //    private final UserPhotoService userPhotoService;
 
-
+    @ApiOperation(value = "hello controller", notes = "시험용 컨트롤러")
     @GetMapping("/hello")
     public String hello(){
         return "hello";
@@ -34,21 +41,12 @@ public class UserController {
         return Response.success(userLoginResponse);
 
     }
-    @ApiOperation(value = "access token 재발급", notes = "Refresh Token으로 새로운 Access Token, Refresh Token을 발행합니다.")
 
-    @PostMapping("/regenerateToken")
-    public Response regenerateToken(@RequestBody ReIssueRequest reIssueRequest) {
-        return Response.success(userService.regenerateToken(reIssueRequest));
-    }
-
-    @PostMapping("/logout")
-    public Response logout(@RequestBody  UserLogoutRequest userLogoutRequest) {
-        return Response.success(userService.logout(userLogoutRequest));
-    }
+    @ApiOperation(value = "회원가입", notes = "회원가입하는 메소드입니다.")
     @PostMapping("/join")
     public Response userAdd(@RequestBody UserJoinRequest request){
 
-        UserJoinResponse userJoinResponse = userService.addUser(request);
+        UserJoinResponse userJoinResponse = userService.saveUser(request);
 
         return Response.success(userJoinResponse);
 
@@ -56,33 +54,34 @@ public class UserController {
 
 
     // 내 프로필 수정
+    @ApiOperation(value = "프로필 수정", notes = "프로필 수정하는 메소드입니다.")
     @PutMapping("/revise")
-    public Response userInfoModify(@RequestHeader(value = "Authorization", required = false) String token, @RequestBody UserProfileRequest userProfileRequest){
+    public Response userInfoModify(Authentication authentication, @RequestBody UserProfileRequest userProfileRequest){
 
-        UserProfileResponse userProfileResponse = userService.modifyMyUserInfo(token, userProfileRequest);
+        UserProfileResponse userProfileResponse = userService.updateUserInfoByUserName(authentication.getName(), userProfileRequest);
         return Response.success(userProfileResponse);
 
     }
 
 
     // 내 프로필 조회
+    @ApiOperation(value = "내 프로필 조회", notes = "내 프로필을 조회하는 메소드입니다.")
     @GetMapping("/profile/my")
-    public Response userMyInfoList(@RequestHeader("Authorization") String token){
+    public Response userMyInfoList(Authentication authentication){
 
-        JwtProvider jwtProvider =new JwtProvider();
-        Long myId = jwtProvider.getId(token);
-
-        UserProfileResponse userProfileResponse = userService.selectUserInfo(myId);
+        UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(authentication.getName());
 
         return Response.success(userProfileResponse);
 
     }
 
     // 상대방의 프로필 조회
-    @GetMapping("/profile/{id}")
-    public Response userInfoList(@PathVariable Long id){
+    @ApiOperation(value = "프로필 조회", notes = "상대방의 프로필을 조회하는 메소드입니다.")
+    @GetMapping("/profile/{userName}")
+    public Response userInfoList(@PathVariable String userName){
 
-        UserProfileResponse userProfileResponse = userService.selectUserInfo(id);
+
+        UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
         return Response.success(userProfileResponse);
 
     }
