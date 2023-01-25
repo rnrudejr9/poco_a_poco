@@ -10,12 +10,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
-import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
-import teamproject.pocoapoco.domain.dto.user.UserProfileRequest;
-import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
+import teamproject.pocoapoco.domain.dto.user.*;
+import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
+import teamproject.pocoapoco.fixture.UserEntityFixture;
+import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 import teamproject.pocoapoco.service.UserService;
 
@@ -45,9 +45,8 @@ class UserControllerTest {
     UserService userService;
 
     @MockBean
-
     UserRepository userRepository;
-
+    UserLoginRequest request = new UserLoginRequest("userId1234", "pass1234");
     @Nested
     @DisplayName("회원가입 테스트")
     public class JoinTest{
