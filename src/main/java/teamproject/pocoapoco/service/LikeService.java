@@ -32,4 +32,11 @@ public class LikeService {
         }
         return goodResponse;
     }
+
+    public LikeResponse getLike(Long crewId){
+        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+        LikeResponse goodResponse = new LikeResponse();
+        goodResponse.setMessage("메세지 개수는 총 : "+ crew.getLikes().size());
+        return goodResponse;
+    }
 }

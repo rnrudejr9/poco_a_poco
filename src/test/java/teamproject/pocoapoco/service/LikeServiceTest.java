@@ -28,6 +28,7 @@ import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class LikeServiceTest {
+
     LikeService likeService;
 
     LikeRepository likeRepository = mock(LikeRepository.class);
@@ -90,10 +91,14 @@ class LikeServiceTest {
     @DisplayName("좋아요 실패 - 로그인 하지않음")
     @WithMockUser
     void goodFail(){
+//        given
 
+//        when
         when(userRepository.findByUserName(user.getUsername())).thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
         RuntimeException exception = Assertions.assertThrows(AppException.class,
                 () -> likeService.goodCrew(crew.getId(),user.getUsername()));
+
+//        then
         assertEquals(exception.getMessage(),ErrorCode.USERID_NOT_FOUND.getMessage());
     }
 
@@ -101,11 +106,37 @@ class LikeServiceTest {
     @DisplayName("좋아요 실패 - 게시글 없음")
     @WithMockUser
     void goodFail2(){
+//        given
+//        when
         when(userRepository.findByUserName(user.getUsername())).thenReturn(Optional.of(user));
         when(crewRepository.findById(crew.getId())).thenThrow(new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
         RuntimeException exception = Assertions.assertThrows(AppException.class,
                 () -> likeService.goodCrew(crew.getId(),user.getUsername()));
+//        then
         assertEquals(exception.getMessage(),ErrorCode.CREW_NOT_FOUND.getMessage());
     }
 
+    @Test
+    @DisplayName("좋아요 조회 성공")
+    @WithMockUser
+    void getLikeSuccess(){
+//        given
+
+//        when
+        when(crewRepository.findById(any())).thenReturn(Optional.of(crew));
+//        then
+        Assertions.assertDoesNotThrow(() -> likeService.getLike(crew.getId()));
+    }
+
+    @Test
+    @DisplayName("좋아요 조회 실패 : 모임이 없음")
+    @WithMockUser
+    void getLikeFail(){
+//        given
+//        when
+        when(crewRepository.findById(any())).thenThrow(new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+//        then
+        Exception exception = Assertions.assertThrows(AppException.class,()->likeService.getLike(any()));
+        assertEquals(exception.getMessage(),ErrorCode.CREW_NOT_FOUND.getMessage());
+    }
 }
