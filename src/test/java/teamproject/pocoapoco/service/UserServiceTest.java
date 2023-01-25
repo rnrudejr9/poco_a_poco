@@ -199,7 +199,8 @@ class UserServiceTest {
         @InjectMocks
         UserService userService;
 
-        @Value("${jwt.token.secret}") String secretKey;
+        @Value("${jwt.token.secret}")
+        String secretKey;
 
         private UserLoginRequest userLoginRequest;
         private UserLoginResponse userLoginResponse;
@@ -215,7 +216,7 @@ class UserServiceTest {
                 .role(UserRole.ROLE_USER)
                 .build();
         // join request
-        UserJoinRequest userJoinRequest1 =  UserJoinRequest.builder()
+        UserJoinRequest userJoinRequest1 = UserJoinRequest.builder()
                 .userId("userId1234")
                 .userName("닉네임")
                 .password("pass1234")
@@ -286,223 +287,216 @@ class UserServiceTest {
 //
 //    }
 
-    @Nested
-    @DisplayName("프로필 수정 테스트")
-    public class ReviseProfile{
+        @Nested
+        @DisplayName("프로필 수정 테스트")
+        public class ReviseProfile {
 
-        @Mock
-        UserRepository userRepository;
+            @Mock
+            UserRepository userRepository;
 
-        @Mock
-        EncrypterConfig config;
-
-
-        UserProfileRequest userProfileRequest1 = UserProfileRequest.builder()
-                .userName("닉네임")
-                .address("주소")
-                .password("비밀번호")
-                .passwordConfirm("비밀번호")
-                .likeSoccer(true)
-                .likeJogging(false)
-                .likeTennis(true)
-                .build();
-
-        UserProfileRequest userProfileRequest2 = UserProfileRequest.builder()
-                .userName("닉네임")
-                .address("주소")
-                .password("비밀번호")
-                .passwordConfirm("비밀번호123")
-                .likeSoccer(true)
-                .likeJogging(false)
-                .likeTennis(true)
-                .build();
-
-        UserProfileResponse userProfileResponse1 = UserProfileResponse.builder()
-                .userName("닉네임")
-                .address("주소")
-                .likeSoccer(true)
-                .likeJogging(false)
-                .likeTennis(true)
-                .build();
-
-        UserService userService;
-
-        User user1 = User.builder()
-                .userId("아이디")
-                .userName("닉네임")
-                .address("주소")
-                .sport(Sport.setSport(true, false, true))
-                .build();
+            @Mock
+            EncrypterConfig config;
 
 
-        // encoder 설정
-        @BeforeEach
-        public void 세팅(){
+            UserProfileRequest userProfileRequest1 = UserProfileRequest.builder()
+                    .userName("닉네임")
+                    .address("주소")
+                    .password("비밀번호")
+                    .passwordConfirm("비밀번호")
+                    .likeSoccer(true)
+                    .likeJogging(false)
+                    .likeTennis(true)
+                    .build();
 
-            lenient().when(config.encoder()).thenReturn(new BCryptPasswordEncoder());
-            userService = new UserService(userRepository, config, new RedisTemplate<>(), new JwtProvider());
+            UserProfileRequest userProfileRequest2 = UserProfileRequest.builder()
+                    .userName("닉네임")
+                    .address("주소")
+                    .password("비밀번호")
+                    .passwordConfirm("비밀번호123")
+                    .likeSoccer(true)
+                    .likeJogging(false)
+                    .likeTennis(true)
+                    .build();
+
+            UserProfileResponse userProfileResponse1 = UserProfileResponse.builder()
+                    .userName("닉네임")
+                    .address("주소")
+                    .likeSoccer(true)
+                    .likeJogging(false)
+                    .likeTennis(true)
+                    .build();
+
+            UserService userService;
+
+            User user1 = User.builder()
+                    .userId("아이디")
+                    .userName("닉네임")
+                    .address("주소")
+                    .sport(Sport.setSport(true, false, true))
+                    .build();
 
 
-        }
+            // encoder 설정
+            @BeforeEach
+            public void 세팅() {
+
+                lenient().when(config.encoder()).thenReturn(new BCryptPasswordEncoder());
+                userService = new UserService(userRepository, config, new RedisTemplate<>(), new JwtProvider());
 
 
-        @Test
-        @DisplayName("프로필 수정 성공")
-        public void 프로필수정테스트1() {
-
-            //given
-
-            userRepository.save(user1);
-            given(userRepository.findByUserName(any())).willReturn(Optional.of(user1));
+            }
 
 
-            // when
-            UserProfileResponse result = userService.updateUserInfoByUserName(user1.getUsername(), userProfileRequest1);
+            @Test
+            @DisplayName("프로필 수정 성공")
+            public void 프로필수정테스트1() {
 
-            // then
-            assertAll(
-                    () -> assertEquals(userProfileResponse1.getUserName(), result.getUserName()),
-                    () -> assertEquals(userProfileResponse1.getAddress(), result.getAddress()));
-        }
+                //given
+
+                userRepository.save(user1);
+                given(userRepository.findByUserName(any())).willReturn(Optional.of(user1));
 
 
+                // when
+                UserProfileResponse result = userService.updateUserInfoByUserName(user1.getUsername(), userProfileRequest1);
 
-        @Test
-        @DisplayName("프로필 수정 실패1 - 비밀번호 확인 실패")
-        public void 프로필수정테스트2(){
+                // then
+                assertAll(
+                        () -> assertEquals(userProfileResponse1.getUserName(), result.getUserName()),
+                        () -> assertEquals(userProfileResponse1.getAddress(), result.getAddress()));
+            }
 
-            // given
+
+            @Test
+            @DisplayName("프로필 수정 실패1 - 비밀번호 확인 실패")
+            public void 프로필수정테스트2() {
+
+                // given
 //            given(userRepository.findByUserName(any())).willThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
 
 
+                //when
+                AppException exception = Assertions.assertThrows(AppException.class,
+                        () -> userService.updateUserInfoByUserName(userProfileRequest2.getUserName(), userProfileRequest2));
 
-            //when
-            AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.updateUserInfoByUserName(userProfileRequest2.getUserName(), userProfileRequest2));
+                //then
+                assertEquals(exception.getMessage(), "패스워드가 일치하지 않습니다.");
 
-            //then
-            assertEquals(exception.getMessage(), "패스워드가 일치하지 않습니다.");
-
-        }
+            }
 
 
-        @Test
-        @DisplayName("프로필 수정 실패2 - 사용자를 찾지 못함")
-        public void 프로필수정테스트3() {
+            @Test
+            @DisplayName("프로필 수정 실패2 - 사용자를 찾지 못함")
+            public void 프로필수정테스트3() {
 
-            //given
+                //given
 //            given(userRepository.save(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
-            //when
+                //when
 
-            AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.updateUserInfoByUserName(userProfileRequest1.getUserName(), userProfileRequest1));
+                AppException exception = Assertions.assertThrows(AppException.class,
+                        () -> userService.updateUserInfoByUserName(userProfileRequest1.getUserName(), userProfileRequest1));
 
-            //then
-            assertEquals(exception.getMessage(), "아이디가 존재하지 않습니다.");
+                //then
+                assertEquals(exception.getMessage(), "아이디가 존재하지 않습니다.");
+            }
+
         }
 
+        @Nested
+        @DisplayName("프로필 조회 테스트")
+        public class getProfile {
+
+            @Mock
+            UserRepository userRepository;
+
+            @Mock
+            EncrypterConfig config;
+
+            @Mock
+            RedisTemplate<String, String> redisTemplate;
+
+            @Mock
+            JwtProvider jwtProvider;
+
+            UserProfileRequest userProfileRequest1 = UserProfileRequest.builder()
+                    .userName("닉네임")
+                    .address("주소")
+                    .password("비밀번호")
+                    .passwordConfirm("비밀번호")
+                    .likeSoccer(true)
+                    .likeJogging(false)
+                    .likeTennis(true)
+                    .build();
+
+            UserProfileRequest userProfileRequest2 = UserProfileRequest.builder()
+                    .userName("닉네임")
+                    .address("주소")
+                    .password("비밀번호")
+                    .passwordConfirm("비밀번호123")
+                    .likeSoccer(true)
+                    .likeJogging(false)
+                    .likeTennis(true)
+                    .build();
+
+            UserProfileResponse userProfileResponse1 = UserProfileResponse.builder()
+                    .userName("닉네임")
+                    .address("주소")
+                    .likeSoccer(true)
+                    .likeJogging(false)
+                    .likeTennis(true)
+                    .build();
+
+            UserService userService;
+
+            User user1 = User.builder()
+                    .userId("아이디")
+                    .userName("닉네임")
+                    .address("주소")
+                    .sport(Sport.setSport(true, false, true))
+                    .build();
+
+            @BeforeEach
+            public void 세팅() {
+
+                userService = new UserService(userRepository, config, redisTemplate, jwtProvider);
+
+            }
+
+
+            @Test
+            @DisplayName("프로필 조회 성공")
+            public void 프로필조회테스트1() {
+
+                //given
+
+                given(userRepository.findByUserName(any())).willReturn(Optional.of(user1));
+
+
+                // when
+                UserProfileResponse result = userService.getUserInfoByUserName(user1.getUsername());
+
+                // then
+                assertAll(
+                        () -> assertEquals(userProfileResponse1.getUserName(), result.getUserName()),
+                        () -> assertEquals(userProfileResponse1.getAddress(), result.getAddress()));
+            }
+
+            @Test
+            @DisplayName("프로필 조회 실패1 - 사용자를 찾지 못함")
+            public void 프로필조회테스트2() {
+
+                //given: 전역변수
+                given(userRepository.findByUserName(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+
+                //when
+
+                AppException exception = Assertions.assertThrows(AppException.class,
+                        () -> userService.getUserInfoByUserName(userProfileRequest1.getUserName()));
+
+                //then
+                assertEquals(exception.getMessage(), "아이디가 존재하지 않습니다.");
+            }
+        }
     }
-
-    @Nested
-    @DisplayName("프로필 조회 테스트")
-    public class getProfile{
-
-        @Mock
-        UserRepository userRepository;
-
-        @Mock
-        EncrypterConfig config;
-
-        @Mock
-        RedisTemplate<String, String> redisTemplate;
-
-        @Mock
-        JwtProvider jwtProvider;
-
-        UserProfileRequest userProfileRequest1 = UserProfileRequest.builder()
-                .userName("닉네임")
-                .address("주소")
-                .password("비밀번호")
-                .passwordConfirm("비밀번호")
-                .likeSoccer(true)
-                .likeJogging(false)
-                .likeTennis(true)
-                .build();
-
-        UserProfileRequest userProfileRequest2 = UserProfileRequest.builder()
-                .userName("닉네임")
-                .address("주소")
-                .password("비밀번호")
-                .passwordConfirm("비밀번호123")
-                .likeSoccer(true)
-                .likeJogging(false)
-                .likeTennis(true)
-                .build();
-
-        UserProfileResponse userProfileResponse1 = UserProfileResponse.builder()
-                .userName("닉네임")
-                .address("주소")
-                .likeSoccer(true)
-                .likeJogging(false)
-                .likeTennis(true)
-                .build();
-
-        UserService userService;
-
-        User user1 = User.builder()
-                .userId("아이디")
-                .userName("닉네임")
-                .address("주소")
-                .sport(Sport.setSport(true, false, true))
-                .build();
-
-        @BeforeEach
-        public void 세팅(){
-
-            userService = new UserService(userRepository, config, redisTemplate, jwtProvider);
-
-        }
-
-
-
-        @Test
-        @DisplayName("프로필 조회 성공")
-        public void 프로필조회테스트1() {
-
-            //given
-
-            given(userRepository.findByUserName(any())).willReturn(Optional.of(user1));
-
-
-            // when
-            UserProfileResponse result = userService.getUserInfoByUserName(user1.getUsername());
-
-            // then
-            assertAll(
-                    () -> assertEquals(userProfileResponse1.getUserName(), result.getUserName()),
-                    () -> assertEquals(userProfileResponse1.getAddress(), result.getAddress()));
-        }
-
-        @Test
-        @DisplayName("프로필 조회 실패1 - 사용자를 찾지 못함")
-        public void 프로필조회테스트2() {
-
-            //given: 전역변수
-            given(userRepository.findByUserName(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
-
-            //when
-
-            AppException exception = Assertions.assertThrows(AppException.class,
-                    () -> userService.getUserInfoByUserName(userProfileRequest1.getUserName()));
-
-            //then
-            assertEquals(exception.getMessage(), "아이디가 존재하지 않습니다.");
-        }
-
-
-    }
-
-
-
 }
