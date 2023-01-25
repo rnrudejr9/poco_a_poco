@@ -25,6 +25,7 @@ import teamproject.pocoapoco.fixture.UserEntityFixture;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -226,6 +227,10 @@ class CrewServiceTest {
 //        @DisplayName("크루 게시글 삭제 실패3 : DB 에러 ")
 //        void deleteCrew4() {
 //            //given
+//            given(userRepository.findByUserName(any())).willReturn(Optional.ofNullable(user));
+//            given(crewRepository.findById(any())).willReturn(Optional.ofNullable(crew));
+//            crew.deleteSoftly(LocalDateTime.now());
+//            given(user.getCrews().contains(crew)).willReturn(true);
 //            given(crewRepository.save(any())).willThrow(new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
 //
 //            //when
