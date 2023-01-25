@@ -30,7 +30,7 @@ public class CustomAuthenticationEntryPointHandler implements AuthenticationEntr
         } else if (authorization.equals(ErrorCode.EXPIRED_TOKEN)) {
             log.error("토큰이 만료된 경우");
             ErrorCode errorCode = ErrorCode.EXPIRED_TOKEN;
-            JwtTokenFilter.MakeError(response,errorCode);
+            JwtTokenFilter.MakeError(response, errorCode);
         }
     }
 }
