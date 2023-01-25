@@ -3,6 +3,7 @@ package teamproject.pocoapoco.service;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -17,12 +18,14 @@ import teamproject.pocoapoco.fixture.UserEntityFixture;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.config.EncrypterConfig;
 import teamproject.pocoapoco.security.provider.JwtProvider;
+import teamproject.pocoapoco.service.UserService;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -183,12 +186,14 @@ class UserServiceTest {
         @Mock
         private UserRepository userRepository;
 
-        @Mock
+        @InjectMocks
         private EncrypterConfig config;
 
         @Mock
         private JwtProvider jwtProvider;
 
+        @InjectMocks
+        UserService userService;
 
         @Value("${jwt.token.secret}") String secretKey;
 

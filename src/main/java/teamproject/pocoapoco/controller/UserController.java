@@ -11,6 +11,7 @@ import teamproject.pocoapoco.service.UserService;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
+@Api(tags = {"Join&Login Controller"})
 public class UserController {
 
     private final UserService userService;
@@ -25,6 +26,7 @@ public class UserController {
 
     @ApiOperation(value = "로그인", notes = "로그인 시 Access Token, Refresh Token을 발행합니다.")
     @PostMapping("/login")
+    @ApiOperation(value = "로그인", notes = "")
     public Response userLogin(@RequestBody UserLoginRequest userLoginRequest){
 
         UserLoginResponse userLoginResponse = userService.login(userLoginRequest);
