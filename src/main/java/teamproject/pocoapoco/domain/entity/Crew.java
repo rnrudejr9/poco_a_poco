@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
-import org.springframework.lang.Nullable;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
-import teamproject.pocoapoco.enums.InterestSport;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,7 +16,8 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Crew {
+@Where(clause = "deleted_at is null")
+public class Crew extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -37,7 +36,7 @@ public class Crew {
     @OneToMany(mappedBy = "crew")
     private List<Like> likes = new ArrayList<>();
 
-    public void update(CrewRequest request) {
+    public void of(CrewRequest request) {
         this.strict = request.getStrict();
         this.title = request.getTitle();
         this.content =request.getContent();
