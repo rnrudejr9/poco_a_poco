@@ -1,5 +1,6 @@
 package teamproject.pocoapoco.controller;
 
+import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.response.Response;
@@ -22,7 +23,7 @@ public class UserController {
         return "hello";
     }
 
-
+    @ApiOperation(value = "로그인", notes = "로그인 시 Access Token, Refresh Token을 발행합니다.")
     @PostMapping("/login")
     public Response userLogin(@RequestBody UserLoginRequest userLoginRequest){
 
@@ -30,6 +31,17 @@ public class UserController {
 
         return Response.success(userLoginResponse);
 
+    }
+    @ApiOperation(value = "access token 재발급", notes = "Refresh Token으로 새로운 Access Token, Refresh Token을 발행합니다.")
+
+    @PostMapping("/regenerateToken")
+    public Response regenerateToken(@RequestBody ReIssueRequest reIssueRequest) {
+        return Response.success(userService.regenerateToken(reIssueRequest));
+    }
+
+    @PostMapping("/logout")
+    public Response logout(@RequestBody  UserLogoutRequest userLogoutRequest) {
+        return Response.success(userService.logout(userLogoutRequest));
     }
     @PostMapping("/join")
     public Response userAdd(@RequestBody UserJoinRequest request){
