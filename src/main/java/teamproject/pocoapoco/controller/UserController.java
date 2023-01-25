@@ -7,16 +7,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.user.*;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.provider.JwtProvider;
-import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
-
-import javax.servlet.http.HttpServletRequest;
 
 @RestController
 @RequiredArgsConstructor
@@ -35,8 +31,9 @@ public class UserController {
         return "hello";
     }
 
-
+    @ApiOperation(value = "로그인", notes = "로그인 시 Access Token, Refresh Token을 발행합니다.")
     @PostMapping("/login")
+    @ApiOperation(value = "로그인", notes = "")
     public Response userLogin(@RequestBody UserLoginRequest userLoginRequest){
 
         UserLoginResponse userLoginResponse = userService.login(userLoginRequest);

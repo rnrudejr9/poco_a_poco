@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.domain.user;
+package teamproject.pocoapoco.domain.dto.user;
 
 
 import lombok.AllArgsConstructor;
@@ -18,9 +18,11 @@ public class UserJoinRequest {
     private String password;
     private String passwordConfirm;
     private String address;
-    private Boolean likeSoccer;
-    private Boolean likeJogging;
-    private Boolean likeTennis;
-
+    @Builder.Default
+    private Boolean likeSoccer = false;
+    @Builder.Default
+    private Boolean likeJogging = false;
+    @Builder.Default
+    private Boolean likeTennis = false;
 
 }

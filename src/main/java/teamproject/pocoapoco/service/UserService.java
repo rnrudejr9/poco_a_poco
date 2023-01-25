@@ -1,6 +1,5 @@
 package teamproject.pocoapoco.service;
 
-import io.jsonwebtoken.Jwt;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.entity.User;
@@ -13,6 +12,7 @@ import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
@@ -20,33 +20,78 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final EncrypterConfig encrypterConfig;
-
+    private final RedisTemplate<String, String> redisTemplate;
+    private final JwtProvider jwtProvider;
 
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
-
         // userName 유효성 확인
         User user = userRepository.findByUserId(userLoginRequest.getUserId())
                 .orElseThrow(() -> {throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
                 });
-
         // password 유효성 확인
         if (!encrypterConfig.encoder().matches(userLoginRequest.getPassword(), user.getPassword())) {
             throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
         }
+        // refresh token 생성
+        String refreshToken = jwtProvider.generateRefreshToken(user);
+        // Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
+        redisTemplate.opsForValue().set(
+                user.getUsername(),
+                refreshToken,
+                jwtProvider.REFRESH_EXPIRATION,
+                TimeUnit.MILLISECONDS
+        );
 
         //token 발행
-        return new UserLoginResponse(new JwtProvider().generateToken(user));
+        return new UserLoginResponse(refreshToken, new JwtProvider().generateAccessToken(user));
     }
 
+    public ReIssueResponse regenerateToken(ReIssueRequest reIssueRequest) {
+        String currentRefreshToken = reIssueRequest.getRefreshToken();
+        String currentAccessToken = reIssueRequest.getAccessToken();
 
+        // Refresh Token 검증
+        if (!jwtProvider.validateToken(currentRefreshToken)) {
+            throw new AppException(ErrorCode.INVALID_TOKEN, "Refresh Token 정보가 유효하지 않습니다");
+        }
 
     public UserJoinResponse saveUser(UserJoinRequest userJoinRequest){
 
+        // 새로운 토큰 생성
+        String newRefreshToken = jwtProvider.generateRefreshToken(user);
+
+        Long expiredTime = jwtProvider.getCurrentExpiration(currentRefreshToken);
+
+        // 5. RefreshToken Redis 업데이트
+        redisTemplate.opsForValue()
+                .set(authentication.getName(), newRefreshToken, expiredTime , TimeUnit.MILLISECONDS);
+
+        return new ReIssueResponse(refreshToken, new JwtProvider().generateAccessToken(user));
+    }
+
+    public UserLogoutResponse logout(UserLogoutRequest userLogoutRequest) {
+        if(!jwtProvider.validateToken(userLogoutRequest.getAccessToken())) {
+            throw new AppException(ErrorCode.INVALID_TOKEN, "");
+        }
+        // AccessToken에서 userName 추출
+        Authentication authentication = jwtProvider.getAuthentication(userLogoutRequest.getAccessToken());
+
+        // refresh token이 남아있다면 삭제
+        if(redisTemplate.opsForValue().get(authentication.getName())!= null) {
+            redisTemplate.delete(authentication.getName());
+        }
+        // 해당 refeshtoken의 accesstoken의 유효시간을 가져와 key에 저장
+        Long expiredTime = jwtProvider.getCurrentExpiration(userLogoutRequest.getAccessToken());
+        redisTemplate.opsForValue()
+                .set(userLogoutRequest.getAccessToken(), "logout", expiredTime, TimeUnit.MILLISECONDS);
+
+        return new UserLogoutResponse(String.format("%s 님이 logout에 성공했습니다", authentication.getName()));
+    }
+
+    public UserJoinResponse addUser(UserJoinRequest userJoinRequest){
         String encodedPassword = encrypterConfig.encoder().encode(userJoinRequest.getPassword());
-
         // 비밀번호 확인 로직 추가
-
         if (!userJoinRequest.getPassword().equals(userJoinRequest.getPasswordConfirm())){
 
             throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
@@ -131,3 +176,4 @@ public class UserService {
 
 
 }
+

@@ -1,25 +1,21 @@
 package teamproject.pocoapoco.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.domain.user.*;
+import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
+import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
+import teamproject.pocoapoco.domain.dto.user.UserProfileRequest;
+import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
-import teamproject.pocoapoco.fixture.UserEntityFixture;
-import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 import teamproject.pocoapoco.service.UserService;
 
@@ -38,8 +34,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @WebMvcTest(UserController.class)
 class UserControllerTest {
-
-    // Autowired를
 
     @Autowired
     MockMvc mockMvc;
@@ -166,31 +160,24 @@ class UserControllerTest {
     @DisplayName("로그인 Test")
     class Login {
 
-        UserLoginRequest userLoginRequest = new UserLoginRequest("userId1234", "pass1234");
-
-
         @Test
         @WithMockUser
         @DisplayName("로그인 성공")
         void 로그인테스트1() throws Exception {
 
-            //given
-            when(userService.login(any())).thenReturn(new UserLoginResponse("token"));
+            when(userService.login(any())).thenReturn(new UserLoginResponse("refreshToken","accessToken"));
 
             //when
-            ResultActions resultActions = mockMvc.perform(post("/api/v1/users/login")
+            mockMvc.perform(post("/api/v1/users/login")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(userLoginRequest)))
-                    .andDo(print());
-
-            //then
-            resultActions
+                            .content(objectMapper.writeValueAsBytes(request)))
+                    //then
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                    .andExpect(jsonPath("$.result.jwt").value("token"))
+                    .andExpect(jsonPath("$.result.refreshToken").value("refreshToken"))
+                    .andExpect(jsonPath("$.result.accessToken").value("accessToken"))
                     .andDo(print());
-
 
         }
 
@@ -200,17 +187,14 @@ class UserControllerTest {
         void 로그인테스트2() throws Exception {
 
             //given
-            when(userService.login(any())).thenThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+            given(userService.login(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
             //when
-            ResultActions resultActions = mockMvc.perform(post("/api/v1/users/login")
+            mockMvc.perform(post("/api/v1/users/login")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(userLoginRequest)))
-                    .andDo(print());
-
-            //then
-            resultActions
+                            .content(objectMapper.writeValueAsBytes(request)))
+                    //then
                     .andExpect(status().isNotFound())
                     .andExpect(content().string(ErrorCode.USERID_NOT_FOUND.name() + " " + ErrorCode.USERID_NOT_FOUND.getMessage()))
                     .andDo(print());
@@ -222,17 +206,14 @@ class UserControllerTest {
         void 로그인테스트3() throws Exception {
 
             //given
-            when(userService.login(any())).thenThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
+            given(userService.login(any())).willThrow(new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage()));
 
             //when
-            ResultActions resultActions = mockMvc.perform(post("/api/v1/users/login")
+            mockMvc.perform(post("/api/v1/users/login")
                             .with(csrf())
                             .contentType(MediaType.APPLICATION_JSON)
-                            .content(objectMapper.writeValueAsBytes(userLoginRequest)))
-                    .andDo(print());
-
-            //then
-            resultActions
+                            .content(objectMapper.writeValueAsBytes(request)))
+                    //then
                     .andExpect(status().isUnauthorized())
                     .andExpect(content().string(ErrorCode.INVALID_PASSWORD.name() + " " + ErrorCode.INVALID_PASSWORD.getMessage()))
                     .andDo(print());

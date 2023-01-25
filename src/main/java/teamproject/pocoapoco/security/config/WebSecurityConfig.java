@@ -10,7 +10,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import teamproject.pocoapoco.security.exception.CustomAccessDeniedHandler;
 import teamproject.pocoapoco.security.exception.CustomAuthenticationEntryPointHandler;
-import teamproject.pocoapoco.security.exception.ExceptionHandlerFilter;
 import teamproject.pocoapoco.security.filter.JwtTokenFilter;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 
@@ -19,34 +18,32 @@ import teamproject.pocoapoco.security.provider.JwtProvider;
 @RequiredArgsConstructor
 public class WebSecurityConfig {
     private final JwtProvider jwtProvider;
-    public static final String[] GET_AUTHENTICATED_REGEX_LIST = {
-            "^/api/v1/test1$"
-    };
-
-    public static final String[] POST_AUTHENTICATED_REGEX_LIST = {
-            "^/api/v1/test1$"
-    };
-
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf().disable();
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
-        http.cors();
-
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        //jwt 사용 간 설정
-
-        http.authorizeHttpRequests()
-                .regexMatchers(HttpMethod.GET, GET_AUTHENTICATED_REGEX_LIST).permitAll()
-                .regexMatchers(HttpMethod.POST, POST_AUTHENTICATED_REGEX_LIST).authenticated();
-
-        http.exceptionHandling()
+        return httpSecurity
+                .httpBasic().disable()
+                .csrf().disable()
+                .cors().and()
+                .authorizeRequests()
+                .antMatchers("/api/v1/users/join", "/api/v1/users/login", "/api/v1/users/regenerateToken").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/users/regenerateToken").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
+                .and()
+                .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPointHandler())
-                .accessDeniedHandler(new CustomAccessDeniedHandler());
+                .accessDeniedHandler(new CustomAccessDeniedHandler())
+                .and()
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+                .and()
+                .addFilterBefore(new JwtTokenFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class)
+//                .addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class)
+                .build();
 
-        http.addFilterBefore(new JwtTokenFilter(jwtProvider), UsernamePasswordAuthenticationFilter.class);
-        http.addFilterBefore(new ExceptionHandlerFilter(), JwtTokenFilter.class);
-
-        return http.build();
     }
+
 }
