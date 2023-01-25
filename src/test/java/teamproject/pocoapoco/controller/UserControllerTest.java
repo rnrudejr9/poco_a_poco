@@ -53,7 +53,7 @@ class UserControllerTest {
         @DisplayName("로그인 성공")
         void 로그인테스트1() throws Exception {
 
-            when(userService.login(any())).thenReturn(new UserLoginResponse("token"));
+            when(userService.login(any())).thenReturn(new UserLoginResponse("refreshToken","accessToken"));
 
             mockMvc.perform(post("/api/v1/users/login")
                             .with(csrf())
@@ -61,7 +61,8 @@ class UserControllerTest {
                             .content(objectMapper.writeValueAsBytes(request)))
                     .andExpect(status().isOk())
                     .andExpect(jsonPath("$.resultCode").value("SUCCESS"))
-                    .andExpect(jsonPath("$.result.jwt").value("token"))
+                    .andExpect(jsonPath("$.result.refreshToken").value("refreshToken"))
+                    .andExpect(jsonPath("$.result.accessToken").value("accessToken"))
                     .andDo(print());
 
         }

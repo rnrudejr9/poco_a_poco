@@ -2,10 +2,10 @@ package teamproject.pocoapoco.service;
 
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.Sport;
@@ -23,8 +23,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -41,7 +40,7 @@ class UserServiceTest {
         EncrypterConfig config;
 
         @Mock
-        private JwtProvider jwtProvider;
+        JwtProvider jwtProvider;
 
         UserJoinRequest userJoinRequest1 = UserJoinRequest.builder()
                 .userId("아이디")
@@ -97,7 +96,7 @@ class UserServiceTest {
         public void 세팅(){
 
             when(config.encoder()).thenReturn(new BCryptPasswordEncoder());
-            userService = new UserService(userRepository, config);
+            userService = new UserService(userRepository, config,new RedisTemplate<>(),jwtProvider);
 
 
         }
@@ -190,66 +189,106 @@ class UserServiceTest {
         @Mock
         private JwtProvider jwtProvider;
 
-        @InjectMocks
-        UserService userService = new UserService(userRepository, config);
 
         @Value("${jwt.token.secret}") String secretKey;
 
-        private User user;
-
         private UserLoginRequest userLoginRequest;
-
         private UserLoginResponse userLoginResponse;
 
-        @BeforeEach
-        void setup() {
-            userLoginRequest = new UserLoginRequest("userId1234", "pass1234");
+        User user = User.builder()
+                .id(1L)
+                .userId("userId1234")
+                .userName("닉네임")
+                .password("pass1234")
+                .address("서울시 강남구")
+                .sport(Sport.setSport(true, false, false))
+                .manner(1)
+                .role(UserRole.ROLE_USER)
+                .build();
+        // join request
+        UserJoinRequest userJoinRequest1 =  UserJoinRequest.builder()
+                .userId("userId1234")
+                .userName("닉네임")
+                .password("pass1234")
+                .passwordConfirm("pass1234")
+                .address("서울시 강남구")
+                .likeSoccer(true)
+                .likeJogging(false)
+                .likeTennis(false)
+                .build();
 
-            userLoginResponse = new UserLoginResponse("token");
-
-            user = User.builder()
-                    .id(1L)
+        private UserJoinRequest createJoinRequest() {
+            return UserJoinRequest.builder()
                     .userId("userId1234")
                     .userName("닉네임")
                     .password("pass1234")
+                    .passwordConfirm("pass1234")
                     .address("서울시 강남구")
-                    .sport(Sport.setSport(true, false, false))
-                    .manner(1)
-                    .role(UserRole.ROLE_USER)
+                    .likeSoccer(true)
+                    .likeJogging(false)
+                    .likeTennis(false)
                     .build();
         }
+        @Mock
+        UserService userService;
+        @Mock
+        RedisTemplate<String,String> redisTemplate;
 
+
+        // encoder 설정
+        @BeforeEach
+        public void 세팅(){
+            when(config.encoder()).thenReturn(new BCryptPasswordEncoder());
+            userService = new UserService(userRepository, config,new RedisTemplate<>(),jwtProvider);
+            userLoginRequest = new UserLoginRequest("userId1234", "pass1234");
+            user = User.toEntity(userJoinRequest1.getUserId(), userJoinRequest1.getUserName(), userJoinRequest1.getAddress(),
+                    config.encoder().encode(userJoinRequest1.getPassword()), userJoinRequest1.getLikeSoccer(),
+                    userJoinRequest1.getLikeJogging(), userJoinRequest1.getLikeTennis());
+
+        }
         @Test
         @DisplayName("로그인 성공")
         public void 로그인테스트1() {
+            // given
+            UserJoinRequest addUser = createJoinRequest();
+            when(userRepository.save(any())).thenReturn(user);
+            UserJoinResponse userJoinResponse = userService.addUser(addUser);
 
-            //given
-            when(userRepository.findByUserName(userLoginRequest.getUserId())).thenReturn(Optional.of(user));
-            System.out.println(user.getUserId());
-            System.out.println(userLoginRequest.getPassword());
-            System.out.println(user.getPassword());
-
-            when(config.encoder().matches(userLoginRequest.getPassword(), user.getPassword())).thenReturn(true);
-            when(jwtProvider.generateToken(user)).thenReturn("token");
+            when(userRepository.findByUserId(userJoinResponse.getUserId())).thenReturn(Optional.of(user));
+            when(jwtProvider.generateAccessToken(user)).thenReturn("accessToken");
+            when(jwtProvider.generateRefreshToken(user)).thenReturn("refreshToken");
 
             //when
             UserLoginResponse response = userService.login(userLoginRequest);
 
-            //then
-            assertThat(response.getJwt()).isEqualTo("token");
-
+            // then
+            assertAll(
+                    () -> assertEquals(userLoginResponse.getRefreshToken(), response.getRefreshToken()),
+                    () -> assertEquals(userLoginResponse.getAccessToken(), response.getAccessToken()));
         }
 
-
         @Test
-        @DisplayName("로그인 실패1 - 해당 아이디 없음")
-        public void 로그인테스트2() {
+        @DisplayName("토큰 재발행")
+        void regenerateToken() {
+            // given
+            UserJoinRequest addUser = createJoinRequest();
+            when(userRepository.save(any())).thenReturn(user);
+            UserJoinResponse userJoinResponse = userService.addUser(addUser);
 
-            //given
+            // when
+            UserLoginResponse response = userService.login(userLoginRequest);
+            String prevAccessToken = response.getAccessToken();
+            String prevRefreshToken = response.getRefreshToken();
 
-            //when
+            ReIssueRequest regenerateToken = new ReIssueRequest(
+                    response.getRefreshToken(), prevAccessToken
+            );
 
-            //then
+            ReIssueResponse regeneratedToken = userService.regenerateToken(regenerateToken);
+
+            // then
+            assertThat(regeneratedToken.getAccessToken()).isNotEqualTo(prevRefreshToken);
+            assertThat(regeneratedToken.getAccessToken()).isNotEqualTo(prevAccessToken);
         }
 
     }
