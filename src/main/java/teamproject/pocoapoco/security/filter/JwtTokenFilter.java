@@ -2,12 +2,16 @@ package teamproject.pocoapoco.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 import teamproject.pocoapoco.domain.dto.error.ErrorResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
+import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 
@@ -18,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 @RequiredArgsConstructor
+@Slf4j
 public class JwtTokenFilter extends OncePerRequestFilter {
     /**
      * request 에서 전달받은 Jwt 토큰을 확인
@@ -26,6 +31,9 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     private final String BEARER = "Bearer ";
 
     private final JwtProvider jwtProvider;
+    private final RedisTemplate redisTemplate;
+
+
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -41,8 +49,20 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         token = parseBearer(token);
 
         if (jwtProvider.validateToken(token)) {
-            Authentication authentication = jwtProvider.getAuthentication(token);
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            // Redis 에 해당 accessToken logout 여부 확인
+            String isLogout = (String)redisTemplate.opsForValue().get(token);
+            log.info("isLogout?:{}",isLogout);
+
+            if (ObjectUtils.isEmpty(isLogout)) {
+                // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
+                Authentication authentication = jwtProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+
+            } else if(isLogout.equals("logout")) {
+                MakeError(response,ErrorCode.INVALID_PERMISSION);
+                filterChain.doFilter(request, response);
+                return;
+            }
         }
 
         filterChain.doFilter(request, response);
