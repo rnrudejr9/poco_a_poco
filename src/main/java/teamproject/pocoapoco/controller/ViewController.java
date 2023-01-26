@@ -16,29 +16,23 @@ import teamproject.pocoapoco.service.UserService;
 public class ViewController {
 
     private final UserService userService;
-    @GetMapping("/login")
-    public String loginForm(Model model) {
-        model.addAttribute("userLoginRequest",new UserLoginRequest());
-
-        return "sign/login";
-    }
-    @GetMapping("/signup")
-    public String signupForm(Model model) {
-        model.addAttribute("userJoinRequest",new UserJoinRequest());
-
-        return "sign/signup";
-    }
 
     @PostMapping("/signup")
     public String signup(UserJoinRequest userJoinRequest){
 
         userService.saveUser(userJoinRequest);
-        return "sign/main";
+        return "test/test";
     }
     @PostMapping("/signin")
     public String login(UserLoginRequest userLoginRequest){
 
         userService.login(userLoginRequest);
-        return "sign/main";
+        return "test/test";
+    }
+    @GetMapping("/start")
+    public String testForm(Model model) {
+        model.addAttribute("userLoginRequest",new UserLoginRequest());
+        model.addAttribute("userJoinRequest",new UserJoinRequest());
+        return "start/start";
     }
 }
