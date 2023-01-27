@@ -9,7 +9,7 @@
 <body>
 <div class="container" id="container">
     <div class="form-container sign-up-container">
-        <form  action="/signup" method="post" th:object="${userJoinRequest}" >
+        <form  action="/view/v1/signup" method="post" th:object="${userJoinRequest}" >
             <h1>계정만들기</h1>
 <!--            <div class="social-container">-->
 <!--                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>-->
@@ -26,7 +26,7 @@
         </form>
     </div>
     <div class="form-container sign-in-container">
-        <form form action="/signin" method="post" th:object="${userLoginRequest}">
+        <form form action="/view/v1/signin" method="post" th:object="${userLoginRequest}">
             <h1>로그인</h1>
             <div class="social-container">
                 <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
