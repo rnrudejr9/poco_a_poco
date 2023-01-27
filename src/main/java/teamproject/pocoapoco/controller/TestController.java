@@ -1,5 +1,6 @@
 package teamproject.pocoapoco.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,11 +24,6 @@ public class TestController {
 
     private final UserService userService;
     private final UserRepository userRepository;
-
-    public TestController(UserService userService, UserRepository userRepository) {
-        this.userService = userService;
-        this.userRepository = userRepository;
-    }
 
     @GetMapping("/start")
     public String hello(){

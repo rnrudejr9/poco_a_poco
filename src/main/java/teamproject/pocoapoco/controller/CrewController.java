@@ -49,7 +49,7 @@ public class CrewController {
     @GetMapping("/{crewId}")
     @ApiOperation(value = "크루 게시글 상세조회", notes = "")
     public Response detailCrew(@PathVariable Long crewId, Authentication authentication) {
-        return Response.success(crewService.detailCrew(crewId, authentication.getName()));
+        return Response.success(crewService.detailCrew(crewId));
     }
 
     // 크루 게시물 전체 조회

@@ -42,11 +42,6 @@ async function loginTest() {
         let json = await response.json();
         document.getElementById("area_login").innerHTML = json.resultCode;
         localStorage.setItem("jwt",'Bearer ' + json.result.accessToken);
-        // // 확인을 위해서 header에 담아둠
-        // var httpRequest = new XMLHttpRequest();
-        // httpRequest.setRequestHeader("Authorization", localStorage.getItem("jwt"));
-        // httpRequest.setRequestHeader("Authentication", localStorage.getItem("jwt"));
-        // httpRequest.send();
         console.log(localStorage.getItem("jwt"));
 
     }else{
