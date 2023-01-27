@@ -390,7 +390,7 @@ class UserServiceTest {
             public void 프로필수정테스트3() {
 
                 //given
-//            given(userRepository.save(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+            //given(userRepository.save(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
                 //when
 
