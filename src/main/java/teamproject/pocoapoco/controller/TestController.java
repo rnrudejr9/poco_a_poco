@@ -11,6 +11,7 @@ import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,7 +49,8 @@ public class TestController {
     }
 
     @GetMapping("/users/profile/my")
-    public String getMyProfile(Model model){
+    public String getMyProfile(Model model, HttpServletRequest httpServletRequest){
+//        String username = (String) httpServletRequest.getAttribute("username");
 
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName("string");
 

@@ -170,6 +170,20 @@
 
 
 <script type="text/javascript">
+
+    // window.onload = async function () {
+    //     var url = "/api/v1/users/profile/my";
+    //     await fetch(url, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": localStorage.getItem('jwt'),
+    //             "Authentication": localStorage.getItem('jwt')
+    //         }
+    //     });
+    // }
+
+
     async function updateProfile() {
         var url = "/api/v1/users/profile/" + document.getElementById("userName");
         let response = await fetch(url, {
