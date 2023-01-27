@@ -13,20 +13,27 @@ spring:
   redis:
     host: localhost
     port: 6379
-
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-
   servlet:
     multipart:
       enabled: true
       max-file-size: 100MB
       max-request-size: 300MB
-
+  config:
+    activate:
+      on-profile: "common"
+    servelet:
+      multipart:
+        max-request-size: 400MB
+        max-file-size: 400MB
+  cloud:
+    aws:
+      region:
+        static: ap-northeast-2
 jwt:
   token:
     secret: "secreteKey"

@@ -4,7 +4,9 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.ModelAndView;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -50,10 +52,12 @@ public class UserController {
 
     // 내 프로필 수정
     @ApiOperation(value = "프로필 수정", notes = "프로필 수정하는 메소드입니다.")
-    @PutMapping("/revise")
+    @PutMapping("/profile/revise")
     public Response userInfoModify(Authentication authentication, @RequestBody UserProfileRequest userProfileRequest){
 
+
         UserProfileResponse userProfileResponse = userService.updateUserInfoByUserName(authentication.getName(), userProfileRequest);
+
         return Response.success(userProfileResponse);
 
     }
@@ -64,7 +68,9 @@ public class UserController {
     @GetMapping("/profile/my")
     public Response userMyInfoList(Authentication authentication){
 
+
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(authentication.getName());
+
 
         return Response.success(userProfileResponse);
 
@@ -77,6 +83,9 @@ public class UserController {
 
 
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
+
+
+
         return Response.success(userProfileResponse);
 
     }
