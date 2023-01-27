@@ -3,6 +3,12 @@
 <html>
 <head>
     <head>
+        <style>
+            #wrapper{
+                width:500px;
+                margin:auto;
+            }
+        </style>
 
         <!--    <link rel="canonical" href="https://getbootstrap.kr/docs/5.1/examples/checkout/">-->
         <!--    &lt;!&ndash; Bootstrap core CSS &ndash;&gt;-->
@@ -20,18 +26,6 @@
         <meta name="theme-color" content="#7952b3">
 
         <style>
-            .bd-placeholder-img {
-                font-size: 1.125rem;
-                text-anchor: middle;
-                -webkit-user-select: none;
-                -moz-user-select: none;
-                user-select: none;
-            }
-            @media (min-width: 768px) {
-                .bd-placeholder-img-lg {
-                    font-size: 3.5rem;
-                }
-            }
             .container {
                 max-width: 960px;
             }
@@ -46,8 +40,7 @@
                 <article class="card">
                     <h1 class="card-title display-5">
                         title<span th:text="${title}"></span></h1>
-                    <img class="card-img-top mb-2" src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=e0245bb4e87077312cc3d102e68c1efd&auto=format&fit=crop&w=735&q=80" alt="Card image">
-
+                    <img class="card-img-top mb-2" src=https://user-images.githubusercontent.com/73879325/214769088-0db6fd43-002a-4492-940a-9decd66d74a9.png alt="Card image">
                     <div class="card-body">
                         <ul>
                             <li>모집 인원 : <span th:text="${limit}"></span></li>
@@ -59,11 +52,12 @@
                         <!-- 목록으로 돌아가기 버튼
                         ================================================== -->
                         <div style="display: inline-block">
-                            <form class="container" form action="/crews" method="get">
+                            <form class="container" form action="api/v1/crews" method="get">
                                 <button class="btn btn-success btn-lg" type="submit"
                                         style="width:120px;height:40px;font-size: 15px">게시글 목록
                                 </button>
                             </form>
+
                         </div>
 
 
@@ -94,7 +88,10 @@
     </div>
 </section>
 
-
+<div id="wrapper">
+    <button class="w-100 btn btn-secondary btn-lg" type="submit" onclick=""
+            style="width:500px;margin:auto;"> 참여하기</button>
+</div>
 
 </body>
 </html>

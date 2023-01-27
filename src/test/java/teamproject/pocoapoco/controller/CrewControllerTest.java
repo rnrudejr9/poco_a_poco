@@ -304,7 +304,7 @@ class CrewControllerTest {
         void detailCrew1() throws Exception {
 
             //given
-            given(crewService.detailCrew(any(), any()))
+            given(crewService.detailCrew(any()))
                     .willReturn(crewDetailResponse);
 
             // when
@@ -325,7 +325,7 @@ class CrewControllerTest {
         void detailCrew2() throws Exception {
 
             //given
-            given(crewService.detailCrew(any(), any()))
+            given(crewService.detailCrew(any()))
                     .willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
             // when
@@ -343,7 +343,7 @@ class CrewControllerTest {
         void detailCrew3() throws Exception {
 
             //given
-            given(crewService.detailCrew(any(), any()))
+            given(crewService.detailCrew(any()))
                     .willThrow(new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
 
             // when
