@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.domain.user;
+package teamproject.pocoapoco.domain.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -6,5 +6,6 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public class UserLoginResponse {
-    private String jwt;
+    private String refreshToken;
+    private String accessToken;
 }
