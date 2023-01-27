@@ -14,7 +14,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 public class CrewDetailResponse {
-
+    private Long id;
     private String strict;
     private String title;
     private String content;
@@ -26,6 +26,7 @@ public class CrewDetailResponse {
 
     public static CrewDetailResponse of(Crew crew) {
         return CrewDetailResponse.builder()
+                .id(crew.getId())
                 .strict(crew.getStrict())
                 .title(crew.getTitle())
                 .content(crew.getContent())
