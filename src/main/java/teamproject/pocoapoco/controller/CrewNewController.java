@@ -25,14 +25,14 @@ public class CrewNewController {
 
 
     // 크루 게시글 등록
-    @PostMapping("/view/v1/crews")
+    @PostMapping("/crews/")
     @ApiOperation(value = "크루 게시글 등록", notes = "")
     public String addCrew(@RequestBody CrewRequest crewRequest, Authentication authentication) {
         crewService.addCrew(crewRequest, authentication.getName());
         return "crew/write";
     }
     // 크루 게시물 상세 조회
-    @GetMapping("/view/v1/crews/{crewId}")
+    @GetMapping("/crews/{crewId}")
     public String detailCrew(@PathVariable Long crewId,Authentication authentication, Model model) {
         try {
             CrewDetailResponse details = crewService.detailCrew(crewId);
