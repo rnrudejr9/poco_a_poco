@@ -4,7 +4,7 @@
 <body>
 <!-- 네비바-->
 <header th:replace="fragments/fragment :: nav"></header>
-<footer th:replace="fragments/fragment :: footer"></footer>
+
 
         <!--    <link rel="canonical" href="https://getbootstrap.kr/docs/5.1/examples/checkout/">-->
         <!--    &lt;!&ndash; Bootstrap core CSS &ndash;&gt;-->
@@ -45,7 +45,7 @@
                                 <img id="imgId" th:src="@{/accounts/}+${accountDto.userId}" width="100" height="100"  alt="첨부이미지" />-->
 <!--                                <img th:src="resources/img/defaultUser.jpg">-->
 <!--                                <img width="100" height="100" src="img/defaultUser.jpg" alt="첨부이미지"/>-->
-                                <h4><a class=name><span th:text="${details.userId}"></span></a></h4>
+                                <h4><a class=name th:view/v1/users/profile/{userName}><span th:text="${details.userId}"></span></a></h4>
                             </div>
                             <!--crew에 baseEntity가 적용되지 않은 거 같다
                             <span style="font-size: xx-small;" th:text="${details.createdAt}"></span>-->

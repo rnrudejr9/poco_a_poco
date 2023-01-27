@@ -17,32 +17,32 @@ public class CommentNewController {
 
     private final CommentService commentService;
 
-    @PostMapping("/crew/{crewId}/comments")
+    @PostMapping("/view/v1/crews/{crewId}/comments")
     public Response<CommentResponse> addComment(@RequestBody CommentRequest commentRequest, @PathVariable Long crewId, Authentication authentication) {
         return Response.success(commentService.addComment(commentRequest, crewId, authentication.getName()));
     }
 
-    @PostMapping("/crew/{crewId}/comments/{parentCommentId}")
+    @PostMapping("/view/v1/crews/{crewId}/comments/{parentCommentId}")
     public Response<CommentReplyResponse> addCommentReply(@RequestBody CommentReplyRequest commentReplyRequest, @PathVariable Long crewId, @PathVariable Long parentCommentId, Authentication authentication) {
         return Response.success(commentService.addCommentReply(commentReplyRequest, crewId, parentCommentId, authentication.getName()));
     }
 
-    @GetMapping("/crew/{crewId}/comments")
+    @GetMapping("/view/v1/crews/{crewId}/comments")
     public Response<Page<CommentResponse>> getCommentList(@PathVariable Long crewId, Pageable pageable) {
         return Response.success(commentService.getCommentList(pageable, crewId));
     }
 
-    @GetMapping("/crew/{crewId}/comments/{parentCommentId}/list")
+    @GetMapping("/view/v1/crews/{crewId}/comments/{parentCommentId}/list")
     public Response<Page<CommentReplyResponse>> getCommentReplyList(@PathVariable Long crewId, Long parentCommentId, Pageable pageable) {
         return Response.success(commentService.getCommentReplyList(pageable, crewId, parentCommentId));
     }
 
-    @PutMapping("/crew/{crewId}/comments/{commentId}")
+    @PutMapping("/view/v1/crews/{crewId}/comments/{commentId}")
     public Response<CommentResponse> modifyComment(@RequestBody CommentRequest commentRequest, @PathVariable Long crewId, @PathVariable Long commentId , Authentication authentication) {
         return Response.success(commentService.modifyComment(commentRequest, crewId, commentId, authentication.getName()));
     }
 
-    @DeleteMapping("/crew/{crewId}/comments/{commentId}")
+    @DeleteMapping("/view/v1/crews/{crewId}/comments/{commentId}")
     public Response<CommentDeleteResponse> deleteComment(@PathVariable Long crewId, @PathVariable Long commentId , Authentication authentication) {
         return Response.success(commentService.deleteComment(crewId, commentId , authentication.getName()));
     }
