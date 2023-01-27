@@ -18,6 +18,7 @@ import java.io.PrintWriter;
 
 @Controller
 @RequestMapping("/view/v1")
+@RequiredArgsConstructor
 public class TestController {
 
     private final UserService userService;

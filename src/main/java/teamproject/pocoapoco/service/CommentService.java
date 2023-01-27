@@ -7,11 +7,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import teamproject.pocoapoco.domain.dto.comment.*;
+import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Comment;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.AlarmType;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
+import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.CommentRepository;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -27,6 +30,7 @@ public class CommentService {
     private final CommentRepository commentRepository;
     private final UserRepository userRepository;
     private final CrewRepository crewRepository;
+    private final AlarmRepository alarmRepository;
 
     public Page<CommentResponse> getCommentList(Pageable pageable, Long crewId) {
         Page<Comment> list = commentRepository.findByCrewId(crewId, pageable);
@@ -41,6 +45,7 @@ public class CommentService {
         Crew crew = getCrew(crewId);
 
         Comment comment = commentRepository.save(commentRequest.toEntity(user, crew));
+        alarmRepository.save(Alarm.toEntity(user, crew, AlarmType.ADD_COMMENT, comment.getComment()));
 
         return CommentResponse.of(comment);
     }
@@ -50,6 +55,7 @@ public class CommentService {
         Comment parentComment = getComment(parentCommentId);
 
         Comment comment = commentRepository.save(commentReplyRequest.toEntity(user, crew, parentComment));
+        alarmRepository.save(Alarm.toEntity(user, crew, AlarmType.ADD_COMMENT, comment.getComment()));
 
         return CommentReplyResponse.of(comment);
     }
