@@ -25,7 +25,7 @@ public class TestController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @GetMapping("/start")
+    @GetMapping("/start1")
     public String hello(){
         return "index";
     }

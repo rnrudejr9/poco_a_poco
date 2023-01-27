@@ -17,19 +17,19 @@ public class ViewController {
 
     private final UserService userService;
 
-    @PostMapping("/signup")
+    @PostMapping("/view/v1/signup")
     public String signup(UserJoinRequest userJoinRequest){
 
         userService.saveUser(userJoinRequest);
         return "test/test";
     }
-    @PostMapping("/signin")
+    @PostMapping("/view/v1/signin")
     public String login(UserLoginRequest userLoginRequest){
 
         userService.login(userLoginRequest);
         return "test/test";
     }
-    @GetMapping("/start")
+    @GetMapping("/view/v1/start")
     public String testForm(Model model) {
         model.addAttribute("userLoginRequest",new UserLoginRequest());
         model.addAttribute("userJoinRequest",new UserJoinRequest());
