@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
+    <meta name="generator" content="Hugo 0.104.2">
+    <title>Album example · Bootstrap v5.2</title>
+
+ 
+    <!-- CSS only -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+      .card-body {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        user-select: none;
+      }
+
+    </style>
+
+    
+  </head>
+  <body>
+    <!-- 네비바-->
+    <header class="p-3 text-bg-dark">
+        <div class="container">
+          <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+              <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
+            </a>
+            <!-- 메뉴-->
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+              <li><a href="#" class="nav-link px-2 text-white"><h4>💪운동메&emsp;&emsp;</h4></a></li>
+              <li><a href="/view/v1/crews/" class="nav-link px-2 text-white"><h5>모집글&emsp;&emsp;</h5></a></li>
+              <li><a href="#" class="nav-link px-2 text-white"><h5>운동메톡&emsp;&emsp;</h5></a></li>
+              <li><a href="#" class="nav-link px-2 text-white"><h5>My프로필&emsp;&emsp;</h5></a></li>
+            </ul>
+    
+            <!-- 검색-->
+            <form class="col-3 col-lg-3 mb-4 mb-lg-0 me-lg-3" role="search" action="/view/v1/crews/strict" method="post" name="findAllCrewWithStrict">
+              <input type="search" name="strict" class="form-control form-control-dark text-bg-dark" placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
+            </form>
+
+            <!-- 로그인&회원가입-->
+            <div class="text-end" th:classappend="${2 == nowPage} ? 'disabled'">
+              <button type="button" class="btn btn-outline-light me-2">Login</button>
+              <button type="button" class="btn btn-warning">Sign-up</button>
+
+            </div>
+
+            
+          </div>
+        </div>
+      </header>
+    
+
+<main>
+    <!-- 소개-->
+  <section class="py-5 text-center container">
+    <div class="row py-lg-5">
+      <div class="col-lg-6 col-md-8 mx-auto">
+        <h1 class="home">운동 메이트</h1>
+        <p class="lead text-muted">
+            <br>
+            운동 메이트로 함께 운동하고, <br>
+            동네 이웃과 운동 메이트가 되어 보세요.
+        </p>
+      </div>
+    </div>
+  </section>
+
+
+
+
+  <div class="album py-5 bg-light">
+    <div class="container">
+        
+        <!-- 운동 체크-->
+        <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4" th:bgcolor="$blue-200">
+            <div class="d-grid gap-2 d-md-block">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                    운동 선택
+                </button>
+            </div>
+            <div></div><div></div><div></div>
+            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <button class="btn btn-primary" type="button">
+                    + 모집 등록
+                </button>
+            </div>
+        </div>
+
+          <div class="collapse" id="collapseExample">
+            <div class="card card-body">
+
+                <form action="" method="" name="">
+                    <div class="grid text-center" >
+                        <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4" >
+                            <button type="button" class="btn btn-outline-secondary">축구</button>
+                            <button type="button" class="btn btn-outline-success">농구</button>
+                            <button type="button" class="btn btn-outline-danger">야구</button>
+                            <button type="button" class="btn btn-outline-warning">등산</button>
+                            <button type="button" class="btn btn-outline-info">산책</button>
+                            <button type="button" class="btn btn-outline-dark">스키장</button>
+                            <button type="button" class="btn btn-outline-success">스노우쿨링</button>
+                            <button type="button" class="btn btn-outline-danger">탁구</button>
+                            <button type="button" class="btn btn-outline-warning">배드민턴</button>
+                            <button type="button" class="btn btn-outline-info">당구</button>
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+          </div>
+
+
+            <!-- 앨범-->
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+
+            <div class="col" th:each="crew : ${crewList}">
+
+              <div class="card shadow-sm">
+                <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+
+                <div class="card-body">
+
+                  <h3 class="card-tile" th:text="${crew.title}">제목</h3>
+                  <p class="card-text" th:text="${crew.content}">내용</p>
+
+                  <div class="d-flex justify-content-between align-items-center">
+
+                    <small class="text-muted" th:text="${crew.strict}">지역</small>
+                    <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary">상세보기</button>
+                      </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        <div class="py-3 my-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2})}">Previous</a>
+                    </li>
+
+                    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/view/v1/crews(page = ${page - 1})}" th:text="${page}">1</a></li>
+                        <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: red"></strong></li>
+                    </th:block>
+
+                    <li class="page-item">
+                        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        
+    </div>
+
+
+  </div>
+  
+
+</main>
+
+    <footer class="py-3 my-4">
+      <ul class="nav justify-content-center border-bottom pb-3 mb-3">
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Features</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Pricing</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">FAQs</a></li>
+        <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">About</a></li>
+      </ul>
+      <p class="text-center text-muted">© 2023 Company, Inc</p>
+    </footer>
+
+
+
+    <!-- JavaScript Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+
+      
+  </body>
+</html>

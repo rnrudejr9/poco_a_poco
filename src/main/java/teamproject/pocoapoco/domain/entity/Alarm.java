@@ -2,27 +2,40 @@ package teamproject.pocoapoco.domain.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamproject.pocoapoco.enums.AlarmType;
 
 import javax.persistence.*;
 
-@Entity
 @AllArgsConstructor
+@Getter
 @NoArgsConstructor
 @Builder
-public class Alarm {
+@Entity
+public class Alarm extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user;
+    private User user; // Crew의 주인
 
     private String fromUserName;
     private Long targetCrewId;
     private String massage;
     private boolean readOrNot;
     private AlarmType alarmType;
+
+    public static Alarm toEntity(User user, Crew crew, AlarmType alarmType, String comment) {
+        Alarm alarm = Alarm.builder()
+                .user(crew.getUser())
+                .alarmType(alarmType)
+                .fromUserName(user.getUsername())
+                .targetCrewId(crew.getId())
+                .massage(comment)
+                .build();
+        return alarm;
+    }
 }

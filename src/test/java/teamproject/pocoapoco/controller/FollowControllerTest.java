@@ -149,5 +149,4 @@ class FollowControllerTest {
                 .andExpect(jsonPath("$.result").value(0))
                 .andDo(print());
     }
-
 }
