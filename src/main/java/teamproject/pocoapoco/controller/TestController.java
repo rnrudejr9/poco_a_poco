@@ -25,11 +25,10 @@ public class TestController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @GetMapping("/start1")
+    @GetMapping("/crews/write")
     public String hello(){
-        return "index";
+        return "crew/write";
     }
-
 
 
     @PostMapping("/users/profile/edit")
