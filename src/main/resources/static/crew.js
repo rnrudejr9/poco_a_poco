@@ -3,6 +3,7 @@ document.getElementById("crew_btn_d").addEventListener('click',deleteCrew);
 document.getElementById("crew_btn_m").addEventListener('click',modifyCrew);
 document.getElementById("crew_btn_f").addEventListener('click',findCrew);
 document.getElementById("crew_btn_fa").addEventListener('click',findAllCrew);
+document.getElementById("crew-btn-detail").addEventListener('click',detailCrew);
 
 async function crewMake() {
     let response = await fetch("/api/v1/crews", {
@@ -111,5 +112,28 @@ async function findAllCrew() {
     }else{
         let json = await response.text();
         document.getElementById("area_crew").innerHTML = json;
+    }
+}
+
+async function detailCrew() {
+    let response = await fetch("/api/v1/crews/" + +document.getElementById("crewDetailId").value, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem('jwt'),
+            "Authentication": localStorage.getItem('jwt')
+        },
+    })
+    if(response.ok){
+        let json = await response.json()
+        console.log(json);
+        document.getElementById("title").innerHTML += json.result.title ;
+        // document.getElementById("area_crew").innerHTML += json.result.strict ;
+        document.getElementById("content").innerHTML += json.result.content ;
+        // document.getElementById("area_crew").innerHTML += json.result.crewLimit ;
+
+    }else{
+        let json = await response.text();
+        document.getElementById("area_detail").innerHTML = json;
     }
 }

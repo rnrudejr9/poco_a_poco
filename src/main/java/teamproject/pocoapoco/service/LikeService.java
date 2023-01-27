@@ -45,4 +45,24 @@ public class LikeService {
         goodResponse.setMessage("메세지 개수는 총 : "+ crew.getLikes().size());
         return goodResponse;
     }
+    public void updateLike(Long crewId, String userName){
+        User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
+        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+        LikeResponse goodResponse = new LikeResponse();
+        if(user.getLikes().stream().anyMatch(like -> like.getCrew().equals(crew))){
+            likeRepository.deleteByUserAndCrew(user,crew);
+            goodResponse.setMessage("좋아요 취소");
+        } else {
+            likeRepository.save(Like.builder().crew(crew).user(user).build());
+            goodResponse.setMessage("좋아요 성공");
+        }
+    }
+
+    public int selectLike(Long crewId){
+        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+        LikeResponse goodResponse = new LikeResponse();
+        int count = crew.getLikes().size();
+        return count;
+    }
+
 }
