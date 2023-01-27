@@ -12,7 +12,7 @@ import teamproject.pocoapoco.domain.dto.alarm.AlarmResponse;
 import teamproject.pocoapoco.service.AlarmService;
 
 @Controller
-@RequestMapping("/alarm/v1")
+@RequestMapping("/view/v1")
 @RequiredArgsConstructor
 public class AlarmController {
 
