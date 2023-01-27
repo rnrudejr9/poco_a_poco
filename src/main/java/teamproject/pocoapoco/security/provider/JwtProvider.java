@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.UserRole;
+import teamproject.pocoapoco.exception.AppException;
+import teamproject.pocoapoco.exception.ErrorCode;
 
 import java.util.Date;
 
@@ -65,16 +67,20 @@ public class JwtProvider {
             Jwts.parser().setSigningKey(SECRET).parseClaimsJws(token);
             return true;
         } catch (io.jsonwebtoken.SignatureException | MalformedJwtException exception) { // 잘못된 jwt signature
-            log.info("validateToken : 잘못된 시그니처");
+//            log.info("validateToken : 잘못된 시그니처");
+            throw new AppException(ErrorCode.INVALID_TOKEN, "validateToken : 잘못된 시그니처");
         } catch (io.jsonwebtoken.ExpiredJwtException exception) { // jwt 만료
-            log.info("validateToken : jwt 만료");
+//            log.info("validateToken : jwt 만료");
+            throw new AppException(ErrorCode.EXPIRED_TOKEN, "validateToken : jwt 만료");
         } catch (io.jsonwebtoken.UnsupportedJwtException exception) { // 지원하지 않는 jwt
-            log.info("validateToken : 지원하지 않는 jwt");
+//            log.info("validateToken : 지원하지 않는 jwt");
+            throw new AppException(ErrorCode.INVALID_TOKEN, "validateToken : 지원하지 않는 jwt");
         } catch (IllegalArgumentException exception) { // 잘못된 jwt 토큰
             log.info("잘못된 jwt 토큰");
+            throw new AppException(ErrorCode.INVALID_TOKEN, "validateToken : 잘못된 jwt 토큰");
         }
-        return false;
     }
+
 
     public Authentication getAuthentication(String accessToken) {
         // token 복호화

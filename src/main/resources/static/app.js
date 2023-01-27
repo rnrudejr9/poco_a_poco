@@ -41,8 +41,9 @@ async function loginTest() {
     if(response.ok){
         let json = await response.json();
         document.getElementById("area_login").innerHTML = json.resultCode;
-        localStorage.setItem("jwt",'Bearer ' + json.result.jwt);
+        localStorage.setItem("jwt",'Bearer ' + json.result.accessToken);
         console.log(localStorage.getItem("jwt"));
+
     }else{
         let json = await response.text();
         document.getElementById("area_login").innerHTML = json;

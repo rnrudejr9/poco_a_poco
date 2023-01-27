@@ -66,9 +66,9 @@ public class CrewService {
     }
 
     // 크루 게시물 상세 조회
-    public CrewDetailResponse detailCrew(Long crewId, String userName) {
+    public CrewDetailResponse detailCrew(Long crewId) {
 
-        User user = findByUserName(userName);
+//        User user = findByUserName(userName);
         Crew crew = findByCrewId(crewId);
 
         return CrewDetailResponse.of(crew);
