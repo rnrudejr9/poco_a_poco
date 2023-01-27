@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html>
+<head>
+    <head>
+        <style>
+            #wrapper{
+                width:500px;
+                margin:auto;
+            }
+        </style>
+
+        <!--    <link rel="canonical" href="https://getbootstrap.kr/docs/5.1/examples/checkout/">-->
+        <!--    &lt;!&ndash; Bootstrap core CSS &ndash;&gt;-->
+        <!--    <link href="/docs/5.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <!-- Favicons -->
+        <link rel="apple-touch-icon" href="/docs/5.1/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
+        <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
+        <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon-16x16.png" sizes="16x16" type="image/png">
+        <link rel="manifest" href="/docs/5.1/assets/img/favicons/manifest.json">
+        <link rel="mask-icon" href="/docs/5.1/assets/img/favicons/safari-pinned-tab.svg" color="#7952b3">
+        <link rel="icon" href="/docs/5.1/assets/img/favicons/favicon.ico">
+        <meta name="theme-color" content="#7952b3">
+
+        <style>
+            .container {
+                max-width: 960px;
+            }
+        </style>
+    </head>
+</head>
+<body>
+<section class="bg-gray200 pt-5 pb-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-7">
+                <article class="card">
+                    <h1 class="card-title display-5">
+                        title<span th:text="${title}"></span></h1>
+                    <img class="card-img-top mb-2" src=https://user-images.githubusercontent.com/73879325/214769088-0db6fd43-002a-4492-940a-9decd66d74a9.png alt="Card image">
+                    <div class="card-body">
+                        <ul>
+                            <li>모집 인원 : <span th:text="${limit}"></span></li>
+                            <li>위치 : <span th:text="${strict}"></span></li>
+                            <li>모집 내용 : <span th:text="${content}"></span></li>
+                            <li>2 tablespoons sugar</li>
+                            <li>A teaspoon of salt</li>
+                        </ul>
+                        <!-- 목록으로 돌아가기 버튼
+                        ================================================== -->
+                        <div style="display: inline-block">
+                            <form class="container" form action="api/v1/crews" method="get">
+                                <button class="btn btn-success btn-lg" type="submit"
+                                        style="width:120px;height:40px;font-size: 15px">게시글 목록
+                                </button>
+                            </form>
+
+                        </div>
+
+
+                        <!-- Begin Comments -replace demowebsite with your own id
+                        ================================================== -->
+                        <div id="comments" class="mt-4">
+                            <div id="disqus_thread">
+                            </div>
+                            <script type="text/javascript">
+                                var disqus_shortname = 'demowebsite';
+                                var disqus_developer = 0;
+                                (function() {
+                                    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+                                    dsq.src = window.location.protocol + '//' + disqus_shortname + '.disqus.com/embed.js';
+                                    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+                                })();
+                            </script>
+                            <noscript>
+                                Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a>
+                            </noscript>
+                        </div>
+                        <!--End Comments
+                        ================================================== -->
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div id="wrapper">
+    <button class="w-100 btn btn-secondary btn-lg" type="submit" onclick=""
+            style="width:500px;margin:auto;"> 참여하기</button>
+</div>
+
+</body>
+</html>

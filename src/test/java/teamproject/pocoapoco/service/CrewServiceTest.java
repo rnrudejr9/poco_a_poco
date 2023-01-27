@@ -253,7 +253,7 @@ class CrewServiceTest {
             given(crewRepository.findById(any())).willReturn(Optional.ofNullable(crew));
 
             //when
-            CrewDetailResponse response = crewService.detailCrew(crew.getId(), user.getUsername());
+            CrewDetailResponse response = crewService.detailCrew(crew.getId());
 
             //then
             assertEquals(crew.getStrict(), response.getStrict());
@@ -269,7 +269,7 @@ class CrewServiceTest {
             given(userRepository.findByUserName(any())).willThrow(new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
 
             //when
-            AppException exception = assertThrows(AppException.class, () -> crewService.detailCrew(crew.getId(), user.getUsername()));
+            AppException exception = assertThrows(AppException.class, () -> crewService.detailCrew(crew.getId()));
 
             //then
             assertEquals(exception.getErrorCode(), ErrorCode.USERID_NOT_FOUND);
@@ -284,7 +284,7 @@ class CrewServiceTest {
             given(crewRepository.findById(any())).willThrow(new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
 
             //when
-            AppException exception = assertThrows(AppException.class, () -> crewService.detailCrew(crew.getId(), user.getUsername()));
+            AppException exception = assertThrows(AppException.class, () -> crewService.detailCrew(crew.getId()));
 
             //then
             assertEquals(exception.getErrorCode(), ErrorCode.CREW_NOT_FOUND);
@@ -300,7 +300,7 @@ class CrewServiceTest {
             given(crewRepository.findById(any())).willThrow(new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
 
             //when
-            AppException exception = assertThrows(AppException.class, () -> crewService.detailCrew(crew.getId(), user.getUsername()));
+            AppException exception = assertThrows(AppException.class, () -> crewService.detailCrew(crew.getId()));
 
             //then
             assertEquals(exception.getErrorCode(), ErrorCode.DB_ERROR);

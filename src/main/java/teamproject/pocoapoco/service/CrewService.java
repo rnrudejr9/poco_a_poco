@@ -66,9 +66,9 @@ public class CrewService {
     }
 
     // 크루 게시물 상세 조회
-    public CrewDetailResponse detailCrew(Long crewId, String userName) {
+    public CrewDetailResponse detailCrew(Long crewId) {
 
-        User user = findByUserName(userName);
+//        User user = findByUserName(userName);
         Crew crew = findByCrewId(crewId);
 
         return CrewDetailResponse.of(crew);
@@ -92,13 +92,13 @@ public class CrewService {
 
 
     // User 존재 확인
-    private User findByUserName(String userName) {
+    public User findByUserName(String userName) {
         return userRepository.findByUserName(userName)
                 .orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
     }
 
     // 크루 게시글 존재 확인
-    private Crew findByCrewId(Long crewId ) {
+    private Crew findByCrewId(Long crewId) {
         return crewRepository.findById(crewId)
                 .orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
     }
