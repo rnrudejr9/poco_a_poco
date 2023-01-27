@@ -1,16 +1,14 @@
 package teamproject.pocoapoco.domain.dto.user;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.context.annotation.Bean;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
 public class UserJoinRequest {
 
     private String userId;
