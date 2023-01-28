@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.controller;
+package teamproject.pocoapoco.controller.main.ui;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
