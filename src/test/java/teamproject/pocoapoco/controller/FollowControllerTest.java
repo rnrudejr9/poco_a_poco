@@ -2,7 +2,6 @@ package teamproject.pocoapoco.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -10,18 +9,13 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
-import teamproject.pocoapoco.domain.dto.comment.CommentResponse;
+import teamproject.pocoapoco.controller.main.api.FollowController;
 import teamproject.pocoapoco.domain.dto.follow.FollowingResponse;
-import teamproject.pocoapoco.domain.dto.like.LikeResponse;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.fixture.TestInfoFixture;
-import teamproject.pocoapoco.service.CommentService;
 import teamproject.pocoapoco.service.FollowService;
 
-import java.time.LocalDateTime;
-
-import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
