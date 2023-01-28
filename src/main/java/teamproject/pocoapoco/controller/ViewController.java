@@ -21,13 +21,13 @@ public class ViewController {
     public String signup(UserJoinRequest userJoinRequest){
 
         userService.saveUser(userJoinRequest);
-        return "test/test";
+        return "redirect:/view/v1/start";
     }
     @PostMapping("/view/v1/signin")
     public String login(UserLoginRequest userLoginRequest){
 
         userService.login(userLoginRequest);
-        return "test/test";
+        return "redirect:/view/v1/crews";
     }
     @GetMapping("/view/v1/start")
     public String testForm(Model model) {
