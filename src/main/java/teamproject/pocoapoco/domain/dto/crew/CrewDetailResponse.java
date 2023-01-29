@@ -20,8 +20,9 @@ public class CrewDetailResponse {
     private String content;
     private Integer crewLimit;
     private String userId;
-//    private String createdAt;
-//    private String lastModifiedAt;
+    private String userName;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
 //    private String sport;
 
     public static CrewDetailResponse of(Crew crew) {
@@ -32,8 +33,9 @@ public class CrewDetailResponse {
                 .content(crew.getContent())
                 .crewLimit(crew.getCrewLimit())
                 .userId(crew.getUser().getUserId())
-//                .createdAt(crew.getCreatedAt().toString())
-//                .lastModifiedAt(crew.getLastModifiedAt().toString())
+                .userName(crew.getUser().getUsername())
+                .createdAt(crew.getCreatedAt())
+                .lastModifiedAt(crew.getLastModifiedAt())
 //                .sport(crew.getSport().getName())
                 .build();
     }
