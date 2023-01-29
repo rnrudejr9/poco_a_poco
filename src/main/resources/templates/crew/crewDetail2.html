@@ -67,13 +67,14 @@
                         </ul>
                         <!-- 목록으로 돌아가기 버튼
                         ================================================== -->
-
-                        <div style="display: inline-block">
-                            <form class="container" form action="javascript:history.back()" method="get">
+                        <div class="form-group">
+                            <form class="container float-left" form action="javascript:history.back()" method="get">
                                 <button class="btn btn-success btn-lg" type="submit"
                                         style="width:120px;height:40px;font-size: 15px">돌아가기
                                 </button>
                             </form>
+<!--                            <a th:href="@{'/view/v1/crews/update/' + *{id}}" th:if="${#authentication.name == post.account.username}" class="btn btn-primary float-right ml-1" aria-describedby="submitHelp">글 수정</a>-->
+<!--                            <button th:if="${#authentication.name == post.account.username}" id="btn-post-delete" class="btn btn-danger float-right ml-1" type="button" onclick="confirmDelete()">글 삭제</button>-->
                         </div>
 
                         <!-- Begin Comments -replace demowebsite with your own id
@@ -108,14 +109,13 @@
 <!--                                <p class="comment2" sec:authorize="isAnonymous()">로그인 후 댓글을 작성할 수 있습니다.</p>-->
 <!--                            </div>-->
 <!--                            <div sec:authorize="isAuthenticated()">-->
-                                <form method="post" >
-                                    <div class="input-group" style="width:auto">
+                                <form id="comment-form" >
+                                    <div id="comment-box" class="input-group" style="width:auto">
                                         <label class="form-label mt-4" hidden>댓글 작성</label>
-                                        <input type="text"  class="form-control" id="commentContent" name="commentContent" placeholder="댓글을 입력해주세요">
-                                        <input type="text" hidden th:value="${crewId}" id="crewId">
-<!--                                        <input type="text" hidden th:value="${#authentication.getName()}" id="principal">-->
-<!--                                        <button type="button" id="commentBtn"  onclick="commentCheck()" class="btn btn-light">작성</button>-->
-                                        <div>
+                                        <div id="comment-writer" class="input-group">
+                                            <input type="text"  class="form-control" id="commentContent" name="commentContent" placeholder="댓글을 입력해주세요">
+                                            <input type="text" hidden th:value="${crewId}" id="crewId">
+                                            <button type="button" id="commentBtn" class="btn btn-light">작성</button>
                                         </div>
                                         <br>
                                     </div>
@@ -137,15 +137,15 @@
 </section>
 
 <aside>
-
 </aside>
 
 <div id="wrapper">
-    <button class="w-100 btn btn-secondary btn-lg" type="submit" onclick=""
+    <button class="w-100 btn btn-secondary btn-lg" type="submit"
             style="width:500px;margin:auto;"> 참여하기</button>
 </div>
 
 <footer th:replace="fragments/fragment :: footer"></footer>
+
 
 </body>
 </html>
