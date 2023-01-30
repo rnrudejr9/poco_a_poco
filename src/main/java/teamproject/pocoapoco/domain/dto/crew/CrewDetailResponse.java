@@ -14,25 +14,28 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 public class CrewDetailResponse {
-
+    private Long id;
     private String strict;
     private String title;
     private String content;
     private Integer crewLimit;
     private String userId;
-//    private String createdAt;
-//    private String lastModifiedAt;
+    private String userName;
+    private LocalDateTime createdAt;
+    private LocalDateTime lastModifiedAt;
 //    private String sport;
 
     public static CrewDetailResponse of(Crew crew) {
         return CrewDetailResponse.builder()
+                .id(crew.getId())
                 .strict(crew.getStrict())
                 .title(crew.getTitle())
                 .content(crew.getContent())
                 .crewLimit(crew.getCrewLimit())
                 .userId(crew.getUser().getUserId())
-//                .createdAt(crew.getCreatedAt().toString())
-//                .lastModifiedAt(crew.getLastModifiedAt().toString())
+                .userName(crew.getUser().getUsername())
+                .createdAt(crew.getCreatedAt())
+                .lastModifiedAt(crew.getLastModifiedAt())
 //                .sport(crew.getSport().getName())
                 .build();
     }

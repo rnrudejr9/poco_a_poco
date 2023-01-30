@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.controller;
+package teamproject.pocoapoco.controller.main.ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
+import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
 import teamproject.pocoapoco.service.UserService;
+
+import javax.servlet.http.HttpServletResponse;
 
 @Controller
 @Slf4j

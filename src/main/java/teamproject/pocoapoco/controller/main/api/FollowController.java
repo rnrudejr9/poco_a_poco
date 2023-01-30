@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.controller;
+package teamproject.pocoapoco.controller.main.api;
 
 
 import io.swagger.annotations.ApiOperation;

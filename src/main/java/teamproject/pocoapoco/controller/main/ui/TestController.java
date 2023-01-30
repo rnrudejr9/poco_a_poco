@@ -1,10 +1,11 @@
-package teamproject.pocoapoco.controller;
+package teamproject.pocoapoco.controller.main.ui;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import teamproject.pocoapoco.controller.main.api.UserController;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.UserProfileRequest;
 import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
@@ -25,11 +26,10 @@ public class TestController {
     private final UserService userService;
     private final UserRepository userRepository;
 
-    @GetMapping("/start1")
+    @GetMapping("/crews/write")
     public String hello(){
-        return "index";
+        return "crew/write";
     }
-
 
 
     @PostMapping("/users/profile/edit")
