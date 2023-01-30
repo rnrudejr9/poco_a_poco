@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
@@ -11,6 +12,7 @@ import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
 import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
 import teamproject.pocoapoco.service.UserService;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
 
 @Controller
@@ -26,8 +28,9 @@ public class ViewController {
         userService.saveUser(userJoinRequest);
         return "redirect:/view/v1/start";
     }
+
     @PostMapping("/view/v1/signin")
-    public String login(UserLoginRequest userLoginRequest){
+    public String login(UserLoginRequest userLoginRequest, HttpServletResponse response){
 
         userService.login(userLoginRequest);
         return "redirect:/view/v1/crews";
