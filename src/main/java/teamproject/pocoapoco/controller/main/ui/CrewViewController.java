@@ -19,6 +19,9 @@ import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.service.CrewService;
 
+import java.util.Arrays;
+import java.util.List;
+
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/view/v1/crews")
@@ -27,35 +30,6 @@ import teamproject.pocoapoco.service.CrewService;
 public class CrewViewController {
 
     private final CrewService crewService;
-
-
-//    // 크루 게시글 등록
-//    @PostMapping()
-//    @ApiOperation(value = "크루 게시글 등록", notes = "")
-//    public Response addCrew(@RequestBody CrewRequest crewRequest, Authentication authentication) {
-//        return Response.success(crewService.addCrew(crewRequest, authentication.getName()));
-//    }
-//
-//    // 크루 게시글 수정
-//    @PostMapping("/{crewId}")
-//    @ApiOperation(value = "크루 게시글 수정", notes = "")
-//    public Response modifyCrew(@PathVariable Long crewId, @RequestBody CrewRequest crewRequest, Authentication authentication) {
-//        return Response.success(crewService.modifyCrew(crewId, crewRequest, authentication.getName()));
-//    }
-//
-//    // 크루 게시글 삭제
-//    @DeleteMapping("/{crewId}")
-//    @ApiOperation(value = "크루 게시글 삭제", notes = "")
-//    public Response deleteCrew(@PathVariable Long crewId, Authentication authentication) {
-//        return Response.success(crewService.deleteCrew(crewId, authentication.getName()));
-//    }
-//
-//    // 크루 게시물 상세 조회
-//    @GetMapping("/{crewId}")
-//    @ApiOperation(value = "크루 게시글 상세조회", notes = "")
-//    public Response detailCrew(@PathVariable Long crewId, Authentication authentication) {
-//        return Response.success(crewService.detailCrew(crewId, authentication.getName()));
-//    }
 
     // 크루 게시물 전체 조회
     @GetMapping()
@@ -104,4 +78,13 @@ public class CrewViewController {
 
         return "main/main";
     }
+
+    @PostMapping("/test")
+    @ApiOperation(value = "크루 게시글 지역 검색조회", notes = "")
+    public String test(@ModelAttribute boolean open) {
+
+        log.info("testing");
+        return "main/main";
+    }
+
 }

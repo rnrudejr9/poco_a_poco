@@ -11,13 +11,16 @@ import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
 import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.CrewStrictRequest;
 import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
+import teamproject.pocoapoco.repository.SportRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -27,7 +30,7 @@ public class CrewService {
 
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
-
+    private final SportRepository sportRepository;
 
     // 크루 게시글 등록
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
@@ -88,6 +91,21 @@ public class CrewService {
         Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
 
         return crews.map(CrewDetailResponse::of);
+    }
+
+    // 크루 게시물 지역 검색 조회
+    public Page<CrewDetailResponse> findAllCrewsWithStrict2(CrewStrictRequest crewStrictRequest, Pageable pageable) {
+
+        Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
+
+        return crews.map(CrewDetailResponse::of);
+    }
+
+    public Optional<Sport> findAllSport() {
+
+        Optional<Sport> sportList = sportRepository.findById(1L);
+
+        return sportList;
     }
 
 
