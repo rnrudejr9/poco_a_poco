@@ -65,6 +65,8 @@ dependencies {
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
+    //타임리프 권한처리 라이브러리
+    implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
 
 

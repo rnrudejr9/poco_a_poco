@@ -1,5 +1,6 @@
 <!doctype html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:fragment="head">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -48,8 +49,10 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="#" class="nav-link px-2 text-white"><h4>💪운동메&emsp;&emsp;</h4></a></li>
                 <li><a href="/view/v1/crews/" class="nav-link px-2 text-white"><h5>모집글&emsp;&emsp;</h5></a></li>
-                <li><a href="/view/v1/alarm/" th:href="@{/view/v1/alarm}" class="nav-link px-2 text-white"><h5>알림&emsp;&emsp;</h5></a></li>
-                <li><a href="/view/v1/users/profile/my" th:href="@{/view/v1/users/profile/my}" class="nav-link px-2 text-white"><h5>My프로필&emsp;&emsp;</h5></a></li>
+                <li><a href="/view/v1/alarm/" sec:authorize="isAuthenticated()" th:href="@{/view/v1/alarm}" class="nav-link px-2 text-white"><h5>알림&emsp;&emsp;</h5>
+                </a></li>
+                <li><a href="/view/v1/users/profile/my" th:href="@{/view/v1/users/profile/my}"
+                       class="nav-link px-2 text-white"><h5>My프로필&emsp;&emsp;</h5></a></li>
             </ul>
 
             <!-- 검색-->
@@ -61,9 +64,15 @@
 
             <!-- 로그인&회원가입-->
             <div class="text-end">
-                <button type="button" class="btn btn-outline-light me-2" onclick="location.href='/view/v1/start'">Login</button>
-                <button type="button" class="btn btn-warning" onclick="location.href='/view/v1/start'">Sign-up</button>
-
+                <button type="button" class="btn btn-outline-light me-2" sec:authorize="!isAuthenticated()"
+                        onclick="location.href='/view/v1/start'">Login
+                </button>
+                <button type="button" class="btn btn-warning" sec:authorize="!isAuthenticated()"
+                        onclick="location.href='/view/v1/start'">Sign-up
+                </button>
+                <span class="text-white" sec:authorize="isAuthenticated()" sec:authentication="name">사용자</span>
+                <span class="text-white" sec:authorize="isAuthenticated()" >님 환영합니다✨</span>
+                <a type="button" class="btn btn-warning" th:href="@{/view/v1/logout}" sec:authorize="isAuthenticated()">Logout</a>
             </div>
 
 
@@ -85,9 +94,6 @@
             integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
             crossorigin="anonymous"></script>
 </footer>
-
-
-
 
 
 </body>
