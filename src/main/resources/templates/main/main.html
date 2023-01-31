@@ -42,19 +42,22 @@
           <div class="collapse" id="collapseExample">
             <div class="card card-body">
 
-                <form action="" method="" name="">
+                <form th:action th:object="${sport}" method="post">
                     <div class="grid text-center" >
                         <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4" >
-                            <button type="button" class="btn btn-outline-secondary">축구</button>
-                            <button type="button" class="btn btn-outline-success">농구</button>
-                            <button type="button" class="btn btn-outline-danger">야구</button>
-                            <button type="button" class="btn btn-outline-warning">등산</button>
-                            <button type="button" class="btn btn-outline-info">산책</button>
-                            <button type="button" class="btn btn-outline-dark">스키장</button>
-                            <button type="button" class="btn btn-outline-success">스노우쿨링</button>
-                            <button type="button" class="btn btn-outline-danger">탁구</button>
-                            <button type="button" class="btn btn-outline-warning">배드민턴</button>
-                            <button type="button" class="btn btn-outline-info">당구</button>
+
+                            <label class="btn btn-outline-danger"> <input type="checkbox" th:field="*{soccer}">축구</label>
+                            <label class="btn btn-outline-warning"> <input type="checkbox" th:field="*{jogging}">조깅</label>
+                            <label class="btn btn-outline-info"> <input type="checkbox" th:field="*{tennis}">테니스</label>
+                            <label class="btn btn btn-outline-success"> <input type="checkbox">농구</label>
+                            <label class="btn btn-outline-secondary"> <input type="checkbox">야구</label>
+                            <label class="btn btn-outline-danger"> <input type="checkbox">스키장</label>
+                            <label class="btn btn-outline-warning"> <input type="checkbox">스노우쿨링</label>
+                            <label class="btn btn-outline-info"> <input type="checkbox">탁구</label>
+                            <label class="btn btn btn-outline-success"> <input type="checkbox">배드민턴</label>
+                            <label class="btn btn-outline-secondary"> <input type="checkbox">당구</label>
+
+                            <button class="btn-primary" type="submit">조회 버튼</button>
                         </div>
                     </div>
                 </form>

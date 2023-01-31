@@ -6,11 +6,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
-import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
-import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
-import teamproject.pocoapoco.domain.dto.crew.CrewStrictRequest;
+import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
@@ -18,6 +16,7 @@ import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.Optional;
 
 
 @Service
@@ -27,7 +26,6 @@ public class CrewService {
 
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
-
 
     // 크루 게시글 등록
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
@@ -86,6 +84,14 @@ public class CrewService {
     public Page<CrewDetailResponse> findAllCrewsWithStrict(CrewStrictRequest crewStrictRequest, Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
+
+        return crews.map(CrewDetailResponse::of);
+    }
+
+    // 크루 게시물 운동 검색 조회
+    public Page<CrewDetailResponse> findAllCrewsBySportIs(SportRequest sportRequest, Pageable pageable) {
+
+        Page<Crew> crews = crewRepository.findBySportIs(pageable, "umm");
 
         return crews.map(CrewDetailResponse::of);
     }

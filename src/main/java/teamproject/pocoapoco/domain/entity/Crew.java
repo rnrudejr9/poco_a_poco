@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Where(clause = "deleted_at is null")
-public class Crew extends BaseEntity{
+public class Crew extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,6 +29,9 @@ public class Crew extends BaseEntity{
     private Integer chatroomId;
     // participant_id 추후 추가예정
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Sport sport;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
@@ -39,7 +42,7 @@ public class Crew extends BaseEntity{
     public void of(CrewRequest request) {
         this.strict = request.getStrict();
         this.title = request.getTitle();
-        this.content =request.getContent();
+        this.content = request.getContent();
         this.crewLimit = request.getCrewLimit();
         this.chatroomId = 1;
     }
