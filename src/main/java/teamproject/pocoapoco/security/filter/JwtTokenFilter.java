@@ -17,6 +17,7 @@ import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -37,16 +38,26 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
         String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+        log.info("First Authorization = {}", token);
         request.setAttribute("existsToken", true); // 토큰 존재 여부 초기화
         if (isEmptyToken(token)) request.setAttribute("existsToken", false); // 토큰이 없는 경우 false로 변경
 
+        //쿠키 값 셋팅
+        if (token == null) {
+            Cookie[] cookies = request.getCookies();
+            for (Cookie cookie : cookies) if(cookie.getName().equals("jwt")) token = cookie.getValue().replace("+", " ");
+        }
+        // 쿠키 조회했는데도 null이거나 'Bearer ' 로 시작하지 않으면 에러
         if (token == null || !token.startsWith(BEARER)) {
+            log.info("Error At nullCheck Authorization = {}", token);
             filterChain.doFilter(request, response);
             return;
         }
 
         token = parseBearer(token);
+        log.info("After remove Bearer. Authorization = {}", token);
 
         if (jwtProvider.validateToken(token)) {
             // Redis 에 해당 accessToken logout 여부 확인
@@ -64,7 +75,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
                 return;
             }
         }
-
+        log.info("finish add Authorization to Security ContextHolder= {}", token);
         filterChain.doFilter(request, response);
     }
 
