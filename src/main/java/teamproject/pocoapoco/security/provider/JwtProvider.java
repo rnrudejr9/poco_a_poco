@@ -8,11 +8,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
+import teamproject.pocoapoco.controller.main.ui.ViewController;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
 
