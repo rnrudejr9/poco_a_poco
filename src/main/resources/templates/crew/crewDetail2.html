@@ -29,6 +29,8 @@
     </body>
 </head>
 <body>
+
+
 <section class="bg-gray200 pt-5 pb-5">
     <div class="container">
         <div class="row justify-content-center">
@@ -45,7 +47,12 @@
                                 <img id="imgId" th:src="@{/accounts/}+${accountDto.userId}" width="100" height="100"  alt="첨부이미지" />-->
 <!--                                <img th:src="resources/img/defaultUser.jpg">-->
 <!--                                <img width="100" height="100" src="img/defaultUser.jpg" alt="첨부이미지"/>-->
-                                <h4><a class=name th:view/v1/users/profile/{userName}><span th:text="${details.userId}"></span></a></h4>
+                                <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100px; height:100px;">
+                                <h4><a class=name th:href="@{/view/v1/users/profile/{userName}(userName=${details.getUserName()})}">
+                                    <span th:text="${details.userId}"></span></a>
+                                </h4>
+
+
                             </div>
                             <!--crew에 baseEntity가 적용되지 않은 거 같다
                             <span style="font-size: xx-small;" th:text="${details.createdAt}"></span>-->
@@ -53,19 +60,21 @@
                                 <li>모집 인원 : <span th:text="${details.crewLimit}"></span></li>
                                 <li>위치 : <span th:text="${details.strict}"></span></li>
                                 <li>모집 내용 : <span th:text="${details.content}"></span></li>
-                                <li>2 tablespoons sugar</li>
-                                <li>A teaspoon of salt</li>
+                                <li>생성 날짜 : <span th:text="${#temporals.format(details.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
+<!--                                <li>수정 날짜 : <span th:text="${#temporals.format(details.lastModifiedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></li>-->
                             </th:block>
 
                         </ul>
                         <!-- 목록으로 돌아가기 버튼
                         ================================================== -->
-                        <div style="display: inline-block">
-                            <form class="container" form action="javascript:history.back()" method="get">
+                        <div class="form-group">
+                            <form class="container float-left" form action="javascript:history.back()" method="get">
                                 <button class="btn btn-success btn-lg" type="submit"
                                         style="width:120px;height:40px;font-size: 15px">돌아가기
                                 </button>
                             </form>
+<!--                            <a th:href="@{'/view/v1/crews/update/' + *{id}}" th:if="${#authentication.name == post.account.username}" class="btn btn-primary float-right ml-1" aria-describedby="submitHelp">글 수정</a>-->
+<!--                            <button th:if="${#authentication.name == post.account.username}" id="btn-post-delete" class="btn btn-danger float-right ml-1" type="button" onclick="confirmDelete()">글 삭제</button>-->
                         </div>
 
                         <!-- Begin Comments -replace demowebsite with your own id
@@ -100,14 +109,13 @@
 <!--                                <p class="comment2" sec:authorize="isAnonymous()">로그인 후 댓글을 작성할 수 있습니다.</p>-->
 <!--                            </div>-->
 <!--                            <div sec:authorize="isAuthenticated()">-->
-                                <form method="post" >
-                                    <div class="input-group" style="width:auto">
+                                <form id="comment-form" >
+                                    <div id="comment-box" class="input-group" style="width:auto">
                                         <label class="form-label mt-4" hidden>댓글 작성</label>
-                                        <input type="text"  class="form-control" id="commentContent" name="commentContent" placeholder="댓글을 입력해주세요">
-                                        <input type="text" hidden th:value="${crewId}" id="crewId">
-<!--                                        <input type="text" hidden th:value="${#authentication.getName()}" id="principal">-->
-<!--                                        <button type="button" id="commentBtn"  onclick="commentCheck()" class="btn btn-light">작성</button>-->
-                                        <div>
+                                        <div id="comment-writer" class="input-group">
+                                            <input type="text"  class="form-control" id="commentContent" name="commentContent" placeholder="댓글을 입력해주세요">
+                                            <input type="text" hidden th:value="${crewId}" id="crewId">
+                                            <button type="button" id="commentBtn" class="btn btn-light">작성</button>
                                         </div>
                                         <br>
                                     </div>
@@ -128,12 +136,16 @@
     </div>
 </section>
 
+<aside>
+</aside>
+
 <div id="wrapper">
-    <button class="w-100 btn btn-secondary btn-lg" type="submit" onclick=""
+    <button class="w-100 btn btn-secondary btn-lg" type="submit"
             style="width:500px;margin:auto;"> 참여하기</button>
 </div>
 
 <footer th:replace="fragments/fragment :: footer"></footer>
+
 
 </body>
 </html>

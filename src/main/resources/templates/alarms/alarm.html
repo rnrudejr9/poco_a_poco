@@ -35,8 +35,9 @@
             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
             <p class="pb-3 mb-0 small lh-sm border-bottom">
                 <strong class="d-block text-gray-dark" th:text="${alarm.fromUserName}">alarm.title</strong>
-                <tr th:text="${alarm.text}">alarm.content</tr>
+                <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
             </p>
+
         </div>
 
         <small class="d-block text-end mt-3">
