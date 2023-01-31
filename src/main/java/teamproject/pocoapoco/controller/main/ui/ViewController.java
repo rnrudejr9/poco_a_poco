@@ -5,6 +5,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
+import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
 import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
@@ -62,10 +64,10 @@ public class ViewController {
 
     @PostMapping("/login/mailConfirm")
     @ResponseBody
-    String mailConfirm(@RequestParam("email") String email) throws Exception {
+    public Response mailConfirm(@RequestParam("email") String email) throws Exception {
 
-        String code = mailService.sendSimpleMessage(email);
-        System.out.println("인증코드 : " + code);
-        return code;
+        UserMailResponse userMailResponse = mailService.sendSimpleMessage(email);
+        System.out.println("인증코드 : " + userMailResponse.getCode());
+        return Response.success(userMailResponse);
     }
 }
