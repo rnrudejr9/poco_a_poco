@@ -11,6 +11,18 @@
     <div class="form-container sign-up-container">
         <form  action="/view/v1/signup" method="post" th:object="${userJoinRequest}" >
             <h3>회원가입</h3>
+            <div class="form-group last mb-4 email_input">
+                <label for="memail" id="mailTxt">이메일을 입력해주세요</label>
+                <input type="text" class="form-control" name="memail" id="memail">
+            </div>
+            <!-- <span>이메일 인증번호</span> -->
+            <button class="btn btn-outline-primary" type="button"  id="write">인증번호</button>
+
+
+            <div class="form-group last mb-4 check_input">
+                <label for="memailconfirm" id="memailconfirmTxt">인증번호를 입력해주세요</label>
+                <input type="text" class="form-control" id="memailconfirm">
+            </div>
             <input type="text" placeholder="Id" th:field="*{userId}" />
             <input type="password" placeholder="Password" th:field="*{password}"/>
             <input type="password" placeholder="PasswordCheck" th:field="*{passwordConfirm}" />
@@ -57,7 +69,7 @@
     const signUpButton = document.getElementById('signUp');
     const signInButton = document.getElementById('signIn');
     const container = document.getElementById('container');
-
+    document.getElementById('write').addEventListener('click',checkEmail);
     signUpButton.addEventListener('click', () => {
         container.classList.add("right-panel-active");
     });
@@ -65,6 +77,28 @@
     signInButton.addEventListener('click', () => {
         container.classList.remove("right-panel-active");
     });
+
+    async function checkEmail(){
+        let params = document.getElementById("memail").value;
+        let response = await fetch(`/login/mailConfirm/?email=${params}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                email: document.getElementById("memail").value,
+            })
+        })
+        console.log(response);
+        if(response.ok){
+            let json = await response.json()
+            console.log(json);
+
+        }else{
+            let json = await response.text();
+            console.log(json);
+        }
+    }
     //본 예제에서는 도로명 주소 표기 방식에 대한 법령에 따라, 내려오는 데이터를 조합하여 올바른 주소를 구성하는 방법을 설명합니다.
     function sample4_execDaumPostcode() {
         new daum.Postcode({
