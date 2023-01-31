@@ -15,6 +15,7 @@ import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.fixture.CrewEntityFixture;
 import teamproject.pocoapoco.fixture.UserEntityFixture;
+import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.LikeRepository;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -34,6 +35,7 @@ class LikeServiceTest {
     LikeRepository likeRepository = mock(LikeRepository.class);
     CrewRepository crewRepository = mock(CrewRepository.class);
     UserRepository userRepository = mock(UserRepository.class);
+    AlarmRepository alarmRepository = mock(AlarmRepository.class);
 
     User user;
     Crew crew;
@@ -52,7 +54,7 @@ class LikeServiceTest {
                 .likeTennis(false)
                 .build();
 
-        likeService = new LikeService(likeRepository,crewRepository,userRepository);
+        likeService = new LikeService(likeRepository,crewRepository,userRepository, alarmRepository);
         user = UserEntityFixture.get(userJoinRequest1);
         crew = CrewEntityFixture.get(1L);
     }
