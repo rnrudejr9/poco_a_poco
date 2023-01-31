@@ -2,6 +2,7 @@ package teamproject.pocoapoco.controller.main.ui;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,9 +16,11 @@ import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.LikeService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.servlet.http.HttpServletRequest;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class CrewNewController {
     private final CrewService crewService;
     private final CommentService commentService;
