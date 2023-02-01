@@ -123,8 +123,23 @@
     function back(){
         location.href="/view/v1/crews";
     }
+
+    function getCookie(cName) {
+        cName = cName + '=';
+        var cookieData = document.cookie;
+        var start = cookieData.indexOf(cName);
+        var cValue = '';
+        if(start != -1){
+            start += cName.length;
+            var end = cookieData.indexOf(';', start);
+            if(end == -1)end = cookieData.length;
+            cValue = cookieData.substring(start, end);
+        }
+        return cValue;
+    }
    async function crewMake() {
        let choose = document.querySelector('input[type=radio][name=options-outlined]:checked').value;
+       var cookieData = getCookie("jwt").replace("+"," ");
        if(choose === null){
            console.log("error not choose");
            return;
@@ -134,6 +149,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
+                "Authorization": cookieData
             },
             body: JSON.stringify({
                 strict: "null",
