@@ -26,7 +26,8 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
 
 
     //운동 검색 By Enum
-    Page<Crew> findBySportTest(Pageable pageable, SportTest test);
+    @Query("select s from Crew s where s.sportTest=:sport or s.sportTest=:sport2 or s.sportTest=:sport3")
+    Page<Crew> findBySportTest(Pageable pageable, SportTest sport, SportTest sport2, SportTest sport3);
 
 
     //    @Query("select s from Crew s where s.sport.soccer=true")

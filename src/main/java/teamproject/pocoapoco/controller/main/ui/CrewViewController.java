@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.entity.Sport;
+import teamproject.pocoapoco.enums.SportTest;
 import teamproject.pocoapoco.service.CrewService;
 
 import java.util.Arrays;

@@ -126,8 +126,10 @@ public class CrewService {
 
 
         //운동 검색 by Enum
-        SportTest test = SportTest.SOCCER;
-        Page<Crew> crews = crewRepository.findBySportTest(pageable, test);
+        SportTest sport = SportTest.SOCCER;
+        SportTest sport2 = SportTest.JOGGING;
+        SportTest sport3 = null;
+        Page<Crew> crews = crewRepository.findBySportTest(pageable, sport, sport2, sport3);
 
 
         return crews.map(CrewDetailResponse::of);

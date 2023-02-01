@@ -5,7 +5,7 @@ package teamproject.pocoapoco.enums;
 public enum SportTest {
 
     SOCCER("축구"),
-    JOGGING("농구"),
+    JOGGING("조깅"),
     TENNIS("테니스");
 
     private String value;

@@ -30,7 +30,7 @@ public class CrewRequest {
                 //crew 종목 검색 test
                 .sprotStr("테니스")
                 .interestSport(InterestSport.TENNIS)
-                .sportTest(SportTest.SOCCER)
+                .sportTest(SportTest.TENNIS)
                 .build();
     }
 }
