@@ -8,15 +8,14 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.entity.Crew;
-import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.SportTest;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.Optional;
 
 
 @Service
@@ -88,14 +87,48 @@ public class CrewService {
         return crews.map(CrewDetailResponse::of);
     }
 
+    // testing
     // 크루 게시물 운동 검색 조회
-    public Page<CrewDetailResponse> findAllCrewsBySport(Pageable pageable) {
-
-        //운동 검색
-        Page<Crew> crews = crewRepository.findBySportSoccer(pageable, true);
+    public Page<CrewDetailResponse> findAllCrewsBySport(SportRequest sportRequest, Pageable pageable) {
 
         //전체검색
         //Page<Crew> crews = crewRepository.findAll(pageable);
+
+        //지역 검색 by String
+//        String strict = "대구";
+//        Page<Crew> crews = crewRepository.findByStrictContaining(pageable, strict);
+
+
+        //운동 검색 by String
+//        String sport = "축구";
+//        Page<Crew> crews = crewRepository.findBySprotStrContaining(pageable, sport);
+
+        //운동 다중검색1 by String
+//        String sport = "축구";
+//        String sport2 = "";
+//        String sport3 = "";
+//        Page<Crew> crews = crewRepository.findBySprotStrOrSprotStrOrSprotStr(pageable, sport, sport2, sport3);
+
+
+        //운동 다중검색2 by String
+//        String sport = "";
+//        String sport2 = "";
+//        String sport3 = "";
+//
+//        if(sportRequest.isSoccer())
+//            sport ="축구";
+//        if(sportRequest.isJogging())
+//            sport2="조깅";
+//        if(sportRequest.isTennis())
+//            sport3="테니스";
+//
+//        Page<Crew> crews = crewRepository.findBySprotStr(pageable, sport, sport2, sport3);
+
+
+        //운동 검색 by Enum
+        SportTest test = SportTest.SOCCER;
+        Page<Crew> crews = crewRepository.findBySportTest(pageable, test);
+
 
         return crews.map(CrewDetailResponse::of);
     }

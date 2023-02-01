@@ -65,6 +65,9 @@ public class CrewViewController {
     @PostMapping()
     public String findAllCrewAndSport(Model model, @ModelAttribute("sport") SportRequest sportRequest,
                                       @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+
+
         //test
         log.info("post sport");
         log.info("post sport soccer : {}", sportRequest.isSoccer());
@@ -72,7 +75,7 @@ public class CrewViewController {
         log.info("post sport jogging : {}", sportRequest.isJogging());
 
 
-        Page<CrewDetailResponse> list = crewService.findAllCrewsBySport(pageable);
+        Page<CrewDetailResponse> list = crewService.findAllCrewsBySport(sportRequest, pageable);
 
         int nowPage = list.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);

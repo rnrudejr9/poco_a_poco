@@ -2,8 +2,9 @@ package teamproject.pocoapoco.domain.dto.crew;
 
 import lombok.*;
 import teamproject.pocoapoco.domain.entity.Crew;
-import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.InterestSport;
+import teamproject.pocoapoco.enums.SportTest;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -16,7 +17,6 @@ public class CrewRequest {
     private String content;
     private Integer crewLimit;
 
-    private Sport sport;
 
     public Crew toEntity(User user) {
         return Crew.builder()
@@ -25,8 +25,12 @@ public class CrewRequest {
                 .content(this.content)
                 .crewLimit(this.crewLimit)
                 .chatroomId(null)
-                .sport(Sport.setSport(true, false, false))
                 .user(user)
+
+                //crew 종목 검색 test
+                .sprotStr("테니스")
+                .interestSport(InterestSport.TENNIS)
+                .sportTest(SportTest.SOCCER)
                 .build();
     }
 }
