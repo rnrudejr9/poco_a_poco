@@ -47,7 +47,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         //쿠키 값 셋팅
         if (token == null) {
             Cookie[] cookies = request.getCookies();
-            for (Cookie cookie : cookies) if(cookie.getName().equals("jwt")) token = cookie.getValue().replace("+", " ");
+            if (cookies != null) for (Cookie cookie : cookies) if(cookie.getName().equals("jwt")) token = cookie.getValue().replace("+", " ");
         }
         // 쿠키 조회했는데도 null이거나 'Bearer ' 로 시작하지 않으면 에러
         if (token == null || !token.startsWith(BEARER)) {
