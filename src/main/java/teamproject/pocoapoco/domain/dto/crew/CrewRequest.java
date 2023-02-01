@@ -4,7 +4,7 @@ import lombok.*;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.InterestSport;
-import teamproject.pocoapoco.enums.SportTest;
+import teamproject.pocoapoco.enums.SportEnum;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -30,7 +30,7 @@ public class CrewRequest {
                 //crew 종목 검색 test
                 .sprotStr("테니스")
                 .interestSport(InterestSport.TENNIS)
-                .sportTest(SportTest.TENNIS)
+                .sportEnum(SportEnum.TENNIS)
                 .build();
     }
 }

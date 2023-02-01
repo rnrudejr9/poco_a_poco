@@ -5,7 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import teamproject.pocoapoco.domain.entity.Crew;
-import teamproject.pocoapoco.enums.SportTest;
+import teamproject.pocoapoco.enums.SportEnum;
 
 public interface CrewRepository extends JpaRepository<Crew, Long> {
 
@@ -26,11 +26,8 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
 
 
     //운동 검색 By Enum
-    @Query("select s from Crew s where s.sportTest=:sport or s.sportTest=:sport2 or s.sportTest=:sport3")
-    Page<Crew> findBySportTest(Pageable pageable, SportTest sport, SportTest sport2, SportTest sport3);
+    @Query("select s from Crew s where s.sportEnum=:sport or s.sportEnum=:sport2 or s.sportEnum=:sport3")
+    Page<Crew> findBySportEnum(Pageable pageable, SportEnum sport, SportEnum sport2, SportEnum sport3);
 
-
-    //    @Query("select s from Crew s where s.sport.soccer=true")
-    //    Page<Crew> findBySportSoccer(Pageable pageable, boolean sport);
 
 }

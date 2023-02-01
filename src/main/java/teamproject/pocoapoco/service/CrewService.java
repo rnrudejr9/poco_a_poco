@@ -9,13 +9,14 @@ import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.enums.SportTest;
+import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -87,12 +88,12 @@ public class CrewService {
         return crews.map(CrewDetailResponse::of);
     }
 
-    // testing
-    // 크루 게시물 운동 검색 조회
-    public Page<CrewDetailResponse> findAllCrewsBySport(SportRequest sportRequest, Pageable pageable) {
+
+    // test : 크루 게시물 검색 조회
+    public Page<CrewDetailResponse> findAllCrewsBySport(CrewSportRequest crewSportRequest, Pageable pageable) {
 
         //전체검색
-        //Page<Crew> crews = crewRepository.findAll(pageable);
+//        Page<Crew> crews = crewRepository.findAll(pageable);
 
         //지역 검색 by String
 //        String strict = "대구";
@@ -111,27 +112,36 @@ public class CrewService {
 
 
         //운동 다중검색2 by String
-//        String sport = "";
+//        String sport = "축구";
 //        String sport2 = "";
 //        String sport3 = "";
 //
-//        if(sportRequest.isSoccer())
+//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
 //            sport ="축구";
-//        if(sportRequest.isJogging())
+//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
 //            sport2="조깅";
-//        if(sportRequest.isTennis())
+//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
 //            sport3="테니스";
 //
 //        Page<Crew> crews = crewRepository.findBySprotStr(pageable, sport, sport2, sport3);
 
 
         //운동 검색 by Enum
-        SportTest sport = SportTest.SOCCER;
-        SportTest sport2 = SportTest.JOGGING;
-        SportTest sport3 = null;
-        Page<Crew> crews = crewRepository.findBySportTest(pageable, sport, sport2, sport3);
 
+        Page<Crew> crews;
+        List<String> sportsList = crewSportRequest.getSportsList();
 
+        if (sportsList.isEmpty()) {
+            crews = crewRepository.findAll(pageable);
+        } else {
+            SportEnum[] sports = new SportEnum[3];
+
+            for (int i = 0; i < sportsList.size(); i++) {
+                sports[i] = SportEnum.valueOf(sportsList.get(i));
+            }
+
+            crews = crewRepository.findBySportEnum(pageable, sports[0], sports[1], sports[2]);
+        }
         return crews.map(CrewDetailResponse::of);
     }
 

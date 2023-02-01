@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
 import teamproject.pocoapoco.enums.InterestSport;
-import teamproject.pocoapoco.enums.SportTest;
+import teamproject.pocoapoco.enums.SportEnum;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ public class Crew extends BaseEntity {
     private InterestSport interestSport;
 
     @Enumerated(value = EnumType.STRING)
-    private SportTest sportTest;
+    private SportEnum sportEnum;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")

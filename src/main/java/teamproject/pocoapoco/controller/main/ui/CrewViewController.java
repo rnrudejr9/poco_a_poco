@@ -8,17 +8,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.crew.*;
-import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.entity.Sport;
-import teamproject.pocoapoco.enums.SportTest;
+import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.service.CrewService;
 
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +33,9 @@ public class CrewViewController {
     @ApiOperation(value = "크루 게시글 전체조회", notes = "")
     public String findAllCrew(Model model,
                               @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        log.info("GetMapping findAllCrew");
+
         Page<CrewDetailResponse> list = crewService.findAllCrews(pageable);
 
         // 페이징 처리 변수
@@ -45,7 +44,7 @@ public class CrewViewController {
         int endPage = Math.min(nowPage + 5, list.getTotalPages());
         int lastPage = list.getTotalPages();
 
-        // 모집글 리스트
+        // 게시글 리스트
         model.addAttribute("crewList", list);
 
         // 페이징 처리 모델
@@ -55,8 +54,7 @@ public class CrewViewController {
         model.addAttribute("lastPage", lastPage);
 
         //test : 종목 검색
-        model.addAttribute("sport", new SportRequest());
-        log.info("get sport");
+        model.addAttribute("sportRequest", new CrewSportRequest());
 
         return "main/main";
     }
@@ -64,32 +62,29 @@ public class CrewViewController {
 
     //test : 종목 검색
     @PostMapping()
-    public String findAllCrewAndSport(Model model, @ModelAttribute("sport") SportRequest sportRequest,
-                                      @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String findAllCrewAndSport(Model model, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
+    @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
+        log.info("PostMapping findAllCrewAndSport");
 
+        Page<CrewDetailResponse> list = crewService.findAllCrewsBySport(crewSportRequest, pageable);
 
-        //test
-        log.info("post sport");
-        log.info("post sport soccer : {}", sportRequest.isSoccer());
-        log.info("post sport tennis : {}", sportRequest.isTennis());
-        log.info("post sport jogging : {}", sportRequest.isJogging());
-
-
-        Page<CrewDetailResponse> list = crewService.findAllCrewsBySport(sportRequest, pageable);
-
+        // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, list.getTotalPages());
         int lastPage = list.getTotalPages();
 
+        // 게시글 리스트
         model.addAttribute("crewList", list);
 
+        // 페이징 처리 모델
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("lastPage", lastPage);
 
+        model.addAttribute("sportRequest", new CrewSportRequest());
 
         return "main/main";
     }
@@ -98,20 +93,24 @@ public class CrewViewController {
     // 크루 게시물 지역 검색 조회
     @PostMapping("/strict")
     @ApiOperation(value = "크루 게시글 지역 검색조회", notes = "")
-    public String findAllCrewWithStrict(String strict, Model model,
-                                        @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+    public String findAllCrewWithStrict(Model model, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
+                                        @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        CrewStrictRequest crewStrictRequest = new CrewStrictRequest(strict);
-        System.out.println("test\n" + crewStrictRequest.getStrict());
+        log.info("PostMapping findAllCrewWithStrict");
+
+        CrewStrictRequest crewStrictRequest = new CrewStrictRequest(crewSportRequest.getStrict());
         Page<CrewDetailResponse> list = crewService.findAllCrewsWithStrict(crewStrictRequest, pageable);
 
+        // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
         int endPage = Math.min(nowPage + 5, list.getTotalPages());
         int lastPage = list.getTotalPages();
 
+        // 게시글 리스트
         model.addAttribute("crewList", list);
 
+        // 페이징 처리 모델
         model.addAttribute("nowPage", nowPage);
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
@@ -150,15 +149,22 @@ public class CrewViewController {
     }
 
 
-    @ModelAttribute("hobbies")
-    private Map<String, String> favorite() {
-        Map<String, String> map = new LinkedHashMap<>();
-        map.put("movie", "영화보기");
-        map.put("music", "음악듣기");
-        map.put("running", "런닝하기");
-        map.put("game", "게임하기");
-        return map;
+    @ModelAttribute("hobbiesEnum")
+    private SportEnum[] favorite() {
+
+        SportEnum[] sportEnum = SportEnum.values();
+        System.out.println(sportEnum);
+
+        return sportEnum;
     }
 
+    @ModelAttribute("sportEnums")
+    private SportEnum[] sportEnums() {
+
+        SportEnum[] sportEnum = SportEnum.values();
+        System.out.println(sportEnum);
+
+        return sportEnum;
+    }
 
 }

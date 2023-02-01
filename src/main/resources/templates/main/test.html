@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <link href="../css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+
+  <div class="py-4 text-center">
+    <h2>Test Form</h2>
+  </div>
+
+
+  <form th:action th:object="${form}" method="post">
+
+
+    <div>
+      <label for="name">이름</label>
+      <input type="text" id="name" th:field="*{name}" class="form-control">
+    </div>
+
+
+    <div>CheckBox Test</div>
+    <div>
+      <div class="form-check">
+        <input type="checkbox" th:field="*{tnf}" class="form-check-input">
+        <label class="form-check-label">True or False</label>
+      </div>
+    </div>
+
+
+    <div>
+      <div>취미 선택 (다중 선택 가능)</div>
+      <div th:each="hobby : ${hobbiesEnum}" class="form-check">
+        <input type="checkbox" th:field="*{hobbies}" th:value="${hobby}" class="form-check-input">
+        <label th:for="${#ids.prev('hobbies')}" th:text="${hobby.getValue()}"  class="form-check-label"></label>
+      </div>
+    </div>
+
+
+    <button class="btn-primary" type="submit">전송</button>
+
+
+  </form>
+
+
+
+
+</div>
+</body>
+</html>

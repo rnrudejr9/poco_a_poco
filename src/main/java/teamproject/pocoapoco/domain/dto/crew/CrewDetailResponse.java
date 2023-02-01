@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.enums.InterestSport;
-import teamproject.pocoapoco.enums.SportTest;
+import teamproject.pocoapoco.enums.SportEnum;
 
 import java.time.LocalDateTime;
 
@@ -28,7 +28,7 @@ public class CrewDetailResponse {
     //crew 종목 검색 test
     private String sprotStr;
     private InterestSport interestSport;
-    private SportTest sportTest;
+    private SportEnum sportEnum;
 
     public static CrewDetailResponse of(Crew crew) {
         return CrewDetailResponse.builder()
@@ -45,7 +45,7 @@ public class CrewDetailResponse {
                 //crew 종목 검색 test
                 .sprotStr(crew.getSprotStr())
                 .interestSport(crew.getInterestSport())
-                .sportTest(crew.getSportTest())
+                .sportEnum(crew.getSportEnum())
                 .build();
     }
 
