@@ -18,7 +18,7 @@ public class MailService   {
     @Autowired
     JavaMailSender emailsender; // Bean 등록해둔 MailConfig 를 emailsender 라는 이름으로 autowired
 
-    private String ePw; // 인증번호
+    public static final String ePw =createKey(); // 인증번호
 
     // 메일 내용 작성
 
@@ -29,7 +29,7 @@ public class MailService   {
         MimeMessage message = emailsender.createMimeMessage();
 
         message.addRecipients(Message.RecipientType.TO, to);// 보내는 대상
-        message.setSubject("GoodJob 회원가입 이메일 인증");// 제목
+        message.setSubject("운동메 회원가입 이메일 인증");// 제목
 
         String msgg = "";
         msgg += "<div style='margin:100px;'>";
@@ -54,7 +54,7 @@ public class MailService   {
     }
 
     // 랜덤 인증 코드 생성
-    public String createKey() {
+    public static String createKey() {
         StringBuffer key = new StringBuffer();
         Random rnd = new Random();
 
@@ -87,7 +87,7 @@ public class MailService   {
 
     public UserMailResponse sendSimpleMessage(String to) throws Exception {
 
-        ePw = createKey(); // 랜덤 인증번호 생성
+       // 랜덤 인증번호 생성
 
         // TODO Auto-generated method stub
         MimeMessage message = createMessage(to); // 메일 발송

@@ -70,4 +70,16 @@ public class ViewController {
         System.out.println("인증코드 : " + userMailResponse.getCode());
         return Response.success(userMailResponse);
     }
+    @PostMapping("/login/verifyCode")
+    @ResponseBody
+    public int verifyCode(@RequestParam("code") String code) {
+        int result = 0;
+        System.out.println("code : "+code);
+        System.out.println("code match : "+ mailService.ePw.equals(code));
+        if(mailService.ePw.equals(code)) {
+            result =1;
+        }
+
+        return result;
+    }
 }
