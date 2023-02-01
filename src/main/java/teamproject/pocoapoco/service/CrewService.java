@@ -89,9 +89,13 @@ public class CrewService {
     }
 
     // 크루 게시물 운동 검색 조회
-    public Page<CrewDetailResponse> findAllCrewsBySportIs(SportRequest sportRequest, Pageable pageable) {
+    public Page<CrewDetailResponse> findAllCrewsBySport(Pageable pageable) {
 
-        Page<Crew> crews = crewRepository.findBySportIs(pageable, "umm");
+        //운동 검색
+        Page<Crew> crews = crewRepository.findBySportSoccer(pageable, true);
+
+        //전체검색
+        //Page<Crew> crews = crewRepository.findAll(pageable);
 
         return crews.map(CrewDetailResponse::of);
     }

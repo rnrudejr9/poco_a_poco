@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.domain.entity.Sport;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,7 @@ public class CrewDetailResponse {
     private String title;
     private String content;
     private Integer crewLimit;
+    private Sport sport;
     private String userId;
     private String userName;
     private LocalDateTime createdAt;
@@ -32,11 +34,11 @@ public class CrewDetailResponse {
                 .title(crew.getTitle())
                 .content(crew.getContent())
                 .crewLimit(crew.getCrewLimit())
+                .sport(crew.getSport())
                 .userId(crew.getUser().getUserId())
                 .userName(crew.getUser().getUsername())
                 .createdAt(crew.getCreatedAt())
                 .lastModifiedAt(crew.getLastModifiedAt())
-//                .sport(crew.getSport().getName())
                 .build();
     }
 

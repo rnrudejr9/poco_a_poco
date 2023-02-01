@@ -67,13 +67,12 @@ public class CrewViewController {
                                       @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
         //test
         log.info("post sport");
-        log.info("post sport {}", sportRequest.isSoccer());
-        log.info("post sport {}", sportRequest.isTennis());
-        log.info("post sport {}", sportRequest.isJogging());
+        log.info("post sport soccer : {}", sportRequest.isSoccer());
+        log.info("post sport tennis : {}", sportRequest.isTennis());
+        log.info("post sport jogging : {}", sportRequest.isJogging());
 
 
-        Page<CrewDetailResponse> list = crewService.findAllCrews(pageable);
-//        Page<CrewDetailResponse> list = crewService.findAllCrewsBySportIs(sportRequest, pageable);
+        Page<CrewDetailResponse> list = crewService.findAllCrewsBySport(pageable);
 
         int nowPage = list.getPageable().getPageNumber() + 1;
         int startPage = Math.max(nowPage - 4, 1);
@@ -86,7 +85,6 @@ public class CrewViewController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("lastPage", lastPage);
-
 
 
         return "main/main";
