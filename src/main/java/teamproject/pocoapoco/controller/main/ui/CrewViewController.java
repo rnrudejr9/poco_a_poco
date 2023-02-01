@@ -119,45 +119,6 @@ public class CrewViewController {
         return "main/main";
     }
 
-
-    //testㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ
-
-    @GetMapping("/form")
-    public String showForm(Model model) {
-        model.addAttribute("form", new FormDto());
-        log.info("get");
-        return "main/test";
-    }
-
-//    @PostMapping("/form")
-//    public String form(@ModelAttribute("form") FormDto formDto) {
-//        log.info("post / {}", formDto.getName());
-//        log.info("post / {}", formDto.isTnf());
-//        return "main/test";
-//    }
-
-    @PostMapping("/form")
-    public String form2(@ModelAttribute("form") FormDto formDto) {
-        log.info("formDto.name = {}", formDto.getName());
-        log.info("formDto.tnf = {}", formDto.isTnf());
-        List<String> hobbies = formDto.getHobbies();
-        for (String hobby : hobbies) {
-            log.info("formDto.hobby = {}", hobby);
-        }
-
-        return "main/test";
-    }
-
-
-    @ModelAttribute("hobbiesEnum")
-    private SportEnum[] favorite() {
-
-        SportEnum[] sportEnum = SportEnum.values();
-        System.out.println(sportEnum);
-
-        return sportEnum;
-    }
-
     @ModelAttribute("sportEnums")
     private SportEnum[] sportEnums() {
 
