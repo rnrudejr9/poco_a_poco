@@ -83,6 +83,19 @@
                                                                                      th:value="${sport}"
                                                                                      th:text="${sport.getValue()}">
                                     </label>
+
+                                    <!--                                    <label class="btn btn-outline-secondary" th:if="${sportRequest.sportsList==null}"> <input type="checkbox"-->
+                                    <!--                                                                                     onclick="count_check(this)"-->
+                                    <!--                                                                                     th:field="*{sportsList}"-->
+                                    <!--                                                                                     th:value="${sport}"-->
+                                    <!--                                                                                     th:text="${sport.getValue()}">-->
+                                    <!--                                    </label>-->
+                                    <!--                                    <label class="btn btn-outline-secondary" th:if="!${sportRequest.sportsList==null}"> <input type="checkbox" checked-->
+                                    <!--                                                                                                                              onclick="count_check(this)"-->
+                                    <!--                                                                                                                              th:field="*{sportsList}"-->
+                                    <!--                                                                                                                              th:value="${sport}"-->
+                                    <!--                                                                                                                              th:text="${sport.getValue()}">-->
+                                    <!--                                    </label>-->
                                 </th:block>
 
                             </div>
@@ -138,7 +151,7 @@
 
                         <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
                             <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
-                                                                                th:href="@{/view/v1/crews(page = ${page - 1})}"
+                                                                                th:href="@{/view/v1/crews(page = ${page - 1}, strict=${sportRequest.getStrict()})}"
                                                                                 th:text="${page}">1</a></li>
                             <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
                                                                                      style="color: red"></strong></li>
@@ -150,7 +163,6 @@
                     </ul>
                 </nav>
             </div>
-
 
         </div>
 
