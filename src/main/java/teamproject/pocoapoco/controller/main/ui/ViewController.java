@@ -61,7 +61,6 @@ public class ViewController {
         response.addCookie(cookie);
         return "redirect:/view/v1/crews";
     }
-
     @PostMapping("/login/mailConfirm")
     @ResponseBody
     public Response mailConfirm(@RequestParam("email") String email) throws Exception {
@@ -79,7 +78,6 @@ public class ViewController {
         if(mailService.ePw.equals(code)) {
             result =1;
         }
-
         return result;
     }
 }

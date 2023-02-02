@@ -23,9 +23,6 @@ public class MailService   {
     // 메일 내용 작성
 
     public MimeMessage createMessage(String to) throws MessagingException, UnsupportedEncodingException {
-//		System.out.println("보내는 대상 : " + to);
-//		System.out.println("인증 번호 : " + ePw);
-
         MimeMessage message = emailsender.createMimeMessage();
 
         message.addRecipients(Message.RecipientType.TO, to);// 보내는 대상
@@ -86,10 +83,7 @@ public class MailService   {
     // 그리고 bean 으로 등록해둔 javaMail 객체를 사용해서 이메일 send!!
 
     public UserMailResponse sendSimpleMessage(String to) throws Exception {
-
        // 랜덤 인증번호 생성
-
-        // TODO Auto-generated method stub
         MimeMessage message = createMessage(to); // 메일 발송
         try {// 예외처리
             emailsender.send(message);
@@ -97,7 +91,6 @@ public class MailService   {
             es.printStackTrace();
             throw new IllegalArgumentException();
         }
-
 
         return new UserMailResponse(ePw); // 메일로 보냈던 인증 코드를 서버로 반환
     }

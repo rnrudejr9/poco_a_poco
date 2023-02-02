@@ -11,14 +11,10 @@ import java.util.Properties;
 
 @Configuration
 public class MailConfig {
-
-    @Value("${spring.mail.username}" +
-            "" +
-            "")
+    @Value("${spring.mail.username}")
     String id;
     @Value("${spring.mail.password}")
     String password;
-
     @Bean
     public JavaMailSender javaMailService() {
         JavaMailSenderImpl javaMailSender = new JavaMailSenderImpl();
