@@ -7,13 +7,13 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
+import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
+import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
 import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
+import teamproject.pocoapoco.service.MailService;
 import teamproject.pocoapoco.service.UserService;
 
 import javax.servlet.http.Cookie;
@@ -28,6 +28,7 @@ import java.io.UnsupportedEncodingException;
 public class ViewController {
 
     private final UserService userService;
+    private final MailService mailService;
 
     @PostMapping("/view/v1/signup")
     public String signup(UserJoinRequest userJoinRequest) {
@@ -62,6 +63,10 @@ public class ViewController {
         model.addAttribute("userJoinRequest", new UserJoinRequest());
         return "start/start";
     }
+    @GetMapping("/view/v1/test")
+    public String test(Model model) {
+        return "test/test";
+    }
 
     @GetMapping("")
     public String oauthLogin() {
@@ -78,5 +83,23 @@ public class ViewController {
         session.removeAttribute("Authorization");
         return "redirect:/view/v1/crews";
     }
+    @PostMapping("/login/mailConfirm")
+    @ResponseBody
+    public Response mailConfirm(@RequestParam("email") String email) throws Exception {
 
+        UserMailResponse userMailResponse = mailService.sendSimpleMessage(email);
+        System.out.println("인증코드 : " + userMailResponse.getCode());
+        return Response.success(userMailResponse);
+    }
+    @PostMapping("/login/verifyCode")
+    @ResponseBody
+    public int verifyCode(@RequestParam("code") String code) {
+        int result = 0;
+        System.out.println("code : "+code);
+        System.out.println("code match : "+ mailService.ePw.equals(code));
+        if(mailService.ePw.equals(code)) {
+            result =1;
+        }
+        return result;
+    }
 }
