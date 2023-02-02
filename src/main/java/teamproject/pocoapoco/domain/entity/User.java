@@ -27,11 +27,13 @@ public class User implements UserDetails {
     private String password;
     private String address;
     private Integer manner;
+    private String email;
     private UserRole role = UserRole.ROLE_USER;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Sport sport;
-    private String profilePath;
+    private String provider;
+    private String providerId;
 
     @OneToMany(mappedBy = "user")
     private List<Crew> crews = new ArrayList<>();
@@ -85,5 +87,4 @@ public class User implements UserDetails {
                 .password(password)
                 .build();
     }
-
 }
