@@ -93,62 +93,68 @@
         <span class="placeholder col-12 bg-light placeholder-lg"></span>
         <span class="placeholder col-12 bg-light placeholder-lg"></span>
 
-        <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="rounded mx-auto d-block" style="height: 200px; width: 200px;">
+        <form method="post" action="/view/v1/users/profile/edit" th:object="${userProfileRequest}">
 
-        <form method="post" action="/">
+            <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="rounded mx-auto d-block" style="height: 200px; width: 200px;">
+
+            <button class="btn btn-primary" type="submit" onclick="updateImage()">프로필 사진 변경</button>
+
+
+            <div class="mb-3 row">
+                <label for="userName" class="col-sm-3 col-form-label">닉네임</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="userName" th:field="*{userName}"/>
+                    <button class="btn btn-primary" onclick="updateUserName()">닉네임 수정하기</button>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="password1" class="col-sm-3 col-form-label">비밀번호</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="password1" placeholder="비밀번호" th:field="*{password}">
+                </div>
+            </div>
+
+            <div class="mb-3 row">
+                <label for="password2" class="col-sm-3 col-form-label">비밀번호 확인</label>
+                <div class="col-sm-10">
+                    <input type="password" class="form-control" id="password2" placeholder="비밀번호 확인" th:field="*{passwordConfirm}">
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="address" class="col-sm-3 col-form-label">주소</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" id="address"  th:field="*{address}" >
+                </div>
+            </div>
+            <div class="container-sport">
+                <label class="col-sm-3 col-form-label">선호 종목</label>
+                <div class="form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="likeSoccer" th:field="*{likeSoccer}">
+                    <label class="form-check-label" for="likeSoccer">
+                        축구
+                    </label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="likeJogging" th:field="*{likeJogging}">
+                    <label class="form-check-label" for="likeJogging">
+                        조깅
+                    </label>
+                </div>
+                <div class="form-check-inline">
+                    <input class="form-check-input" type="checkbox" value="" id="likeTennis" th:field="*{likeTennis}">
+                    <label class="form-check-label" for="likeTennis">
+                        테니스
+                    </label>
+                </div>
+
+                <span class="placeholder col-12 bg-light placeholder-lg"></span>
+
+
+            </div>
+
+            <button class="btn btn-primary" type="submit" >수정 완료</button>
         </form>
-        <div class="mb-3 row">
-            <label for="userName" class="col-sm-3 col-form-label">닉네임</label>
-            <div class="col-sm-10">
-                <input type="text" readonly class="form-control-plaintext" id="userName" th:value="${userProfileResponse.userName}"/>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="password1" class="col-sm-3 col-form-label">비밀번호</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" id="password1" placeholder="비밀번호">
-            </div>
-        </div>
 
-        <div class="mb-3 row">
-            <label for="password2" class="col-sm-3 col-form-label">비밀번호 확인</label>
-            <div class="col-sm-10">
-                <input type="password" class="form-control" id="password2" placeholder="비밀번호 확인">
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="address" class="col-sm-3 col-form-label">주소</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control" id="address" th:value="${userProfileResponse.address}">
-            </div>
-        </div>
-        <div class="container-sport">
-            <label class="col-sm-3 col-form-label">선호 종목</label>
-            <div class="form-check-inline">
-                <input class="form-check-input" type="checkbox" id="likeSoccer" th:checked="${userProfileResponse.likeSoccer}">
-                <label class="form-check-label" for="likeSoccer">
-                    축구
-                </label>
-            </div>
-            <div class="form-check-inline">
-                <input class="form-check-input" type="checkbox" id="likeJogging" th:checked="${userProfileResponse.likeJogging}">
-                <label class="form-check-label" for="likeJogging">
-                    조깅
-                </label>
-            </div>
-            <div class="form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="likeTennis" th:checked="${userProfileResponse.likeJogging}">
-                <label class="form-check-label" for="likeTennis">
-                    테니스
-                </label>
-            </div>
-
-            <span class="placeholder col-12 bg-light placeholder-lg"></span>
-
-
-            <button class="btn btn-primary" type="submit" onclick="updateProfile()" >수정 완료</button>
-
-        </div>
 
 
     </div>
@@ -160,50 +166,14 @@
 
 <script type="text/javascript">
 
-    // window.onload = async function () {
-    //     var url = "/api/v1/users/profile/my";
-    //     await fetch(url, {
-    //         method: "GET",
-    //         headers: {
-    //             "Content-Type": "application/json",
-    //             "Authorization": localStorage.getItem('jwt'),
-    //             "Authentication": localStorage.getItem('jwt')
-    //         }
-    //     });
-    // }
+    function updateUserName(){
+        //새창 만들기
+        window.open("", "닉네임 변경하기", "width=400, height=350");
+    }
 
-
-    async function updateProfile() {
-        var url = "/api/v1/users/profile/" + document.getElementById("userName");
-        let response = await fetch(url, {
-            method: "PUT",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": localStorage.getItem('jwt'),
-                "Authentication": localStorage.getItem('jwt')
-            },
-            body: JSON.stringify({
-
-                userName: document.getElementById("userName"),
-                password: document.getElementById("password1"),
-                passwordConfirm: document.getElementById("password2"),
-                address: document.getElementById("address"),
-                likeSoccer: document.getElementById("likeSoccer"),
-                likeJogging: document.getElementById("likeJogging"),
-                likeTennis: document.getElementById("likeTennis"),
-            })
-        });
-        if(response.ok){
-            let json = await response.json();
-
-            console.log("프로필 수정 완료");
-            alert("회원정보 수정이 완료되었습니다.");
-
-        }else{
-
-            console.log("프로필 수정 실패");
-            alert("회원 정보 수정에 실패했습니다.");
-        }
+    function updateImage(){
+        //새창 만들기
+        window.open("", "프로필 이미지 변경하기", "width=400, height=350");
     }
 
 </script>

@@ -47,6 +47,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
+
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<GrantedAuthority>(List.of(new SimpleGrantedAuthority(role.name())));
@@ -78,6 +80,7 @@ public class User implements UserDetails {
     }
 
     public static User toEntity(String userId, String userName, String address, String password, Boolean likeSoccer, Boolean likeJogging, Boolean likeTennis){
+
         return User.builder()
                 .userId(userId)
                 .userName(userName)
@@ -85,6 +88,18 @@ public class User implements UserDetails {
                 .role(UserRole.ROLE_USER)
                 .sport(Sport.setSport(likeSoccer, likeJogging, likeTennis))
                 .password(password)
+                .build();
+    }
+
+    public static User toRevisedEntity(Long id, String userId, String revisedUserName, String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis) {
+        return User.builder()
+                .id(id)
+                .userId(userId)
+                .userName(revisedUserName)
+                .address(revisedAddress)
+                .role(UserRole.ROLE_USER)
+                .sport(Sport.setSport(revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis))
+                .password(encodedPassword)
                 .build();
     }
 }
