@@ -98,8 +98,7 @@ public class CrewViewController {
 
         log.info("PostMapping findAllCrewWithStrict");
 
-        CrewStrictRequest crewStrictRequest = new CrewStrictRequest(crewSportRequest.getStrict());
-        Page<CrewDetailResponse> list = crewService.findAllCrewsWithStrict(crewStrictRequest, pageable);
+        Page<CrewDetailResponse> list = crewService.findAllCrewsWithStrict(crewSportRequest, pageable);
 
         // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber() + 1;

@@ -10,6 +10,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewStrictRequest;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.service.CrewService;
@@ -63,8 +64,8 @@ public class CrewController {
     // 크루 게시물 지역 검색 조회
     @PostMapping("/strict")
     @ApiOperation(value = "크루 게시글 지역 검색조회", notes = "")
-    public Response findAllCrewWithStrict(@RequestBody CrewStrictRequest crewStrictRequest,
+    public Response findAllCrewWithStrict(@RequestBody CrewSportRequest crewSportRequest,
                                           @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return Response.success(crewService.findAllCrewsWithStrict(crewStrictRequest, pageable));
+        return Response.success(crewService.findAllCrewsWithStrict(crewSportRequest, pageable));
     }
 }

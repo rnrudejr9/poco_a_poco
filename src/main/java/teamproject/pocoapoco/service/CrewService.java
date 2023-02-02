@@ -81,9 +81,9 @@ public class CrewService {
     }
 
     // 크루 게시물 지역 검색 조회
-    public Page<CrewDetailResponse> findAllCrewsWithStrict(CrewStrictRequest crewStrictRequest, Pageable pageable) {
+    public Page<CrewDetailResponse> findAllCrewsWithStrict(CrewSportRequest crewSportRequest, Pageable pageable) {
 
-        Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
+        Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewSportRequest.getStrict());
 
         return crews.map(CrewDetailResponse::of);
     }
