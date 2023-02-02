@@ -69,6 +69,8 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
 
+    //oauth2
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
 
 }
 
