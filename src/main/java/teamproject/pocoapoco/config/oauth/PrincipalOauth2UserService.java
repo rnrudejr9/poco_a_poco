@@ -16,6 +16,7 @@ import teamproject.pocoapoco.config.oauth.provider.FacebookUserInfo;
 import teamproject.pocoapoco.config.oauth.provider.GoogleUserInfo;
 import teamproject.pocoapoco.config.oauth.provider.NaverUserInfo;
 import teamproject.pocoapoco.config.oauth.provider.OAuth2UserInfo;
+import teamproject.pocoapoco.domain.entity.Sport;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -83,6 +84,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
                     .role(UserRole.ROLE_USER)
                     .provider(provider)
                     .providerId(providerId)
+                    .sport(new Sport())
                     .build();
             userRepository.save(user);
         } else log.info("이미 Oauth 로그인을 한 적이있습니다.");

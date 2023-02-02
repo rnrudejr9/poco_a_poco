@@ -1,6 +1,7 @@
 package teamproject.pocoapoco.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -17,6 +18,11 @@ import java.util.Random;
 public class MailService   {
     @Autowired
     JavaMailSender emailsender; // Bean 등록해둔 MailConfig 를 emailsender 라는 이름으로 autowired
+
+    @Value("${spring.mail.username}")
+    String id;
+    @Value("${spring.mail.personal}")
+    String personal;
 
     public static final String ePw =createKey(); // 인증번호
 
@@ -45,7 +51,7 @@ public class MailService   {
         msgg += "</div>";
         message.setText(msgg, "utf-8", "html");// 내용, charset 타입, subtype
         // 보내는 사람의 이메일 주소, 보내는 사람 이름
-        message.setFrom(new InternetAddress("eoghks960307@naver.com", "대환"));// 보내는 사람
+        message.setFrom(new InternetAddress(id + "@naver.com", personal));// 보내는 사람
 
         return message;
     }
