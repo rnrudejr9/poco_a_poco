@@ -98,7 +98,7 @@
     });
 
     async function loadFetcher(){
-        let url = "/view/v1/chat/" + [[${room.roomId}]];
+        let url = "/api/v1/chat/" + [[${room.roomId}]];
         let response = await fetch(url,{
             method: "GET",
             headers: {
@@ -132,7 +132,7 @@
     }
 
     async function fetcher() {
-        let response = await fetch("/view/v1/chat", {
+        let response = await fetch("/api/v1/chat", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"

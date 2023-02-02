@@ -11,7 +11,7 @@ import teamproject.pocoapoco.service.chat.ChatService;
 import java.util.List;
 
 @RequiredArgsConstructor
-@RequestMapping("/view/v1/chat")
+@RequestMapping("/api/v1/chat")
 @RestController
 @Slf4j
 public class ChatRestController {
