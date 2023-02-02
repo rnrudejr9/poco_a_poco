@@ -30,7 +30,7 @@ public class ViewController {
     private final UserService userService;
 
     @PostMapping("/view/v1/signup")
-    public String signup(UserJoinRequest userJoinRequest){
+    public String signup(UserJoinRequest userJoinRequest) {
 
         userService.saveUser(userJoinRequest);
         return "redirect:/view/v1/start";
@@ -42,7 +42,7 @@ public class ViewController {
         UserLoginResponse tokens = userService.login(userLoginRequest);
 
         //cookie 설정은 스페이스가 안되기 때문에 Bearer 앞에 +를 붙인다. Security Filter에서 + -> " " 로 치환할 것이다.
-        Cookie cookie = new Cookie("jwt", "Bearer+"+tokens.getAccessToken());
+        Cookie cookie = new Cookie("jwt", "Bearer+" + tokens.getAccessToken());
 
 
         cookie.setPath("/");
@@ -55,10 +55,11 @@ public class ViewController {
 
         return "redirect:/view/v1/crews";
     }
+
     @GetMapping("/view/v1/start")
     public String testForm(Model model) {
-        model.addAttribute("userLoginRequest",new UserLoginRequest());
-        model.addAttribute("userJoinRequest",new UserJoinRequest());
+        model.addAttribute("userLoginRequest", new UserLoginRequest());
+        model.addAttribute("userJoinRequest", new UserJoinRequest());
         return "start/start";
     }
 
@@ -68,10 +69,13 @@ public class ViewController {
     }
 
     @GetMapping("/view/v1/logout")
-    public String logout(HttpServletResponse response, HttpSession session) {
+    public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
         Cookie cookie = new Cookie("jwt", null);
-        session.removeAttribute("Authorization");
+        cookie.setMaxAge(0);
+        cookie.setPath("/");
         response.addCookie(cookie);
+
+        session.removeAttribute("Authorization");
         return "redirect:/view/v1/crews";
     }
 
