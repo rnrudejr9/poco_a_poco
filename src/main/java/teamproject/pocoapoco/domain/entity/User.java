@@ -27,11 +27,13 @@ public class User implements UserDetails {
     private String password;
     private String address;
     private Integer manner;
+    private String email;
     private UserRole role = UserRole.ROLE_USER;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Sport sport;
-    private String profilePath;
+    private String provider;
+    private String providerId;
 
     @OneToMany(mappedBy = "user")
     private List<Crew> crews = new ArrayList<>();
@@ -44,6 +46,8 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
+
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -76,6 +80,7 @@ public class User implements UserDetails {
     }
 
     public static User toEntity(String userId, String userName, String address, String password, Boolean likeSoccer, Boolean likeJogging, Boolean likeTennis){
+
         return User.builder()
                 .userId(userId)
                 .userName(userName)
@@ -86,4 +91,15 @@ public class User implements UserDetails {
                 .build();
     }
 
+    public static User toRevisedEntity(Long id, String userId, String revisedUserName, String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis) {
+        return User.builder()
+                .id(id)
+                .userId(userId)
+                .userName(revisedUserName)
+                .address(revisedAddress)
+                .role(UserRole.ROLE_USER)
+                .sport(Sport.setSport(revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis))
+                .password(encodedPassword)
+                .build();
+    }
 }

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/fragment :: head"></head>
+<body>
+<!-- 네비바-->
+<header th:replace="fragments/fragment :: nav"></header>
+
+<th:block>
+    <th:block th:fragment="content">
+
+        <div class="container">
+            <div class="col-6">
+                <h1>[[${room.name}]]</h1>
+            </div>
+            <div style="overflow:scroll; height: 535px; display: flex; flex-direction: column-reverse; overflow-y: auto;  background-color: #9bbbd4">
+                <div id="msgArea" style="background-color: #9bbbd4"></div>
+            </div>
+
+            <div class="col-5">
+                <div class="input-group mb-3">
+                    <input type="text" id="msg" class="form-control">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-6"></div>
+        </div>
+
+
+        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+    </th:block>
+</th:block>
+
+
+
+<script th:inline="javascript">
+    document.addEventListener("DOMContentLoaded",function(){
+
+        loadFetcher();
+        var roomName = [[${room.name}]];
+        var roomId = [[${room.roomId}]];
+        var username = document.getElementById("myName").innerHTML;
+
+        console.log(roomName + ", " + roomId + ", " + username);
+
+        var sockJs = new SockJS("/stomp/chat", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
+        //1. SockJS를 내부에 들고있는 stomp를 내어줌
+        var stomp = Stomp.over(sockJs);
+
+        //2. connection이 맺어지면 실행
+        stomp.connect({}, function (){
+            console.log("STOMP Connection")
+
+
+            //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+            stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
+
+                var content = JSON.parse(chat.body);
+                var writer = content.writer;
+                var dateTime = new Date().toDateString();
+                var str = '';
+
+
+                if(writer === username){
+                    str = "<div class='col-6 offset-md-6'>";
+                    str += "<div class='alert alert-warning'>";
+                    str += "<b>" + writer + " : " + content.message + " : " + dateTime + "</b>";
+                    str += "</div></div>";
+                    $("#msgArea").append(str);
+                }
+                else{
+                    str = "<div class='col-6'>";
+                    str += "<div class='alert alert-success'>";
+                    str += "<b>" + writer + " : " + content.message + "</b>";
+                    str += "</div></div>";
+                    $("#msgArea").append(str);
+                }
+            });
+
+
+
+            stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
+            //3. send(path, header, message)로 메세지를 보낼 수 있음
+        });
+
+        $("#button-send").on("click", function(e){
+            var msg = document.getElementById("msg");
+
+            console.log(username + ":" + msg.value);
+            fetcher();
+            stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
+            msg.value = '';
+        });
+    });
+
+    async function loadFetcher(){
+        let url = "/api/v1/chat/" + [[${room.roomId}]];
+        let response = await fetch(url,{
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+                credentials: "same-origin",
+                credentials: 'include'
+            }
+        })
+        if(response.ok){
+            let json = await response.json();
+            console.log(json);
+            for(var i = 0;i<json.result.length;i++){
+                if(json.result[i].writer === document.getElementById("myName").innerHTML ){
+                    str = "<div class='col-6 offset-md-6'>";
+                    str += "<div class='alert alert-warning'>";
+                    str += "<b>" + json.result[i].writer + " : " + json.result[i].message + " : " + json.result[i].createdAt + "</b>";
+                    str += "</div></div>";
+                    $("#msgArea").append(str);
+                }else{
+                    str = "<div class='col-6'>";
+                    str += "<div class='alert alert-success'>";
+                    str += "<b>" + json.result[i].writer + " : " + json.result[i].message + " : " + json.result[i].createdAt + "</b>";
+                    str += "</div></div>";
+                    $("#msgArea").append(str);
+                }
+            }
+        }else{
+            let json = await response.json();
+            console.log(json.result.message);
+        }
+    }
+
+    async function fetcher() {
+        let response = await fetch("/api/v1/chat", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                writer: document.getElementById("myName").innerHTML,
+                message: document.getElementById("msg").value,
+                roomId: [[${room.roomId}]]
+            })
+        })
+        console.log("end");
+        console.log(response);
+
+    }
+</script>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+</body>
+
+</html>
