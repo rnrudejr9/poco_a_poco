@@ -71,6 +71,32 @@
 
                     <hr class="my-4">
 
+                    <tr>
+                        <th>주소</th>
+                        <td><input type="text" id="address_kakao" name="address" readonly /></td>
+                    </tr>
+                    <tr>
+                        <th>상세 주소</th>
+                        <td><input type="text" id="address_detail" name="address_detail" /></td>
+                    </tr>
+
+                    <script src="//t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
+                    <script>
+                        window.onload = function(){
+                            document.getElementById("address_kakao").addEventListener("click", function(){ //주소입력칸을 클릭하면
+                                //카카오 지도 발생
+                                new daum.Postcode({
+                                    oncomplete: function(data) { //선택시 입력값 세팅
+                                        document.getElementById("address_kakao").value = data.address; // 주소 넣기
+                                        document.querySelector("input[name=address_detail]").focus(); //상세입력 포커싱
+                                    }
+                                }).open();
+                            });
+                        }
+                    </script>
+
+                    <hr class="my-4">
+
                     <label class="form-label" id="rangeHuman">인원수</label>
                     <input type="range" class="form-range" min="1" max="99" step="1" id="customRange3" onchange="changeLabel()">
 
@@ -124,22 +150,10 @@
         location.href="/view/v1/crews";
     }
 
-    function getCookie(cName) {
-        cName = cName + '=';
-        var cookieData = document.cookie;
-        var start = cookieData.indexOf(cName);
-        var cValue = '';
-        if(start != -1){
-            start += cName.length;
-            var end = cookieData.indexOf(';', start);
-            if(end == -1)end = cookieData.length;
-            cValue = cookieData.substring(start, end);
-        }
-        return cValue;
-    }
+
    async function crewMake() {
        let choose = document.querySelector('input[type=radio][name=options-outlined]:checked').value;
-       var cookieData = getCookie("jwt").replace("+"," ");
+
        if(choose === null){
            console.log("error not choose");
            return;
@@ -148,17 +162,17 @@
         let response = await fetch("/api/v1/crews", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json",
-                "Authorization": cookieData
+                "Content-Type": "application/json"
             },
+            credentials: "include",
             body: JSON.stringify({
-                strict: "null",
+                strict: document.getElementById("address_kakao").value+ " " + document.getElementById("address_detail").value,
                 crewLimit: document.getElementById("customRange3").value,
                 content: document.getElementById("content").value,
-                title: document.getElementById("title").value
+                title: document.getElementById("title").value,
+                sports: choose
             })
         })
-       console.log("end");
         console.log(response);
         if(response.ok){
             let json = await response.json()
