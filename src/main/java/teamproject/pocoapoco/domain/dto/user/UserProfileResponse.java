@@ -20,7 +20,7 @@ public class UserProfileResponse {
                 .address(user.getAddress())
                 .likeSoccer(user.getSport().isSoccer())
                 .likeJogging(user.getSport().isJogging())
-                .likeJogging(user.getSport().isTennis())
+                .likeTennis(user.getSport().isTennis())
                 .build();
     }
 }

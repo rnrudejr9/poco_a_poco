@@ -28,6 +28,7 @@ public class User implements UserDetails {
     private String address;
     private Integer manner;
     private String email;
+    private String imagePath;
     private UserRole role = UserRole.ROLE_USER;
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -98,6 +99,19 @@ public class User implements UserDetails {
                 .userName(revisedUserName)
                 .address(revisedAddress)
                 .role(UserRole.ROLE_USER)
+                .sport(Sport.setSport(revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis))
+                .password(encodedPassword)
+                .build();
+    }
+
+    public static User toEntityWithImage(Long id, String userId, String revisedUserName, String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis, String imagePath) {
+        return User.builder()
+                .id(id)
+                .userId(userId)
+                .userName(revisedUserName)
+                .address(revisedAddress)
+                .role(UserRole.ROLE_USER)
+                .imagePath(imagePath)
                 .sport(Sport.setSport(revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis))
                 .password(encodedPassword)
                 .build();
