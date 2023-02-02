@@ -38,9 +38,16 @@ public class ViewController {
 
         //cookie 설정은 스페이스가 안되기 때문에 Bearer 앞에 +를 붙인다. Security Filter에서 + -> " " 로 치환할 것이다.
         Cookie cookie = new Cookie("jwt", "Bearer+"+tokens.getAccessToken());
+
+
+        cookie.setPath("/");
+        cookie.setSecure(true);
+        //변경요소
+
         cookie.setHttpOnly(true);
         cookie.setMaxAge(60 * 25); //초단위 25분설정
         response.addCookie(cookie);
+
         return "redirect:/view/v1/crews";
     }
     @GetMapping("/view/v1/start")
