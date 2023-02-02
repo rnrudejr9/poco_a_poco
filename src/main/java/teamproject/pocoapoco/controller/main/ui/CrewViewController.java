@@ -15,10 +15,6 @@ import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.service.CrewService;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/view/v1/crews")
