@@ -53,6 +53,8 @@
                 </a></li>
                 <li><a href="/view/v1/users/profile/my" th:href="@{/view/v1/users/profile/my}"
                        class="nav-link px-2 text-white"><h5>My프로필&emsp;&emsp;</h5></a></li>
+
+                <li><a href="/view/v1/rooms" class="nav-link px-2 text-white">CHAT!</a></li>
             </ul>
 
             <!-- 검색-->
@@ -70,7 +72,7 @@
                 <button type="button" class="btn btn-warning" sec:authorize="!isAuthenticated()"
                         onclick="location.href='/view/v1/start'">Sign-up
                 </button>
-                <span class="text-white" sec:authorize="isAuthenticated()" sec:authentication="name">사용자</span>
+                <span class="text-white" sec:authorize="isAuthenticated()" sec:authentication="name" id="myName">사용자</span>
                 <span class="text-white" sec:authorize="isAuthenticated()" >님 환영합니다✨</span>
                 <a type="button" class="btn btn-warning" th:href="@{/view/v1/logout}" sec:authorize="isAuthenticated()">Logout</a>
             </div>
