@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>프로필 수정</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+
+
+    <style>
+
+        * {
+            font-family: 'Gowun Dodum', sans-serif;
+        }
+
+
+        #container-profile {
+            max-width: 600px;
+            max-height: 1000px;
+            position: relative;
+
+        }
+
+        .container-sport {
+            max-width: 400px;
+            max-height: 200px;
+            position: relative;
+
+        }
+        .container-navbar{
+            position: absolute;
+            top:30%;
+
+        }
+
+        #left-box {
+            list-style-type: none;
+            padding: 10px;
+            margin: 0px;
+            width: 200px;
+            background: lightblue;
+            height: 100%;
+            overflow: auto;
+            position: fixed;
+        }
+
+        li a {
+            text-decoration: none;
+            padding: 10px;
+            display: block;
+            color: #000;
+            font-weight: bold;
+        }
+
+
+    </style>
+
+
+</head>
+
+<body>
+
+<header th:replace="fragments/fragment :: nav"></header>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+
+<ul id="left-box">
+    <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100px; height:100px;">
+
+    <p style="position: relative; top:10px;">소개말말말</p>
+
+    <div class="container-navbar">
+
+        <li><a class="home" href="/view/v1/crews/">홈화면</a></li>
+        <li><a href="/view/v1/users/profile/my">프로필 수정</a></li>
+        <li><a href="#">참여중인 모임</a></li>
+        <li><a href="#">333444</a></li>
+    </div>
+
+</ul>
+
+<div sec:authorize="isAuthenticated()">
+
+    <div class="container" style="padding:20px;" id="container-profile">
+
+
+        <span class="placeholder col-12 bg-light placeholder-lg"></span>
+        <span class="placeholder col-12 bg-light placeholder-lg"></span>
+        <span class="placeholder col-12 bg-light placeholder-lg"></span>
+
+        <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="rounded mx-auto d-block" style="height: 200px; width: 200px;">
+
+        <div class="mb-3 row">
+            <label for="userName" class="col-sm-3 col-form-label">닉네임</label>
+            <div class="col-sm-10">
+                <input type="text" readonly class="form-control-plaintext" id="userName" th:value="${userProfileResponse.userName}"/>
+            </div>
+        </div>
+        <div class="mb-3 row">
+            <label for="address" class="col-sm-3 col-form-label">주소</label>
+            <div class="col-sm-10">
+                <input type="text" class="form-control-plaintext" id="address" th:value="${userProfileResponse.address}">
+            </div>
+        </div>
+        <div class="container-sport">
+            <label class="col-sm-3 col-form-label">선호 종목</label>
+            <div class="form-check-inline">
+                <input class="form-check-input" type="checkbox" id="likeSoccer" th:checked="${userProfileResponse.likeSoccer}">
+                <label class="form-check-label" for="likeSoccer">
+                    축구
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <input class="form-check-input" type="checkbox" id="likeJogging" th:checked="${userProfileResponse.likeJogging}">
+                <label class="form-check-label" for="likeJogging">
+                    조깅
+                </label>
+            </div>
+            <div class="form-check-inline">
+                <input class="form-check-input" type="checkbox" value="" id="likeTennis" th:checked="${userProfileResponse.likeJogging}">
+                <label class="form-check-label" for="likeTennis">
+                    테니스
+                </label>
+            </div>
+
+            <span class="placeholder col-12 bg-light placeholder-lg"></span>
+        </div>
+
+        <button class="btn btn-primary" type="button" onclick="location.href = '/view/v1/users/profile/edit';" >프로필 수정하기</button>
+
+
+    </div>
+
+
+</div>
+
+
+
+<script type="text/javascript">
+
+    // window.onload = async function () {
+    //     var url = "/api/v1/users/profile/my";
+    //     await fetch(url, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json",
+    //             "Authorization": localStorage.getItem('jwt'),
+    //             "Authentication": localStorage.getItem('jwt')
+    //         }
+    //     });
+    // }
+
+
+    async function updateProfile() {
+        var url = "/api/v1/users/profile/" + document.getElementById("userName");
+        let response = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": localStorage.getItem('jwt'),
+                "Authentication": localStorage.getItem('jwt')
+            },
+            body: JSON.stringify({
+
+                userName: document.getElementById("userName"),
+                password: document.getElementById("password1"),
+                passwordConfirm: document.getElementById("password2"),
+                address: document.getElementById("address"),
+                likeSoccer: document.getElementById("likeSoccer"),
+                likeJogging: document.getElementById("likeJogging"),
+                likeTennis: document.getElementById("likeTennis"),
+            })
+        });
+        if(response.ok){
+            let json = await response.json();
+
+            console.log("프로필 수정 완료");
+            alert("회원정보 수정이 완료되었습니다.");
+
+        }else{
+
+            console.log("프로필 수정 실패");
+            alert("회원 정보 수정에 실패했습니다.");
+        }
+    }
+
+</script>
+
+
+
+</body>
+

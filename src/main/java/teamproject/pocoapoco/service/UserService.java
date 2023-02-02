@@ -196,8 +196,10 @@ public class UserService {
         Boolean revisedLikeJogging = (userProfileRequest.getLikeJogging().equals(beforeMyUser.getSport().isJogging()))? beforeMyUser.getSport().isJogging(): userProfileRequest.getLikeJogging();
         Boolean revisedLikeTennis = (userProfileRequest.getLikeTennis().equals(beforeMyUser.getSport().isTennis()))? beforeMyUser.getSport().isTennis(): userProfileRequest.getLikeTennis();
 
+        String encodedPassword = encrypterConfig.encoder().encode(revisedPassword);
 
-        User revisedMyUser = User.toEntity(beforeMyUser.getUserId(), revisedUserName, revisedAddress, revisedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis);
+
+        User revisedMyUser = User.toRevisedEntity(beforeMyUser.getId(), beforeMyUser.getUserId(), revisedUserName, revisedAddress, encodedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis);
 
         userRepository.save(revisedMyUser);
 
