@@ -29,9 +29,9 @@
         <form form action="/view/v1/signin" method="post" th:object="${userLoginRequest}">
             <h1>로그인</h1>
             <div class="social-container">
-                <a href="#" class="social"><i class="fab fa-facebook-f"></i></a>
-                <a href="#" class="social"><i class="fab fa-google-plus-g"></i></a>
-                <a href="#" class="social"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#" th:href="@{/oauth2/authorization/facebook}" class="social">페이스북<i class="fab fa-facebook-f"></i></a>
+                <a href="#" th:href="@{/oauth2/authorization/google}" class="social">구글<i class="fab fa-google-plus-g"></i></a>
+                <a href="#" th:href="@{/oauth2/authorization/naver}" class="social">네이버<i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your account</span>
             <input type="text" placeholder="userId" th:field="*{userId}" />

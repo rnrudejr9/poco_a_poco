@@ -20,6 +20,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @RequiredArgsConstructor
@@ -30,7 +31,6 @@ public class JwtTokenFilter extends OncePerRequestFilter {
      */
 
     private final String BEARER = "Bearer ";
-
     private final JwtProvider jwtProvider;
     private final RedisTemplate redisTemplate;
 
@@ -48,6 +48,13 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (token == null) {
             Cookie[] cookies = request.getCookies();
             if (cookies != null) for (Cookie cookie : cookies) if(cookie.getName().equals("jwt")) token = cookie.getValue().replace("+", " ");
+            else {
+                HttpSession session = request.getSession(false);
+                if (session == null || session.getAttribute("Authorization") == null) {
+                } else {
+                    token = session.getAttribute("Authorization").toString();
+                }
+            }
         }
         // 쿠키 조회했는데도 null이거나 'Bearer ' 로 시작하지 않으면 에러
         if (token == null || !token.startsWith(BEARER)) {
@@ -57,7 +64,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         token = parseBearer(token);
-        log.info("After remove Bearer. Authorization = {}", token);
+        log.info("After remove Bearer Authorization = {}", token);
 
         if (jwtProvider.validateToken(token)) {
             // Redis 에 해당 accessToken logout 여부 확인

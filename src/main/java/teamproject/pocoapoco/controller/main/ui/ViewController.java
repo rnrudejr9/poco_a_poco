@@ -2,6 +2,9 @@ package teamproject.pocoapoco.controller.main.ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.parameters.P;
+import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,7 +17,9 @@ import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
 import teamproject.pocoapoco.service.UserService;
 
 import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
 
 @Controller
@@ -57,10 +62,15 @@ public class ViewController {
         return "start/start";
     }
 
+    @GetMapping("")
+    public String oauthLogin() {
+        return "redirect:/view/v1/crews";
+    }
+
     @GetMapping("/view/v1/logout")
-    public String logout(HttpServletResponse response) {
-        // 시큐리티 세션 파기하지 않았는데도 로그아웃된 이유는 Security Context에 익명유저로 등록이 되었기 때문?
+    public String logout(HttpServletResponse response, HttpSession session) {
         Cookie cookie = new Cookie("jwt", null);
+        session.removeAttribute("Authorization");
         response.addCookie(cookie);
         return "redirect:/view/v1/crews";
     }

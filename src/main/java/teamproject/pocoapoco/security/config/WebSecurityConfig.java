@@ -9,6 +9,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import teamproject.pocoapoco.config.oauth.PrincipalOauth2UserService;
 import teamproject.pocoapoco.security.exception.CustomAccessDeniedHandler;
 import teamproject.pocoapoco.security.exception.CustomAuthenticationEntryPointHandler;
 import teamproject.pocoapoco.security.filter.JwtTokenFilter;
@@ -20,6 +21,8 @@ import teamproject.pocoapoco.security.provider.JwtProvider;
 public class WebSecurityConfig {
     private final JwtProvider jwtProvider;
     private final RedisTemplate redisTemplate;
+
+    private final PrincipalOauth2UserService principalOauth2UserService;
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
 
@@ -35,11 +38,11 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
                 .and()
-                .logout()
-                .logoutUrl("/logout")
-                .invalidateHttpSession(true)
-                .deleteCookies("jwt")
-                .logoutSuccessUrl("/view/v1/crews")
+                .oauth2Login()
+                .loginPage("/view/v1/start")
+                .userInfoEndpoint()
+                .userService(principalOauth2UserService)
+                .and()
                 .and()
                 .exceptionHandling()
                 .authenticationEntryPoint(new CustomAuthenticationEntryPointHandler())
