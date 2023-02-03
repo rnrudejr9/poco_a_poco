@@ -64,6 +64,7 @@ dependencies {
 
     // redis
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    implementation 'org.springframework.session:spring-session-data-redis'
 
     //타임리프 권한처리 라이브러리
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
@@ -79,6 +80,11 @@ dependencies {
     //웹소켓
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+
+
+    //s3 설정
+    implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
+    implementation 'com.amazonaws:aws-java-sdk-s3'
 
 
 }
