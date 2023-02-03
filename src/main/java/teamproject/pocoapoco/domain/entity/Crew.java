@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import teamproject.pocoapoco.domain.dto.chat.ChatRoomDTO;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.enums.InterestSport;
+import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
 import javax.persistence.*;
@@ -28,10 +30,21 @@ public class Crew extends BaseEntity{
     private String title;
     private String content;
     private Integer crewLimit;
+    private Integer chatroomId;
+
+    // participant_id 추후 추가예정
 
     @OneToOne
     @JoinColumn(name="room_id")
     private ChatRoom chatRoom;
+
+    //crew 종목 검색 test
+    private String sprotStr;
+    @Enumerated(value = EnumType.STRING)
+    private InterestSport interestSport;
+
+    @Enumerated(value = EnumType.STRING)
+    private SportEnum sportEnum;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -47,7 +60,7 @@ public class Crew extends BaseEntity{
     public void of(CrewRequest request) {
         this.strict = request.getStrict();
         this.title = request.getTitle();
-        this.content =request.getContent();
+        this.content = request.getContent();
         this.crewLimit = request.getCrewLimit();
     }
 }

@@ -1,11 +1,12 @@
 package teamproject.pocoapoco.domain.dto.crew;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.enums.InterestSport;
+import teamproject.pocoapoco.enums.SportEnum;
 
 import java.time.LocalDateTime;
 
@@ -23,7 +24,11 @@ public class CrewDetailResponse {
     private String userName;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
-//    private String sport;
+
+    //crew 종목 검색 test
+    private String sprotStr;
+    private InterestSport interestSport;
+    private SportEnum sportEnum;
 
     public static CrewDetailResponse of(Crew crew) {
         return CrewDetailResponse.builder()
@@ -36,7 +41,11 @@ public class CrewDetailResponse {
                 .userName(crew.getUser().getUsername())
                 .createdAt(crew.getCreatedAt())
                 .lastModifiedAt(crew.getLastModifiedAt())
-//                .sport(crew.getSport().getName())
+
+                //crew 종목 검색 test
+                .sprotStr(crew.getSprotStr())
+                .interestSport(crew.getInterestSport())
+                .sportEnum(crew.getSportEnum())
                 .build();
     }
 
