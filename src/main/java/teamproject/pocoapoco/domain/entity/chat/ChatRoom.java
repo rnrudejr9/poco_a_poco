@@ -1,11 +1,9 @@
 package teamproject.pocoapoco.domain.entity.chat;
 
 import lombok.*;
+import teamproject.pocoapoco.domain.entity.User;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 @Builder
@@ -18,6 +16,11 @@ public class ChatRoom {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long roomId;
     private String name;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
+    private User user;
+
 //    @Builder.Default
 //    @OneToMany(mappedBy = "chat_room")
 //    private List<Chat> chats = new ArrayList<>();

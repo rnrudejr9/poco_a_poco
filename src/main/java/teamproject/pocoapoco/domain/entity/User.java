@@ -4,6 +4,7 @@ import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.UserRole;
 
@@ -47,6 +48,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<Comment> comments = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<ChatRoom> chatRooms = new ArrayList<>();
 
 
     @Override
@@ -80,7 +83,6 @@ public class User implements UserDetails {
     }
 
     public static User toEntity(String userId, String userName, String address, String password, Boolean likeSoccer, Boolean likeJogging, Boolean likeTennis){
-
         return User.builder()
                 .userId(userId)
                 .userName(userName)
@@ -102,4 +104,5 @@ public class User implements UserDetails {
                 .password(encodedPassword)
                 .build();
     }
+
 }

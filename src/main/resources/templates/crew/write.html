@@ -150,6 +150,29 @@
         location.href="/view/v1/crews";
     }
 
+    async function chatRoomMake(crewId){
+        let response = await fetch("/api/v1/room", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                crewId: crewId,
+                name: document.getElementById("title").value
+            })
+        })
+        console.log(response);
+        if(response.ok){
+            let json = await response.json()
+            console.log(json);
+            alert("채팅등록");
+        }else{
+            let json = await response.text();
+            console.log(json);
+            alert("실패");
+        }
+    }
 
    async function crewMake() {
        let choose = document.querySelector('input[type=radio][name=options-outlined]:checked').value;
@@ -178,6 +201,8 @@
             let json = await response.json()
             console.log(json);
             alert("모임등록성공!");
+            let crewId = json.result.crewId;
+            chatRoomMake(crewId);
             location.href="/view/v1/crews";
         }else{
             let json = await response.text();
