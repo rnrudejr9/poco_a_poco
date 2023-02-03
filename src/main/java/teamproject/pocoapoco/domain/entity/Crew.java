@@ -27,12 +27,13 @@ public class Crew extends BaseEntity{
     private Long id;
 
     private String strict;
+    private String roadName;
     private String title;
     private String content;
     private Integer crewLimit;
-    private Integer chatroomId;
 
-    // participant_id 추후 추가예정
+    private String datepick;
+    private String timepick;
 
     @OneToOne
     @JoinColumn(name="room_id")

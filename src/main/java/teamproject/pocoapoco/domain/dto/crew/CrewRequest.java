@@ -16,6 +16,9 @@ public class CrewRequest {
     private String title;
     private String content;
     private Integer crewLimit;
+    private String datepick;
+    private String timepick;
+    private String chooseSport;
 
 
     public Crew toEntity(User user) {
@@ -23,15 +26,14 @@ public class CrewRequest {
                 .strict(this.strict)
                 .title(this.title)
                 .content(this.content)
-
                 .crewLimit(this.crewLimit)
-                .chatroomId(null)
-                .user(user)
 
-                //crew 종목 검색 test
-                .sprotStr("테니스")
-                .interestSport(InterestSport.TENNIS)
-                .sportEnum(SportEnum.TENNIS)
+                .datepick(this.datepick)
+                .timepick(this.timepick)
+
+                .user(user)
+                .sprotStr(this.chooseSport)
+
                 .build();
     }
 }
