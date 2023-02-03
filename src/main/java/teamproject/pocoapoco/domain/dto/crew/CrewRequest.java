@@ -3,6 +3,7 @@ package teamproject.pocoapoco.domain.dto.crew;
 import lombok.*;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -20,8 +21,8 @@ public class CrewRequest {
                 .strict(this.strict)
                 .title(this.title)
                 .content(this.content)
+
                 .crewLimit(this.crewLimit)
-                .chatroomId(null)
                 .user(user)
                 .build();
     }

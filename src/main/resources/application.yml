@@ -24,6 +24,10 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+
+  mail:
+    username: sol4854@naver.com
+    password:
 #  servlet:
 #    multipart:
 #      enabled: true

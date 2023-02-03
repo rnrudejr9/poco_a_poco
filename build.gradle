@@ -69,6 +69,9 @@ dependencies {
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
 
+    //email 인증
+    implementation 'org.springframework.boot:spring-boot-starter-mail:2.7.1'
+
 
     //oauth2
     implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'
