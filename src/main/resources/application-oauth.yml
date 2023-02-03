@@ -26,7 +26,7 @@ spring:
 
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: http://54.180.86.39:8084/login/oauth2/code/naver
+            redirect-uri: http://ec2-54-180-86-39.ap-northeast-2.compute.amazonaws.com:8084/login/oauth2/code/naver
             client-authentication-method: POST
         provider:
           naver:
