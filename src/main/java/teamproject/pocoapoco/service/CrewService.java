@@ -17,6 +17,7 @@ import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 
 
@@ -75,6 +76,7 @@ public class CrewService {
     }
 
     // 크루 게시물 전체 조회
+    @Transactional
     public Page<CrewDetailResponse> findAllCrews(Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findAll(pageable);
@@ -83,6 +85,7 @@ public class CrewService {
     }
 
     // 크루 게시물 지역 검색 조회
+    @Transactional
     public Page<CrewDetailResponse> findAllCrewsWithStrict(CrewStrictRequest crewStrictRequest, Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
