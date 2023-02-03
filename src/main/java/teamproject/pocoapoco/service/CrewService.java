@@ -6,18 +6,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
-import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
-import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
-import teamproject.pocoapoco.domain.dto.crew.CrewStrictRequest;
+import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Service
@@ -27,7 +27,6 @@ public class CrewService {
 
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
-
 
     // 크루 게시글 등록
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
@@ -75,6 +74,7 @@ public class CrewService {
     }
 
     // 크루 게시물 전체 조회
+    @Transactional
     public Page<CrewDetailResponse> findAllCrews(Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findAll(pageable);
@@ -83,10 +83,67 @@ public class CrewService {
     }
 
     // 크루 게시물 지역 검색 조회
-    public Page<CrewDetailResponse> findAllCrewsWithStrict(CrewStrictRequest crewStrictRequest, Pageable pageable) {
+    public Page<CrewDetailResponse> findAllCrewsWithStrict(CrewSportRequest crewSportRequest, Pageable pageable) {
 
-        Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewStrictRequest.getStrict());
+        Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewSportRequest.getStrict());
 
+        return crews.map(CrewDetailResponse::of);
+    }
+
+
+    // test : 크루 게시물 검색 조회
+    public Page<CrewDetailResponse> findAllCrewsBySport(CrewSportRequest crewSportRequest, Pageable pageable) {
+
+        //전체검색
+//        Page<Crew> crews = crewRepository.findAll(pageable);
+
+        //지역 검색 by String
+//        String strict = "대구";
+//        Page<Crew> crews = crewRepository.findByStrictContaining(pageable, strict);
+
+
+        //운동 검색 by String
+//        String sport = "축구";
+//        Page<Crew> crews = crewRepository.findBySprotStrContaining(pageable, sport);
+
+        //운동 다중검색1 by String
+//        String sport = "축구";
+//        String sport2 = "";
+//        String sport3 = "";
+//        Page<Crew> crews = crewRepository.findBySprotStrOrSprotStrOrSprotStr(pageable, sport, sport2, sport3);
+
+
+        //운동 다중검색2 by String
+//        String sport = "축구";
+//        String sport2 = "";
+//        String sport3 = "";
+//
+//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
+//            sport ="축구";
+//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
+//            sport2="조깅";
+//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
+//            sport3="테니스";
+//
+//        Page<Crew> crews = crewRepository.findBySprotStr(pageable, sport, sport2, sport3);
+
+
+        //운동 검색 by Enum
+
+        Page<Crew> crews;
+        List<String> sportsList = crewSportRequest.getSportsList();
+
+        if (sportsList.isEmpty()) {
+            crews = crewRepository.findAll(pageable);
+        } else {
+            SportEnum[] sports = new SportEnum[3];
+
+            for (int i = 0; i < sportsList.size(); i++) {
+                sports[i] = SportEnum.valueOf(sportsList.get(i));
+            }
+
+            crews = crewRepository.findBySportEnum(pageable, sports[0], sports[1], sports[2]);
+        }
         return crews.map(CrewDetailResponse::of);
     }
 

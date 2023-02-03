@@ -2,128 +2,183 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/fragment :: head"></head>
 
+
+<script>
+
+    var tc = 0;
+
+    function count_check(obj) {
+        if (obj.checked)
+            tc++;
+        else
+            tc--;
+        if (tc > 3) {
+            alert("최대 3개 체크 가능합니다.");
+            obj.checked = false;
+            tc--;
+        }
+    }
+
+</script>
 <body>
 <!-- 네비바-->
 <header th:replace="fragments/fragment :: nav"></header>
 
 <main>
     <!-- 소개-->
-  <section class="py-5 text-center container">
-    <div class="row py-lg-5">
-      <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="home">운동 메이트</h1>
-        <p class="lead text-muted">
-            <br>
-            운동 메이트로 함께 운동하고, <br>
-            동네 이웃과 운동 메이트가 되어 보세요.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <div class="album py-5 bg-light">
-    <div class="container">
-        
-        <!-- 운동 체크-->
-        <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
-            <div class="d-grid gap-2 d-md-block">
-                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                    운동 선택
-                </button>
-            </div>
-            <div></div><div></div><div></div>
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button class="btn btn-primary" type="button" onclick="location.href='/view/v1/crews/write'">
-                    + 모집 등록
-                </button>
+    <section class="py-5 text-center container">
+        <div class="row py-lg-5">
+            <div class="col-lg-6 col-md-8 mx-auto">
+                <h1 class="home">운동 메이트</h1>
+                <p class="lead text-muted">
+                    <br>
+                    운동 메이트로 함께 운동하고, <br>
+                    동네 이웃과 운동 메이트가 되어 보세요.
+                </p>
             </div>
         </div>
+    </section>
 
-          <div class="collapse" id="collapseExample">
-            <div class="card card-body">
+    <div class="album py-5 bg-light">
+        <div class="container">
 
-                <form action="" method="" name="">
-                    <div class="grid text-center" >
-                        <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4" >
-                            <button type="button" class="btn btn-outline-secondary">축구</button>
-                            <button type="button" class="btn btn-outline-success">농구</button>
-                            <button type="button" class="btn btn-outline-danger">야구</button>
-                            <button type="button" class="btn btn-outline-warning">등산</button>
-                            <button type="button" class="btn btn-outline-info">산책</button>
-                            <button type="button" class="btn btn-outline-dark">스키장</button>
-                            <button type="button" class="btn btn-outline-success">스노우쿨링</button>
-                            <button type="button" class="btn btn-outline-danger">탁구</button>
-                            <button type="button" class="btn btn-outline-warning">배드민턴</button>
-                            <button type="button" class="btn btn-outline-info">당구</button>
-                        </div>
-                    </div>
-                </form>
-
+            <!-- 운동 체크-->
+            <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
+                <div class="d-grid gap-2 d-md-block">
+                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                        운동 선택
+                    </button>
+                </div>
+                <div></div>
+                <div></div>
+                <div></div>
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                    <button class="btn btn-primary" type="button" onclick="location.href='/view/v1/crews/write'">
+                        + 모집 등록
+                    </button>
+                </div>
             </div>
-          </div>
+
+            <div class="collapse" id="collapseExample">
+                <div class="card card-body">
+
+                    <!--                <form th:action="@{/view/v1/crews}" th:object="${sport}" method="post">-->
+                    <form th:action method="post" th:object="${sportRequest}">
+                        <div class="grid text-center">
+                            <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
+
+                                <!--                            <label class="btn btn-outline-danger"> <input type="checkbox" th:field="*{soccer}">축구</label>-->
+                                <!--                            <label class="btn btn-outline-warning"> <input type="checkbox" th:field="*{jogging}">조깅</label>-->
+                                <!--                            <label class="btn btn-outline-info"> <input type="checkbox" th:field="*{tennis}">테니스</label>-->
+                                <!--                            <label class="btn btn-outline-warning"> <input type="checkbox">조깅</label>-->
+                                <!--                            <label class="btn btn-outline-info"> <input type="checkbox" >테니스</label>-->
+                                <!--                            <label class="btn btn btn-outline-success"> <input type="checkbox">농구</label>-->
+                                <!--                            <label class="btn btn-outline-secondary"> <input type="checkbox">야구</label>-->
+
+                                <th:block th:each="sport : ${sportEnums}">
+                                    <label class="btn btn-outline-secondary"> <input type="checkbox"
+                                                                                     onclick="count_check(this)"
+                                                                                     th:field="*{sportsList}"
+                                                                                     th:value="${sport}"
+                                                                                     th:text="${sport.getValue()}">
+                                    </label>
+
+                                    <!--                                    <label class="btn btn-outline-secondary" th:if="${sportRequest.sportsList==null}"> <input type="checkbox"-->
+                                    <!--                                                                                     onclick="count_check(this)"-->
+                                    <!--                                                                                     th:field="*{sportsList}"-->
+                                    <!--                                                                                     th:value="${sport}"-->
+                                    <!--                                                                                     th:text="${sport.getValue()}">-->
+                                    <!--                                    </label>-->
+                                    <!--                                    <label class="btn btn-outline-secondary" th:if="!${sportRequest.sportsList==null}"> <input type="checkbox" checked-->
+                                    <!--                                                                                                                              onclick="count_check(this)"-->
+                                    <!--                                                                                                                              th:field="*{sportsList}"-->
+                                    <!--                                                                                                                              th:value="${sport}"-->
+                                    <!--                                                                                                                              th:text="${sport.getValue()}">-->
+                                    <!--                                    </label>-->
+                                </th:block>
+
+                            </div>
+                            <button class="btn btn-primary" type="submit">조회 버튼</button>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
 
 
             <!-- 앨범-->
-          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
 
-            <div class="col" th:each="crew : ${crewList}">
+                <div class="col" th:each="crew : ${crewList}">
 
-              <div class="card shadow-sm">
-                <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img" aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#55595c"/><text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text></svg>
+                    <div class="card shadow-sm">
+                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img"
+                             aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
+                            <title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#55595c"/>
+                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
+                        </svg>
 
-                <div class="card-body">
+                        <div class="card-body">
 
-                  <h3 class="card-tile" th:text="${crew.title}">제목</h3>
-                  <p class="card-text" th:text="${crew.content}">내용</p>
+                            <h3 class="card-tile" th:text="${crew.title}">제목</h3>
+                            <p class="card-text" th:text="${crew.content}">내용</p>
 
-                  <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex justify-content-between align-items-center">
 
-                    <small class="text-muted" th:text="${crew.strict}">지역</small>
-                    <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
-                    <div class="btn-group">
-                        <button type="button" class="btn btn-secondary" ><a th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id})}">상세보기</a></button>
-<!--                        <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
+                                <small class="text-muted" th:text="${crew.strict}">지역</small>
+                                <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary"><a
+                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id})}">상세보기</a></button>
+                                    <!--                        <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
 
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                  </div>
                 </div>
-              </div>
             </div>
-          </div>
 
-        <div class="py-3 my-4">
-            <nav aria-label="Page navigation example">
-                <ul class="pagination justify-content-center">
-                    <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2})}">Previous</a>
-                    </li>
+            <div class="py-3 my-4">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                            <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2})}">Previous</a>
+                        </li>
 
-                    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
-                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link" th:href="@{/view/v1/crews(page = ${page - 1})}" th:text="${page}">1</a></li>
-                        <li class="page-item" th:if="${page == nowPage}"> <strong class="page-link" th:text="${page}" style="color: red"></strong></li>
-                    </th:block>
+                        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                            <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
+                                                                                th:href="@{/view/v1/crews(page = ${page - 1}, strict=${sportRequest.getStrict()})}"
+                                                                                th:text="${page}">1</a></li>
+                            <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
+                                                                                     style="color: red"></strong></li>
+                        </th:block>
 
-                    <li class="page-item">
-                        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage})}">Next</a>
-                    </li>
-                </ul>
-            </nav>
+                        <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
+                            <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage})}">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+
         </div>
-        
-        
+
+
     </div>
 
-
-  </div>
-  
 
 </main>
 
 <footer th:replace="fragments/fragment :: footer"></footer>
 
-    <!-- JavaScript Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous"></script>
+<!-- JavaScript Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+        crossorigin="anonymous"></script>
 
-      
-  </body>
+
+</body>
 </html>
