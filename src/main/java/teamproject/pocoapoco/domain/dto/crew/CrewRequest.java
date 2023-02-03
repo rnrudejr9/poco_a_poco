@@ -23,6 +23,7 @@ public class CrewRequest {
                 .strict(this.strict)
                 .title(this.title)
                 .content(this.content)
+
                 .crewLimit(this.crewLimit)
                 .chatroomId(null)
                 .user(user)
