@@ -136,6 +136,10 @@
                                     <!--                        <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
 
                                 </div>
+
+                                <div>
+                                    <button type="button" class="btn btn-secondary" th:crewId="${crew.id}" th:onclick="fetcher(this.getAttribute('crewId'))">참여하기</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -183,6 +187,29 @@
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
         crossorigin="anonymous"></script>
 
+<script>
+    async function fetcher(crewId) {
+        var crewId = crewId;
+        let response = await fetch("/api/v1/part", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                crewId: crewId
+            })
+        })
+        console.log("end");
+        if(response.ok){
+            var json = response.json();
+            console.log(json);
+        }else{
+            var json = response.json();
+            console.log(json);
+        }
+    }
+</script>
 
 </body>
 </html>
