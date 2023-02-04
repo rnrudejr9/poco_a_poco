@@ -1,16 +1,19 @@
 package teamproject.pocoapoco.controller.main.ui;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.controller.main.api.UserController;
 import teamproject.pocoapoco.domain.dto.response.Response;
+import teamproject.pocoapoco.domain.dto.user.UserProfileImageRequest;
 import teamproject.pocoapoco.domain.dto.user.UserProfileRequest;
 import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
 
 import javax.servlet.http.HttpServletRequest;
@@ -21,10 +24,12 @@ import java.io.PrintWriter;
 @Controller
 @RequestMapping("/view/v1")
 @RequiredArgsConstructor
+@Slf4j
 public class ProfileController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final UserPhotoService userPhotoService;
 
 
     @PostMapping("/users/profile/edit")
@@ -86,6 +91,35 @@ public class ProfileController {
 
 
     }
+
+    @PostMapping("/users/profile/image/edit")
+    public String uploadImage(String imagePath, Authentication authentication, Model model){
+
+        log.info(imagePath);
+
+        String userName = authentication.getName();
+
+
+        UserProfileResponse userProfileResponse = userPhotoService.editUserImage(userName, imagePath);
+
+        model.addAttribute("userProfileImagePath", imagePath);
+
+        model.addAttribute("userProfileResponse", userProfileResponse);
+
+
+        return "profile/get-my-profile";
+
+    }
+
+
+    @GetMapping("/users/profile/image/edit")
+    public String uploadImagePage(){
+
+
+        return "/profile/upload-form";
+    }
+
+
 
 
 }

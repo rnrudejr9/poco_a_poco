@@ -15,6 +15,7 @@ import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -73,6 +74,7 @@ public class CrewService {
     }
 
     // 크루 게시물 전체 조회
+    @Transactional
     public Page<CrewDetailResponse> findAllCrews(Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findAll(pageable);
