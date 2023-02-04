@@ -220,6 +220,20 @@ public class UserService {
 
     }
 
+    public String getProfilePathByUserName(String userName) {
+
+        Optional<User> selectedUserOptional = userRepository.findByUserName(userName);
+
+        if(selectedUserOptional.isEmpty()){
+            throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
+        }
+
+        User selectedUser = selectedUserOptional.get();
+
+        return selectedUser.getImagePath();
+
+    }
+
 
 
 }

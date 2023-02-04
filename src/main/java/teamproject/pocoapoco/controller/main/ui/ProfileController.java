@@ -50,8 +50,11 @@ public class ProfileController {
 
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
 
+        String userProfileImagePath = userService.getProfilePathByUserName(userName);
+
         model.addAttribute("userProfileResponse", userProfileResponse);
         model.addAttribute("userProfileRequest", new UserProfileRequest());
+        model.addAttribute("userProfileImagePath", userProfileImagePath);
 
 
         return "profile/edit";
@@ -62,9 +65,13 @@ public class ProfileController {
 
         String userName = authentication.getName();
 
+        String userProfileImagePath = userService.getProfilePathByUserName(userName);
+
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
 
         model.addAttribute("userProfileResponse", userProfileResponse);
+
+        model.addAttribute("userProfileImagePath", userProfileImagePath);
 
 
         return "profile/get-my-profile";
@@ -118,6 +125,10 @@ public class ProfileController {
 
         return "/profile/upload-form";
     }
+
+
+
+
 
 
 
