@@ -51,6 +51,8 @@ public class CrewNewController {
 
         log.info("Strict : {}", crewSportRequest.getStrict());
 
+        log.info("Now Page : {}", crewSportRequest.getCrewNowPage());
+
         List<String> sportsList = crewSportRequest.getSportsList();
         if (CollectionUtils.isEmpty(sportsList))
             log.info("상세조회 list empty");
@@ -60,6 +62,7 @@ public class CrewNewController {
                 log.info(s);
             }
         }
+
 
 
         Page<CrewDetailResponse> list;
@@ -77,11 +80,25 @@ public class CrewNewController {
             list = crewService.findAllCrewsBySport(crewSportRequest, pageable);
         }
 
+        // 페이징 처리 변수
+        int nowPage = list.getPageable().getPageNumber() + 1;
+        int startPage = Math.max(nowPage - 4, 1);
+        int endPage = Math.min(nowPage + 5, list.getTotalPages());
+        int lastPage = list.getTotalPages();
 
-        List<Long> crewIdList = list.getContent().
-                stream().
-                map(c -> c.getId())
-                .collect(Collectors.toList());
+        // 게시글 리스트
+        model.addAttribute("crewList", list);
+
+        // 페이징 처리 모델
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        model.addAttribute("lastPage", lastPage);
+
+
+       // model.addAttribute("crewId", crewId);
+
+
 
         Optional<CrewDetailResponse> testList = list.getContent().stream()
                 .filter(c -> c.getId() == crewId)

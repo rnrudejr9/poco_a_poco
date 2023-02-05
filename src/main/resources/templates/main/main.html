@@ -129,6 +129,7 @@
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-secondary"><a
                                             th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
+                                            crewNowPage=${nowPage},
                                             strict=${sportRequest.getStrict()},
                                             sportsList=${sportRequest.getSportsList()}
                                             )}">상세보기</a>
@@ -165,8 +166,8 @@
 
                         <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
                             <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
-                                                                                strict=${sportRequest.getStrict()},
-                                                                                sportsList=${sportRequest.getSportsList()})}">Next</a>
+                                                                           strict=${sportRequest.getStrict()},
+                                                                           sportsList=${sportRequest.getSportsList()})}">Next</a>
                         </li>
                     </ul>
                 </nav>

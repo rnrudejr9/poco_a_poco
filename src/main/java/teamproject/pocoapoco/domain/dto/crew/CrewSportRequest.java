@@ -13,8 +13,7 @@ import java.util.List;
 @Setter
 public class CrewSportRequest {
 
+    private int crewNowPage;
     private String strict;
     private List<String> sportsList;
-    private List<Long> crewIdList;
-
 }
