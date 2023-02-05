@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,6 +24,8 @@ import teamproject.pocoapoco.service.LikeService;
 import javax.persistence.EntityNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -39,9 +43,11 @@ public class CrewNewController {
         crewService.addCrew(crewRequest, authentication.getName());
         return "crew/write";
     }
+
     // 크루 게시물 상세 조회
     @GetMapping("/view/v1/crews/{crewId}")
-    public String detailCrew(@PathVariable Long crewId, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest, Authentication authentication, Model model) {
+    public String detailCrew(@PathVariable Long crewId, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest, Authentication authentication, Model model,
+                             @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 
         log.info("Strict : {}", crewSportRequest.getStrict());
 
@@ -54,20 +60,43 @@ public class CrewNewController {
                 log.info(s);
             }
         }
+
+
         Page<CrewDetailResponse> list;
 
-        if(crewSportRequest.getStrict() == null && CollectionUtils.isEmpty(sportsList)){
+        if(crewSportRequest.getStrict() == "" && CollectionUtils.isEmpty(sportsList)){
             log.info("Detail if : All");
-            list = crewService.findAllCrews(null);
+            list = crewService.findAllCrews(pageable);
         }
-        else if(crewSportRequest.getStrict() != null){
+        else if(crewSportRequest.getStrict() != null && crewSportRequest.getStrict() != ""){
             log.info("Detail if : Strict");
-            list = crewService.findAllCrewsWithStrict(crewSportRequest, null);
+            list = crewService.findAllCrewsWithStrict(crewSportRequest, pageable);
         }
         else{
             log.info("Detail if : Sports list");
-            list = crewService.findAllCrewsBySport(crewSportRequest, null);
+            list = crewService.findAllCrewsBySport(crewSportRequest, pageable);
         }
+
+
+        List<Long> crewIdList = list.getContent().
+                stream().
+                map(c -> c.getId())
+                .collect(Collectors.toList());
+
+        Optional<CrewDetailResponse> testList = list.getContent().stream()
+                .filter(c -> c.getId() == crewId)
+                .findFirst();
+
+        if(testList.isPresent())
+            log.info("testList : {}", testList.get());
+        else
+            log.info("testList : empty");
+
+
+
+
+
+
 
 
 

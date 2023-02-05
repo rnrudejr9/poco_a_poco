@@ -61,14 +61,13 @@ public class CrewViewController {
         }
         log.info("\n");
 
-
+        List<String> userSportsList = new ArrayList<>();
         // 유저 로그인 확인
         if(authentication != null  && CollectionUtils.isEmpty(sportsList)) {
 
             log.info("authentication.getName() :" + authentication.getName());
 
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(authentication.getName());
-            List<String> userSportsList = new ArrayList<>();
 
             if(userProfileResponse.getLikeSoccer()){
                 userSportsList.add("SOCCER");
@@ -96,7 +95,7 @@ public class CrewViewController {
         // 페이징 검색 필터
         Page<CrewDetailResponse> list;
 
-        if(crewSportRequest.getStrict() == null && CollectionUtils.isEmpty(sportsList)){
+        if(crewSportRequest.getStrict() == null && CollectionUtils.isEmpty(sportsList) && CollectionUtils.isEmpty(userSportsList)){
             log.info("if : All");
             list = crewService.findAllCrews(pageable);
         }
