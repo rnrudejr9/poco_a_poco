@@ -8,7 +8,7 @@
 </style>
 <script>
     // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
-    history.replaceState({}, null, location.pathname);
+    // history.replaceState({}, null, location.pathname);
 
     // 운동 종목 체크박스 3개 초과 시 알람
     function count_check(obj) {
@@ -51,8 +51,11 @@
 
     <div class="album py-5 bg-light">
         <div class="container">
+
+            <!-- 운동 종목 데이터 확인-->
             <label th:text="|userSportsList : ${userSportsList}|"></label><br>
             <label th:text="|sportRequest.getSportsList() : ${sportRequest.getSportsList()}|"></label>
+
             <!-- 운동 체크-->
             <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
                 <div class="d-grid gap-2 d-md-block">
@@ -89,7 +92,9 @@
                                 </label>
                             </div>
                             <button class="btn btn-primary" type="submit">조회 버튼</button>
-                            <button class="btn btn-primary" type="button" onclick="location.href='/view/v1/crews'">My운동종목</button>
+                            <button class="btn btn-primary" type="button" onclick="location.href='/view/v1/crews'">
+                                My운동종목
+                            </button>
                         </div>
 
                     </form>
@@ -123,7 +128,11 @@
                                 <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-secondary"><a
-                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id})}">상세보기</a></button>
+                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
+                                            strict=${sportRequest.getStrict()},
+                                            sportsList=${sportRequest.getSportsList()}
+                                            )}">상세보기</a>
+                                    </button>
                                     <!--                        <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
 
                                 </div>

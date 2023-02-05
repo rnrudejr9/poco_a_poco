@@ -15,5 +15,6 @@ public class CrewSportRequest {
 
     private String strict;
     private List<String> sportsList;
+    private List<Long> crewIdList;
 
 }

@@ -20,8 +20,8 @@ import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.UserService;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -61,8 +61,9 @@ public class CrewViewController {
         }
         log.info("\n");
 
+
         // 유저 로그인 확인
-        if(authentication != null && CollectionUtils.isEmpty(sportsList)) {
+        if(authentication != null  && CollectionUtils.isEmpty(sportsList)) {
 
             log.info("authentication.getName() :" + authentication.getName());
 
@@ -99,7 +100,7 @@ public class CrewViewController {
             log.info("if : All");
             list = crewService.findAllCrews(pageable);
         }
-        else if(crewSportRequest.getStrict() != null){
+        else if(crewSportRequest.getStrict() != null && crewSportRequest.getStrict() != ""){
             log.info("if : Strict");
             list = crewService.findAllCrewsWithStrict(crewSportRequest, pageable);
         }
@@ -129,6 +130,15 @@ public class CrewViewController {
 //        userSportsList.add(String.valueOf(SportEnum.JOGGING));
 //        userSportsList.add(String.valueOf(SportEnum.SOCCER));
 //        crewSportRequest.setSportsList(userSportsList);
+
+
+        List<Long> crewIdList = list.getContent().
+                stream().
+                map(c -> c.getId())
+                .collect(Collectors.toList());
+        for(Long s : crewIdList)
+            log.info("{}", s);
+        model.addAttribute("crewIdList", crewIdList);
 
 
 
