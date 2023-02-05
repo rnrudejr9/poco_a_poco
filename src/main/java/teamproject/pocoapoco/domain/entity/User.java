@@ -54,7 +54,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "user")
+    private List<CrewMembers> members = new ArrayList<>();
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<GrantedAuthority>(List.of(new SimpleGrantedAuthority(role.name())));
