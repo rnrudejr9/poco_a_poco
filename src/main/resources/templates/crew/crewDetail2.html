@@ -139,44 +139,10 @@
 <aside>
 </aside>
 
-
-<ul class="pagination justify-content-center">
-    <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2},
-                                                       crewId = ${crewId},
-                                                       strict=${sportRequest.getStrict()},
-                                                       sportsList=${sportRequest.getSportsList()})}">Previous</a>
-    </li>
-
-<!--    <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">-->
-<!--        <li class="page-item" th:if="${page != nowPage}"><a class="page-link"-->
-<!--                                                            th:href="@{/view/v1/crews(-->
-<!--                                                                                page = ${page - 1},-->
-<!--                                                                                strict=${sportRequest.getStrict()},-->
-<!--                                                                                sportsList=${sportRequest.getSportsList()}-->
-<!--                                                                                )}" th:text="${page}">1</a></li>-->
-
-<!--        <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"-->
-<!--                                                                 style="color: red"></strong></li>-->
-<!--    </th:block>-->
-
-    <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
-        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
-                                                       crewId = ${crewId},
-                                                       strict=${sportRequest.getStrict()},
-                                                       sportsList=${sportRequest.getSportsList()})}">Next</a>
-    </li>
-</ul>
-
-
 <div id="wrapper">
     <button class="w-100 btn btn-secondary btn-lg" type="submit"
             style="width:500px;margin:auto;"> 참여하기</button>
 </div>
-
-
-
-
 
 <footer th:replace="fragments/fragment :: footer"></footer>
 

@@ -15,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
+import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.UserService;
@@ -31,8 +32,6 @@ import java.util.stream.Collectors;
 public class CrewViewController {
 
     private final CrewService crewService;
-
-    private final UserService userService;
 
     // 크루 게시물 전체 조회, 검색 조회, 운동 종목 조회
     @GetMapping()
@@ -67,7 +66,7 @@ public class CrewViewController {
 
             log.info("authentication.getName() :" + authentication.getName());
 
-            UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(authentication.getName());
+            UserProfileResponse userProfileResponse = crewService.findByUserNameGetUserProfile(authentication.getName());
 
             if(userProfileResponse.getLikeSoccer()){
                 userSportsList.add("SOCCER");
