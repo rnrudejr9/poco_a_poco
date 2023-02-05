@@ -47,7 +47,7 @@ public class CrewNewController {
     // 크루 게시물 상세 조회
     @GetMapping("/view/v1/crews/{crewId}")
     public String detailCrew(@PathVariable Long crewId, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest, Authentication authentication, Model model,
-                             @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                             @PageableDefault(page = 0, size = 9, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         log.info("Strict : {}", crewSportRequest.getStrict());
 

@@ -38,7 +38,7 @@ public class CrewViewController {
     @GetMapping()
     @ApiOperation(value = "크루 게시글 전체조회", notes = "")
     public String findAllCrew(Model model, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest, Authentication authentication,
-                              @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
+                              @PageableDefault(page = 0, size = 9, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         // 로그 확인
         log.info("GetMapping findAllCrew");
