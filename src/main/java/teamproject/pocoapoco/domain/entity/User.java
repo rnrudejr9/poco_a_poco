@@ -1,11 +1,13 @@
 package teamproject.pocoapoco.domain.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.UserRole;
 
 import javax.persistence.*;
