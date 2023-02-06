@@ -2,22 +2,60 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/fragment :: head"></head>
 
+<style>
+
+    .text-muted{
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 30%;
+    }
+
+    .card-tile{
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 90%;
+    }
+
+    .card-text{
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 100%;
+    }
+
+    .card-body{
+        background-color: #f0faff;
+    }
+
+</style>
 
 <script>
+    // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
+    history.replaceState({}, null, location.pathname);
 
-    var tc = 0;
-
+    // 운동 종목 체크박스 3개 초과 시 알람
     function count_check(obj) {
-        if (obj.checked)
-            tc++;
-        else
-            tc--;
-        if (tc > 3) {
+
+        var chkBox = document.getElementById("btn-sports");
+        var chkCnt = 0;
+
+        for (var i = 0; i < chkBox.length; i++) {
+            if (chkBox[i].checked) {
+                chkCnt++;
+            }
+        }
+        if (chkCnt > 3) {
             alert("최대 3개 체크 가능합니다.");
             obj.checked = false;
-            tc--;
+            return false;
         }
     }
+
 
 </script>
 <body>
@@ -42,6 +80,11 @@
     <div class="album py-5 bg-light">
         <div class="container">
 
+
+            <!-- 운동 종목 데이터 확인-->
+<!--            <label th:text="|userSportsList : ${userSportsList}|"></label><br>-->
+<!--            <label th:text="|sportRequest.getSportsList() : ${sportRequest.getSportsList()}|"></label>-->
+
             <!-- 운동 체크-->
             <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
                 <div class="d-grid gap-2 d-md-block">
@@ -63,46 +106,28 @@
             <div class="collapse" id="collapseExample">
                 <div class="card card-body">
 
-                    <!--                <form th:action="@{/view/v1/crews}" th:object="${sport}" method="post">-->
-                    <form th:action method="get" th:object="${sportRequest}">
+                    <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
                         <div class="grid text-center">
                             <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
 
-                                <!--                            <label class="btn btn-outline-danger"> <input type="checkbox" th:field="*{soccer}">축구</label>-->
-                                <!--                            <label class="btn btn-outline-warning"> <input type="checkbox" th:field="*{jogging}">조깅</label>-->
-                                <!--                            <label class="btn btn-outline-info"> <input type="checkbox" th:field="*{tennis}">테니스</label>-->
-                                <!--                            <label class="btn btn-outline-warning"> <input type="checkbox">조깅</label>-->
-                                <!--                            <label class="btn btn-outline-info"> <input type="checkbox" >테니스</label>-->
-                                <!--                            <label class="btn btn btn-outline-success"> <input type="checkbox">농구</label>-->
-                                <!--                            <label class="btn btn-outline-secondary"> <input type="checkbox">야구</label>-->
+                                <label class="btn btn-outline-secondary" th:each="sport : ${sportEnums}">
+                                    <input type="checkbox"
 
-                                <th:block th:each="sport : ${sportEnums}">
-                                    <label class="btn btn-outline-secondary"> <input type="checkbox"
-                                                                                     onclick="count_check(this)"
-                                                                                     th:field="*{sportsList}"
-                                                                                     th:value="${sport}"
-                                                                                     th:text="${sport.getValue()}">
-                                    </label>
-
-                                    <!--                                    <label class="btn btn-outline-secondary" th:if="${sportRequest.sportsList==null}"> <input type="checkbox"-->
-                                    <!--                                                                                     onclick="count_check(this)"-->
-                                    <!--                                                                                     th:field="*{sportsList}"-->
-                                    <!--                                                                                     th:value="${sport}"-->
-                                    <!--                                                                                     th:text="${sport.getValue()}">-->
-                                    <!--                                    </label>-->
-                                    <!--                                    <label class="btn btn-outline-secondary" th:if="!${sportRequest.sportsList==null}"> <input type="checkbox" checked-->
-                                    <!--                                                                                                                              onclick="count_check(this)"-->
-                                    <!--                                                                                                                              th:field="*{sportsList}"-->
-                                    <!--                                                                                                                              th:value="${sport}"-->
-                                    <!--                                                                                                                              th:text="${sport.getValue()}">-->
-                                    <!--                                    </label>-->
-                                </th:block>
-
+                                           onclick="count_check(this)"
+                                           name="chk"
+                                           th:field="*{sportsList}"
+                                           th:value="${sport}"
+                                           th:text="${sport.getValue()}">
+                                </label>
                             </div>
                             <button class="btn btn-primary" type="submit">조회 버튼</button>
+                            <button class="btn btn-primary" type="button" onclick="location.href='/view/v1/crews'">
+                                My운동종목
+                            </button>
                         </div>
 
                     </form>
+
 
                 </div>
             </div>
@@ -114,25 +139,29 @@
                 <div class="col" th:each="crew : ${crewList}">
 
                     <div class="card shadow-sm">
-                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img"
-                             aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">
-                            <title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#55595c"/>
-                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>
-                        </svg>
+<!--                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img"-->
+<!--                             aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">-->
+<!--                            <title>Placeholder</title>-->
+<!--                            <rect class="bg-pic" width="100%" height="100%" fill="#55595c"/>-->
+<!--                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>-->
+<!--                        </svg>-->
+                        <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100%; height:225px;">
+
 
                         <div class="card-body">
 
-                            <h3 class="card-tile" th:text="${crew.title}">제목</h3>
-                            <p class="card-text" th:text="${crew.content}">내용</p>
-
+                            <div class="test" >
+                                <h3 class="card-tile" th:text="${crew.title}">제목</h3>
+                                <p class="card-text" th:text="${crew.content}">내용</p>
+                            </div>
                             <div class="d-flex justify-content-between align-items-center">
 
                                 <small class="text-muted" th:text="${crew.strict}">지역</small>
                                 <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-secondary"><a
-                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id})}">상세보기</a></button>
+                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id})}">상세보기</a>
+                                    </button>
                                     <!--                        <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
 
                                 </div>
@@ -150,7 +179,9 @@
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
                         <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                            <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2})}">Previous</a>
+                            <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2},
+                                                                                strict=${sportRequest.getStrict()},
+                                                                                sportsList=${sportRequest.getSportsList()})}">Previous</a>
                         </li>
 
                         <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
@@ -159,14 +190,16 @@
                                                                                 page = ${page - 1},
                                                                                 strict=${sportRequest.getStrict()},
                                                                                 sportsList=${sportRequest.getSportsList()}
-                                                                                )}"
-                                                                                th:text="${page}">1</a></li>
+                                                                                )}" th:text="${page}">1</a></li>
+
                             <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
                                                                                      style="color: red"></strong></li>
                         </th:block>
 
                         <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
-                            <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage})}">Next</a>
+                            <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
+                                                                           strict=${sportRequest.getStrict()},
+                                                                           sportsList=${sportRequest.getSportsList()})}">Next</a>
                         </li>
                     </ul>
                 </nav>

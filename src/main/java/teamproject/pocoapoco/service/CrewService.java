@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.crew.*;
+import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
@@ -18,6 +19,7 @@ import teamproject.pocoapoco.repository.UserRepository;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -156,16 +158,30 @@ public class CrewService {
     }
 
     // 크루 게시글 존재 확인
-    private Crew findByCrewId(Long crewId) {
+    public Crew findByCrewId(Long crewId) {
         return crewRepository.findById(crewId)
                 .orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
     }
 
     // 해당 게시글 작성자 확인
-    private void findByUserAndCrewContaining(User user, Crew crew) {
+    public void findByUserAndCrewContaining(User user, Crew crew) {
         if (!user.getCrews().contains(crew)) {
             throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 게시글에 접근 권한이 없습니다.");
         }
+    }
+
+    public UserProfileResponse findByUserNameGetUserProfile(String userName) {
+
+        Optional<User> selectedUserOptional = userRepository.findByUserName(userName);
+
+        if(selectedUserOptional.isEmpty()){
+            throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
+        }
+
+        User selectedUser = selectedUserOptional.get();
+
+        return UserProfileResponse.fromEntity(selectedUser);
+
     }
 
 }
