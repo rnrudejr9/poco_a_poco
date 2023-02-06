@@ -4,7 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import teamproject.pocoapoco.domain.dto.members.CrewMemberResponse;
+import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberResponse;
 
 import javax.persistence.*;
 import java.util.List;
