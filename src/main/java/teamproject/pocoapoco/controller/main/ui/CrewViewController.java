@@ -71,7 +71,7 @@ public class CrewViewController {
         CrewResponse crewResponse = crewService.modifyCrew(crewId, crewRequest, authentication.getName());
         attributes.addFlashAttribute("message", "게시글을 수정했습니다.");
 
-        return "redirect:" + "/view/v1/crews/update/" + crewResponse.getCrewId();
+        return "redirect:" + "/view/v1/crews/"+ crewResponse.getCrewId();
     }
 
     // 크루 게시글 수정화면
