@@ -6,7 +6,7 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     show-sql: true
     format_sql: true
     use_sql_comments: true
@@ -24,6 +24,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+    hiddenmethod:
+      filter:
+        enabled: true   # put/delete httpMethod 적용
 
   mail:
     username:
