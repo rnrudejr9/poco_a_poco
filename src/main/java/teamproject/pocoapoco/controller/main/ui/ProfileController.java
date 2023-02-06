@@ -40,8 +40,10 @@ public class ProfileController {
         model.addAttribute("userProfileResponse", userProfileResponse);
 
 
-        return "profile/get-my-profile";
+        return "redirect:/view/v1/users/profile/my";
     }
+
+
 
     @GetMapping("/users/profile/edit")
     public String editUserPage(Model model, Authentication authentication){
