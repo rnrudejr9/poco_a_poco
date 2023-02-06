@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>아이디 중복 확인</title>
+</head>
+
+<body>
+
+<h3>아이디 중복 확인</h3>
+
+<form method="post" action="/view/v1/users/profile/image/edit" >
+
+    <input type="text" name="userName" id="inputUserName"  required />
+    <button type="button" onclick="checkDuplication()">아이디 중복 확인</button>
+
+    <input type="hidden" name="isNotDuplicated" id ="isNotDuplicated">
+
+    <br><br>
+
+    <a style="display: none" id="errorMessage">중복된 아이디가 존재합니다.</a>
+
+    <br><br>
+
+    <div id="finalButton" style="display: none">
+        <button type="submit" onclick="finish()">입력한 닉네임을 사용합니다.</button>
+        <input type="button" value="창닫기" onclick="window.close()">
+    </div>
+
+</form>
+
+
+
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+
+<script type="text/javascript">
+
+    async function checkDuplication() {
+
+        var inputUserName = document.getElementById('inputUserName').value;
+        console.log(inputUserName);
+        var url = '/view/v1/users/check_duplicate/' + inputUserName;
+
+        await fetch(url)
+            .then((resonse) => resonse.json())
+            .then((data) => {
+
+                console.log(data)
+                $('#isNotDuplicated').val(data)
+
+            });
+
+
+        console.log(document.getElementById('isNotDuplicated').value)
+
+        if (document.getElementById('isNotDuplicated').value == 'true') {
+            document.getElementById('finalButton').style.display = "";
+            document.getElementById('errorMessage').style.display = "none";
+
+        } else {
+            document.getElementById('finalButton').style.display = "none";
+            document.getElementById('errorMessage').style.display = "";
+        } // 2번 써야하는 문제 해결해야함 ㅠㅠ
+
+
+    }
+
+
+    function finish(){
+
+        opener.document.getElementById("userName").value = document.getElementById("inputUserName").value;
+        window.close();
+
+    }
+
+</script>
+
+
+</body>
+
+
+
+</html>
