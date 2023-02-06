@@ -140,6 +140,7 @@ public class CrewService {
 
             for (int i = 0; i < sportsList.size(); i++) {
                 sports[i] = SportEnum.valueOf(sportsList.get(i));
+                log.info("Service sports List : {}", sports[i]);
             }
 
             crews = crewRepository.findBySportEnum(pageable, sports[0], sports[1], sports[2]);
