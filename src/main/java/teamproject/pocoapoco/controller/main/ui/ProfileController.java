@@ -101,6 +101,46 @@ public class ProfileController {
 
     }
 
+
+    @ResponseBody
+    @GetMapping("/users/check_duplicate/{userName}")
+    public Boolean checkUserNameDuplicated(@PathVariable String userName, Model model, HttpServletResponse response) throws IOException {
+
+        log.info(userName);
+
+        try{
+            Boolean userNameNotDuplicate = userService.checkUserNameDuplicate(userName);
+//            model.addAttribute("userNameNotDupliacte", userNameNotDuplicate);
+
+            log.info(String.valueOf(userNameNotDuplicate));
+
+            return userNameNotDuplicate ; // 어떤 페이지로 연결할 지 생각해보기
+
+        } catch (AppException e){
+
+            response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+
+            out.println("<script>alert('중복된 아이디가 존재합니다.');</script>");
+
+            out.flush();
+            return false;
+        }
+
+    }
+
+
+
+
+    @GetMapping("/users/profile/check_duplicate_window")
+    public String openDuplicateWindow(){
+
+        return "profile/check-duplicated-username";
+    }
+
+
+
+
     @PostMapping("/users/profile/image/edit")
     public String uploadImage(String imagePath, Authentication authentication, Model model){
 

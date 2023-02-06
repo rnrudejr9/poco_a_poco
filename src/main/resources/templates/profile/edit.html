@@ -103,6 +103,17 @@
 
             <button class="btn btn-primary" type="button" onclick="location.href = '/view/v1/users/profile/image/edit';">프로필 사진 변경</button>
 
+            <div class="mb-3 row">
+                <label for="userName" class="col-sm-3 col-form-label">닉네임</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="userName" th:value="*{userName}"/>
+
+                </div>
+                <button class="btn btn-primary" type="button" onclick="openDuplicationWindow()">닉네임 중복 확인</button>
+
+            </div>
+
+
 
             <div class="mb-3 row">
                 <label for="password1" class="col-sm-3 col-form-label">비밀번호</label>
@@ -220,6 +231,12 @@
 
 
     }
+
+    function openDuplicationWindow(){
+        window.open("/view/v1/users/profile/check_duplicate_window", "닉네임 수정", 'width=300, height=300')
+    }
+
+
 
 
 </script>

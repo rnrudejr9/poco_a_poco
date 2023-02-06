@@ -189,7 +189,7 @@ public class UserService {
         User beforeMyUser = myUserOptional.get();
         // request에서 수정된 정보만 반영하기
 
-//        String revisedUserName = (userProfileRequest.getUserName().isBlank())? beforeMyUser.getUsername(): userProfileRequest.getUserName();
+        String revisedUserName = (userProfileRequest.getUserName().isBlank())? beforeMyUser.getUsername(): userProfileRequest.getUserName();
         String revisedAddress = (userProfileRequest.getAddress().isBlank())? beforeMyUser.getAddress(): userProfileRequest.getAddress();
         String revisedPassword = (userProfileRequest.getPassword().isBlank())? beforeMyUser.getPassword(): userProfileRequest.getPassword();
         Boolean revisedLikeSoccer = (userProfileRequest.getLikeSoccer().equals(beforeMyUser.getSport().isSoccer()))? beforeMyUser.getSport().isSoccer(): userProfileRequest.getLikeSoccer();
@@ -199,7 +199,7 @@ public class UserService {
         String encodedPassword = encrypterConfig.encoder().encode(revisedPassword);
 
 
-        User revisedMyUser = User.toEntityWithImage(beforeMyUser.getId(), beforeMyUser.getUserId(), beforeMyUser.getUsername(), revisedAddress, encodedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis, beforeMyUser.getImagePath());
+        User revisedMyUser = User.toEntityWithImage(beforeMyUser.getId(), beforeMyUser.getUserId(), revisedUserName, revisedAddress, encodedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis, beforeMyUser.getImagePath());
 
         userRepository.save(revisedMyUser);
 
@@ -232,6 +232,18 @@ public class UserService {
 
         return selectedUser.getImagePath();
 
+    }
+
+    // 중복되면 true
+    public Boolean checkUserNameDuplicate(String userName) {
+
+        Optional<User> optionalUser = userRepository.findByUserName(userName);
+
+        if(optionalUser.isPresent()){
+            return false;
+        } else{
+            return true;
+        }
     }
 
 
