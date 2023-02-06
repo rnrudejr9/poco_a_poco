@@ -30,7 +30,6 @@ import teamproject.pocoapoco.service.CrewMemberService;
 import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.LikeViewService;
 
-import java.util.ArrayList;
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
@@ -167,6 +166,14 @@ public class CrewViewController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("lastPage", lastPage);
+
+        log.info("list.getPageable() : {} ", list.getPageable());
+        log.info("list.getPageable().getPageNumber() : {}", list.getPageable().getPageNumber());
+
+        log.info("list.getContent().size() : {}", list.getContent().size());
+        log.info("list.getContent().get(0) : {}", list.getContent().get(0).getId());
+        log.info("list.getContent().indexOf(1) : {}", list.getContent().indexOf(1));
+
 
 
         return "main/main";
