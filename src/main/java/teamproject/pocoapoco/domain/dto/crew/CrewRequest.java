@@ -9,6 +9,7 @@ import teamproject.pocoapoco.enums.SportEnum;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 public class CrewRequest {
 
