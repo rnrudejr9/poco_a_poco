@@ -47,7 +47,7 @@ public class ViewController {
 
 
         cookie.setPath("/");
-        cookie.setSecure(true);
+//        cookie.setSecure(true);
         //변경요소
 
         cookie.setHttpOnly(true);

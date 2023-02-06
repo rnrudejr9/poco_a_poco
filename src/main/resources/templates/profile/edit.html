@@ -71,7 +71,7 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 
 <ul id="left-box">
-    <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100px; height:100px;">
+    <img src = "" class="img-thumbnail" style="width:100px; height:100px;" id="left-image">
 
     <p style="position: relative; top:10px;">소개말말말</p>
 
@@ -87,6 +87,9 @@
 
 <div sec:authorize="isAuthenticated()">
 
+
+    <input type="hidden" name="img-key" th:value="${userProfileImagePath}">
+
     <div class="container" style="padding:20px;" id="container-profile">
 
 
@@ -96,7 +99,7 @@
 
         <form method="post" action="/view/v1/users/profile/edit" th:object="${userProfileRequest}">
 
-            <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="rounded mx-auto d-block" style="height: 200px; width: 200px;">
+            <img src="" class="rounded mx-auto d-block" style="height: 200px; width: 200px;" id="main-image">
 
             <button class="btn btn-primary" type="button" onclick="location.href = '/view/v1/users/profile/image/edit';">프로필 사진 변경</button>
 
@@ -158,12 +161,66 @@
 
 
 
-<script type="text/javascript">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 
-    function updateImage(){
-        //새창 만들기
-        window.open("", "프로필 이미지 변경하기", "width=400, height=350");
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+
+<script type="text/javascript" th:inline="javascript">
+
+    window.onload = async function profileGet() {
+
+        let uuidString = self.crypto.randomUUID();
+
+        const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
+        const SECRET_ACCESS_KEY = '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';
+        const REGION = 'ap-northeast-2';
+        const BUCKET_NAME = 'poco-bucket-2';
+        const BUCKET_DIRECTORY = '/profileimages';
+        const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+        // AWS ACCESS KEY를 세팅합니다.
+
+        AWS.config.update({
+            accessKeyId: ACCESS_KEY,
+            secretAccessKey: SECRET_ACCESS_KEY
+        });
+
+        var s3 = new AWS.S3({
+            region: REGION
+        });
+
+        var imgKey = $('input[name=img-key]').val();
+
+        // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+
+        if(!imgKey){
+            imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+        }
+
+
+
+        const params = {
+            Bucket: S3_BUCKET,
+            Key: imgKey
+        };
+
+        var url = s3.getSignedUrl(
+            "getObject", params
+        );
+
+        const img1 = document.getElementById('left-image');
+        img1.src = url;
+
+        const img2 = document.getElementById('main-image');
+        img2.src = url;
+
+        console.log(url);
+
+
+
     }
+
 
 </script>
 

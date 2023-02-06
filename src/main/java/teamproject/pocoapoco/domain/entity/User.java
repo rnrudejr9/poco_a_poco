@@ -1,11 +1,13 @@
 package teamproject.pocoapoco.domain.entity;
 
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.UserRole;
 
 import javax.persistence.*;
@@ -52,7 +54,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "user")
+    private List<CrewMembers> members = new ArrayList<>();
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<GrantedAuthority>(List.of(new SimpleGrantedAuthority(role.name())));

@@ -24,6 +24,9 @@ spring:
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
+    hiddenmethod:
+      filter:
+        enabled: true   # put/delete httpMethod 적용
 
   mail:
     username:

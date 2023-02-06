@@ -23,11 +23,11 @@ spring:
             scope:
               - name
               - email
+
             client-name: Naver
             authorization-grant-type: authorization_code
-            redirect-uri: http://localhost:8080/login/oauth2/code/naver
+            redirect-uri: http://ec2-54-180-86-39.ap-northeast-2.compute.amazonaws.com:8084/login/oauth2/code/naver
             client-authentication-method: POST
-
         provider:
           naver:
             authorization-uri: https://nid.naver.com/oauth2.0/authorize # 네이버 로그인 클릭시 요청되는 URI

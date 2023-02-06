@@ -28,15 +28,7 @@
 
     function profileUpload() {
 
-
-        var today = new Date();
-
-        var year = today.getFullYear();
-        var month = ('0' + (today.getMonth() + 1)).slice(-2);
-        var day = ('0' + today.getDate()).slice(-2);
-
-        var dateString = year + '-' + month  + '-' + day;
-
+        let uuidString = self.crypto.randomUUID();
 
         const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
         const SECRET_ACCESS_KEY = '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';
@@ -58,10 +50,11 @@
         });
 
 
+
         let files = document.getElementById('imageFile').files;
         let file = files[0];
 
-        let fileName = dateString + '-' + file.name.replace(' ', '');
+        let fileName = uuidString + '-' + file.name.replace(' ', '');
 
 
         const params = {
@@ -71,14 +64,12 @@
             Key: fileName
         };
 
-        let filePath = 'https://' + BUCKET_NAME + '.s3.ap-northeast-2.amazonaws.com' +BUCKET_DIRECTORY + '/' + fileName;
-
 
         myBucket.putObject(params)
             .on('httpUploadProgress', (evt) => {
                 alert("SUCCESS");
-                console.log(filePath);
-                $('#imagePath').val(filePath);
+                console.log(fileName);
+                $('#imagePath').val(fileName);
             })
             .send((err) => {
                 if (err) console.log(err)

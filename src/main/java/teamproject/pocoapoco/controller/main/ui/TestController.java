@@ -9,6 +9,7 @@ import teamproject.pocoapoco.controller.main.api.UserController;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.UserProfileRequest;
 import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
+import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.UserService;
@@ -17,6 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 
 @Controller
 @RequestMapping("/view/v1")
@@ -27,7 +29,9 @@ public class TestController {
     private final UserRepository userRepository;
 
     @GetMapping("/crews/write")
-    public String hello(){
+    public String hello(Model model){
+        List<SportEnum> sportEnums = List.of(SportEnum.values());
+        model.addAttribute("sportEnums",sportEnums);
         return "crew/write";
     }
 
