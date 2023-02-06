@@ -400,7 +400,7 @@ class CrewControllerTest {
             Page<CrewDetailResponse> crewDetailResponses = crews.map(CrewDetailResponse::of);
 
             //given
-            given(crewService.findAllCrewsWithStrict(any(), any()))
+            given(crewService.findAllCrewsByStrict(any(), any()))
                     .willReturn(crewDetailResponses);
 
             // when
