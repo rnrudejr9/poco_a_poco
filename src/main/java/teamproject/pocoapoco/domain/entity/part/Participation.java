@@ -1,6 +1,7 @@
-package teamproject.pocoapoco.domain.entity.chat;
+package teamproject.pocoapoco.domain.entity.part;
 
 import lombok.*;
+import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 
 import javax.persistence.*;
@@ -10,20 +11,16 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@Setter
-public class ChatRoom {
+public class Participation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roomId;
-    private String name;
-
+    private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-//    @Builder.Default
-//    @OneToMany(mappedBy = "chat_room")
-//    private List<Chat> chats = new ArrayList<>();
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "crew_id")
+    private Crew crew;
 }
