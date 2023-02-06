@@ -13,4 +13,6 @@ import java.util.Optional;
 public interface CommentRepository extends JpaRepository<Comment, Long> {
     Page<Comment> findByCrewId(Long id, Pageable pageable);
     Page<Comment> findByCrewIdAndParentId(Long id, Pageable pageable, Long parentId);
+    List<Comment> findByCrewId(Long id);
+    List<Comment> findByCrewIdAndParentId(Long id, Long parentId);
 }
