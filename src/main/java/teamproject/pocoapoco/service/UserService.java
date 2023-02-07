@@ -218,6 +218,7 @@ public class UserService {
     public UserIdFindResponse findUserId(String nickName){
         User user = userRepository.findByNickName(nickName).get();
 
+
         UserIdFindResponse userIdFindResponse = UserIdFindResponse.builder()
                 .userName(user.getUsername())
                 .build();

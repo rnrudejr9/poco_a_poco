@@ -68,8 +68,8 @@
             <h3> 아이디 찾기</h3>
             <form>
                 <label>회원가입시 입력한 닉네임을 입력해주세요.</label>
-                <input type="text" placeholder="Id" id="userNameForFindId" />
-                <button style="margin-left: 10px" type="submit" id="findId">아이디 찾기</button>
+                <input type="text" placeholder="Id" id="nickNameForFindId" />
+                <button style="margin-left: 10px" type="button" id="findId">아이디 찾기</button>
             </form>
         </div>
         <!--팝업 버튼 영역-->
@@ -86,8 +86,8 @@
             <h5>비밀번호를 재설정 합니다.</h5>
             <form>
                 <label>비밀번호를 찾고싶은 Id를 입력해 주세요</label>
-                <input type="text" placeholder="Id" id="" />
-                <button style="margin-left: 10px" type="submit" id="">비밀번호 찾기</button>
+                <input type="text" placeholder="Id"  />
+                <button style="margin-left: 10px" type="submit" >비밀번호 찾기</button>
             </form>
         </div>
         <!--팝업 버튼 영역-->
@@ -116,7 +116,7 @@
     document.getElementById('findId').addEventListener('click',findId);
 
     async function findId(){
-        let params = document.getElementById("userNameForFindId").value;
+        let params = document.getElementById("nickNameForFindId").value;
         let response = await fetch(`/api/v1/findId/?nickName=${params}`,{
             method : "GET",
             headers: {
@@ -125,12 +125,13 @@
 
         })
         let data = await response.json()
-        // console.log(data)
-        // console.log(data.result.userId)
+        console.log(data)
+
+
         if(response.ok){
-            alert(`회원님의 Id 는 ${data.result.nickName} 입니다.`)
+            alert(`손님의 아이디는 : ${data.result.userName} 입니다.`)
         }else
-            alert("아이디를 다시 확인해 주시기 바랍니다.")
+            alert("아이디를 다시 확인해 주세요")
     }
 
 
@@ -143,8 +144,8 @@
             }
         })
         let data = await response.json()
-        // console.log(data)
-        // console.log(data.result.code)
+        console.log(data)
+        console.log(data.result.code)
 
         if(response.ok){
             alert("메세지가 전송되었습니다 email을 확인하세요")
