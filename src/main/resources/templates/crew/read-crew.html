@@ -154,21 +154,22 @@
 
 <ul class="pagination justify-content-center">
     <li class="page-item" th:classappend="${0 == nowPage} ? 'disabled'">
-        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2},
-                                                       strict=${sportRequest.getStrict()},
-                                                       sportsList=${sportRequest.getSportsList()}
-                                                       )}">이전글</a>
+        <a class="page-link" th:href="@{/view/v1/crews/{crewId}(crewId = ${crewId},
+                                                          page = ${nowPage - 1},
+                                                          strict=${sportRequest.getStrict()},
+                                                          sportsList=${sportRequest.getSportsList()}
+                                                          )}">이전글</a>
     </li>
 
 
     <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
-        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
-                                                       strict=${sportRequest.getStrict()},
-                                                       sportsList=${sportRequest.getSportsList()}
-                                                       )}">다음글</a>
+        <a class="page-link" th:href="@{/view/v1/crews/{crewId}(crewId = ${crewId},
+                                                          page = ${nowPage + 1},
+                                                          strict=${sportRequest.getStrict()},
+                                                          sportsList=${sportRequest.getSportsList()}
+                                                          )}">다음글</a>
     </li>
 </ul>
-
 
 <div id="wrapper">
     <input type="text" hidden th:value="${crewId}" id="crewIdJoin">

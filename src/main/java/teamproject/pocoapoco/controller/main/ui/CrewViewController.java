@@ -33,6 +33,7 @@ import teamproject.pocoapoco.service.LikeViewService;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequiredArgsConstructor
@@ -48,20 +49,33 @@ public class CrewViewController {
     private final UserRepository userRepository;
 
     // 크루 게시물 상세 페이지
-//    @GetMapping("/{crewId}")
-//    public String detailCrew(@PathVariable Long crewId, Model model) {
-//        try {
-//            CrewDetailResponse details = crewService.detailCrew(crewId);
-//            int count = likeViewService.getLikeCrew(crewId);
-//
-//            model.addAttribute("details", details);
-//            // 좋아요 개수 출력
-//            model.addAttribute("likeCnt",count);
-//        } catch (EntityNotFoundException e) {
-//            return "redirect:/index";
-//        }
-//        return "crew/read-crew";
-//    }
+    @GetMapping("/{crewId}")
+    public String detailCrew(@PathVariable Long crewId, Model model, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
+                             @PageableDefault(page = 0, size = 1, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+
+        // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
+        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
+
+        try {
+            CrewDetailResponse details = list.getContent().get(0);
+            int count = likeViewService.getLikeCrew(crewId);
+
+            model.addAttribute("details", details);
+            model.addAttribute("likeCnt", count);
+        } catch (EntityNotFoundException e) {
+            return "redirect:/index";
+        }
+
+        // 페이징 처리 변수
+        int nowPage = list.getPageable().getPageNumber();
+        int lastPage = list.getTotalPages() - 1;
+
+        // 페이징 처리 모델
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("lastPage", lastPage);
+
+        return "crew/read-crew";
+    }
 
     // 크루 게시글 수정
     @PutMapping("/{crewId}")
@@ -139,7 +153,7 @@ public class CrewViewController {
     // 크루 게시물 전체 조회, 검색 조회, 운동 종목 조회
     @GetMapping()
     @ApiOperation(value = "크루 게시글 전체조회", notes = "")
-    public String findAllCrew(Model model,  Authentication authentication,
+    public String findAllCrew(Model model, Authentication authentication,
                               @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
                               @PageableDefault(page = 0, size = 9, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
@@ -147,7 +161,7 @@ public class CrewViewController {
         List<String> userSportsList = crewService.getUserSports(authentication, CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
 
         // 처음 로그인 시, My운동종목 클릭 시 유저 종목 Model에 추가
-        if(!CollectionUtils.isEmpty(userSportsList) && !crewSportRequest.isLoginStatus()){
+        if (!CollectionUtils.isEmpty(userSportsList) && !crewSportRequest.isLoginStatus()) {
             crewSportRequest.setSportsList(userSportsList);
             crewSportRequest.setLoginStatus(true);
         }
@@ -155,11 +169,10 @@ public class CrewViewController {
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
         Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, CollectionUtils.isEmpty(userSportsList), pageable);
 
-
         // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber() + 1;
-        int startPage = Math.max(nowPage - 4, 1);
-        int endPage = Math.min(nowPage + 5, list.getTotalPages());
+        int startNumPage = Math.max(nowPage - 4, 1);
+        int endNumPage = Math.min(nowPage + 5, list.getTotalPages());
         int lastPage = list.getTotalPages();
 
         // 게시글 리스트
@@ -167,62 +180,46 @@ public class CrewViewController {
 
         // 페이징 처리 모델
         model.addAttribute("nowPage", nowPage);
-        model.addAttribute("startPage", startPage);
-        model.addAttribute("endPage", endPage);
+        model.addAttribute("startNumPage", startNumPage);
+        model.addAttribute("endNumPage", endNumPage);
         model.addAttribute("lastPage", lastPage);
 
         return "main/main";
     }
 
-    @GetMapping("/{crewId}")
-    public String detailCrew(@PathVariable Long crewId, Model model, Authentication authentication,
-                             @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
-                             @PageableDefault(page = 0, size = 1, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
-
-
-        // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
-        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
-
-        for(CrewDetailResponse s : list){
-            log.info("CrewDetailReponse = id: {}, strict : {}, sport : {}", s.getId(), s.getStrict(), s.getSportEnum());
-        }
-
-        // 페이징 처리 변수
-        int nowPage = list.getPageable().getPageNumber();
-//        int startPage = Math.max(nowPage - 4, 1);
-//        int endPage = Math.min(nowPage + 5, list.getTotalPages());
-        int lastPage = list.getTotalPages();
-
-        // 게시글 리스트
-        model.addAttribute("crewList", list);
-
-        // 페이징 처리 모델
-        model.addAttribute("nowPage", nowPage);
-//        model.addAttribute("startPage", startPage);
-//        model.addAttribute("endPage", endPage);
-        model.addAttribute("lastPage", lastPage);
-
-
-        try {
-            CrewDetailResponse details = crewService.detailCrew(crewId);
-            int count = likeViewService.getLikeCrew(crewId);
-
-            model.addAttribute("details", details);
-            // 좋아요 개수 출력
-            model.addAttribute("likeCnt", count);
-        } catch (EntityNotFoundException e) {
-            return "redirect:/index";
-        }
-
-        return "crew/read-crew";
-    }
-
+//    @GetMapping("/{crewId}")
+//    public String detailCrew(@PathVariable Long crewId, Model model,
+//                             @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
+//                             @PageableDefault(page = 0, size = 1, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
+//
+//        // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
+//        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
+//
+//        try {
+//            CrewDetailResponse details = list.getContent().get(0);
+//            int count = likeViewService.getLikeCrew(crewId);
+//
+//            model.addAttribute("details", details);
+//            model.addAttribute("likeCnt", count);
+//        } catch (EntityNotFoundException e) {
+//            return "redirect:/index";
+//        }
+//
+//        // 페이징 처리 변수
+//        int nowPage = list.getPageable().getPageNumber();
+//        int lastPage = list.getTotalPages() - 1;
+//
+//        // 페이징 처리 모델
+//        model.addAttribute("nowPage", nowPage);
+//        model.addAttribute("lastPage", lastPage);
+//
+//        return "crew/read-crew";
+//    }
 
     @ModelAttribute("sportEnums")
     private List<SportEnum> sportEnums() {
         List<SportEnum> sportEnums = List.of(SportEnum.values());
         return sportEnums;
     }
-
 
 }

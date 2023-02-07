@@ -104,14 +104,12 @@
 
             <div class="collapse" id="collapseExample">
                 <div class="card card-body">
-
                     <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
-                        <input type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}" th:text="|sportRequest.isLogin() : ${sportRequest.loginStatus}|"/>
+                        <small class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}"></small>
                         <div class="grid text-center">
                             <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
                                 <label class="btn btn-outline-secondary" th:each="sport : ${sportEnums}">
                                     <input type="checkbox"
-
                                            onclick="count_check(this)"
                                            name="chk"
                                            th:field="*{sportsList}"
@@ -124,51 +122,34 @@
                                 My운동종목
                             </button>
                         </div>
-
                     </form>
-
-
                 </div>
             </div>
 
-
             <!-- 앨범-->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-
                 <div class="col" th:each="crew : ${crewList}">
-
-                    <div class="card shadow-sm">
-<!--                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img"-->
-<!--                             aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">-->
-<!--                            <title>Placeholder</title>-->
-<!--                            <rect class="bg-pic" width="100%" height="100%" fill="#55595c"/>-->
-<!--                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>-->
-<!--                        </svg>-->
+                    <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
                         <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
                         <input type="hidden" name="img-key" th:value="${crew.imagePath}">
-
-
                         <div class="card-body">
-
                             <div class="test">
                                 <h3 class="card-tile" th:text="${crew.title}">제목</h3>
                                 <p class="card-text" th:text="${crew.content}">내용</p>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-
                                 <small class="text-muted text-strict" th:text="${crew.strict}">지역</small>
                                 <small class="text-muted text-peopleNum" th:text="${crew.crewLimit} + 명">인원</small>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-secondary"><a
                                             th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
-                                                                               page = ${nowPage - 1},
+                                                                               page = (${nowPage} - 1) * 9 + ${crewStat.index},
                                                                                loginStatus = ${sportRequest.loginStatus},
                                                                                strict = ${sportRequest.getStrict()},
                                                                                sportsList = ${sportRequest.getSportsList()}
                                                                                )}">상세보기</a>
                                     </button>
                                     <!--                        <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
-
                                 </div>
 
                                 <div>
@@ -182,6 +163,7 @@
                 </div>
             </div>
 
+            <!-- 하단 페이징-->
             <div class="py-3 my-4">
                 <nav aria-label="Page navigation example">
                     <ul class="pagination justify-content-center">
@@ -191,8 +173,7 @@
                                                                            loginStatus = ${sportRequest.loginStatus},
                                                                            sportsList=${sportRequest.getSportsList()})}">Previous</a>
                         </li>
-
-                        <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
+                        <th:block th:each="page : ${#numbers.sequence(startNumPage, endNumPage)}">
                             <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
                                                                                 th:href="@{/view/v1/crews(
                                                                                             page = ${page - 1},
@@ -201,10 +182,8 @@
                                                                                             sportsList=${sportRequest.getSportsList()}
                                                                                             )}" th:text="${page}">1</a></li>
 
-                            <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
-                                                                                     style="color: red"></strong></li>
+                            <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}" style="color: red"></strong></li>
                         </th:block>
-
                         <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
                             <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
                                                                            strict=${sportRequest.getStrict()},
@@ -214,13 +193,8 @@
                     </ul>
                 </nav>
             </div>
-
         </div>
-
-
     </div>
-
-
 </main>
 
 <footer th:replace="fragments/fragment :: footer"></footer>
