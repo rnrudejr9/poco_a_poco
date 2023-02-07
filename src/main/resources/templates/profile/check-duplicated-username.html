@@ -14,7 +14,7 @@
 
 <form method="post" action="/view/v1/users/profile/image/edit" >
 
-    <input type="text" name="userName" id="inputUserName"  required />
+    <input type="text" name="nickName" id="inputNickName"  required />
     <button type="button" onclick="checkDuplication()">아이디 중복 확인</button>
 
     <input type="hidden" name="isNotDuplicated" id ="isNotDuplicated">
@@ -41,9 +41,8 @@
 
     async function checkDuplication() {
 
-        var inputUserName = document.getElementById('inputUserName').value;
-        console.log(inputUserName);
-        var url = '/view/v1/users/check_duplicate/' + inputUserName;
+        var inputNickName = document.getElementById('inputNickName').value;
+        var url = '/view/v1/users/check_duplicate/' + inputNickName;
 
         await fetch(url)
             .then((resonse) => resonse.json())
@@ -72,7 +71,7 @@
 
     function finish(){
 
-        opener.document.getElementById("userName").value = document.getElementById("inputUserName").value;
+        window.opener.document.getElementById('nickName').value = document.getElementById('inputNickName').value;
         window.close();
 
     }

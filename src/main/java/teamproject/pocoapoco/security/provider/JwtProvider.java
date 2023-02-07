@@ -43,7 +43,6 @@ public class JwtProvider {
         claims.put(ID_KEY, user.getId());
         claims.put(USERNAME_KEY, user.getUsername());
         claims.put(ROLE_KEY, user.getRole().name());
-        claims.put(USERID_KEY, user.getUserId());
 
         return Jwts.builder()
                 .setClaims(claims)

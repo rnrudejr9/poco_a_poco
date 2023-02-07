@@ -32,8 +32,12 @@ public class Crew extends BaseEntity{
     private String content;
     private Integer crewLimit;
 
+    private String imagePath;
+
     private String datepick;
     private String timepick;
+
+
 
     @OneToOne
     @JoinColumn(name="room_id")

@@ -19,10 +19,10 @@
             <input type="text" class="form-control" placeholder="인증번호를 입력해주세요" id="memailconfirm">
             <button style="margin-left: 10px" type="button"  id="check">인증번호 확인</button>
             </div>
-            <input type="text" placeholder="Id" th:field="*{userId}" />
+            <input type="text" placeholder="Id" th:field="*{userName}" />
             <input type="password" placeholder="Password" th:field="*{password}"/>
             <input type="password" placeholder="PasswordCheck" th:field="*{passwordConfirm}" />
-            <input type="text" placeholder="Name"th:field="*{userName}" />
+            <input type="text" placeholder="Name"th:field="*{nickName}" />
             <input type="text" id="sample4_postcode" placeholder="우편번호">
             <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기">
             <input type="text" id="sample4_roadAddress" placeholder="도로명주소" th:field="*{address}">
@@ -38,7 +38,7 @@
                 <a href="#" th:href="@{/oauth2/authorization/naver}" class="social">네이버<i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your account</span>
-            <input type="text" placeholder="Email" th:field="*{userId}" />
+            <input type="text" placeholder="Email" th:field="*{userName}" />
             <input type="password" placeholder="Password"th:field="*{password}" />
             <a href="#">Forgot your password?</a>
             <button type="submit">로그인</button>

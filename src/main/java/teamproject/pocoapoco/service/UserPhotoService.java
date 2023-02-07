@@ -46,7 +46,7 @@ public class UserPhotoService {
 
         User selectedUser = selectedUserOptional.get();
 
-        User revisedUser = User.toEntityWithImage(selectedUser.getId(), selectedUser.getUserId(), selectedUser.getUsername(),
+        User revisedUser = User.toEntityWithImage(selectedUser.getId(), selectedUser.getUsername(), selectedUser.getNickName(),
                 selectedUser.getAddress(), selectedUser.getPassword(), selectedUser.getSport().isSoccer(),
                 selectedUser.getSport().isJogging(), selectedUser.getSport().isTennis(), imagePath);
 

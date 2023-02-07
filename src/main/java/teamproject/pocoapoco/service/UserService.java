@@ -14,6 +14,8 @@ import teamproject.pocoapoco.security.config.EncrypterConfig;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -29,7 +31,7 @@ public class UserService {
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
         // userName 유효성 확인
-        User user = userRepository.findByUserId(userLoginRequest.getUserId())
+        User user = userRepository.findByUserName(userLoginRequest.getUserName())
                 .orElseThrow(() -> {throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
                 });
         // password 유효성 확인
@@ -60,25 +62,25 @@ public class UserService {
         }
 
 
-        if (userRepository.findByUserId(userJoinRequest.getUserId()).isPresent()){
+        if (userRepository.findByUserName(userJoinRequest.getUserName()).isPresent()){
             throw new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage());
 
         } // 아이디 중복 확인 버튼 생성?
 
-        if (userRepository.findByUserName(userJoinRequest.getUserName()).isPresent()){
+        if (userRepository.findByUserName(userJoinRequest.getNickName()).isPresent()){
             throw new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage());
 
         }
 
 
-        User user = User.toEntity(userJoinRequest.getUserId(), userJoinRequest.getUserName(), userJoinRequest.getAddress(),
+        User user = User.toEntity(userJoinRequest.getUserName(), userJoinRequest.getNickName(), userJoinRequest.getAddress(),
                 encrypterConfig.encoder().encode(userJoinRequest.getPassword()), userJoinRequest.getLikeSoccer(),
                 userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis());
 
         User saved = userRepository.save(user);
 
 
-        UserJoinResponse userJoinResponse = new UserJoinResponse(saved.getUserId(), "회원가입 되었습니다.");
+        UserJoinResponse userJoinResponse = new UserJoinResponse(saved.getUsername(), "회원가입 되었습니다.");
 
         return userJoinResponse;
 
@@ -141,38 +143,9 @@ public class UserService {
         return new UserLogoutResponse(String.format("%s 님이 logout에 성공했습니다", authentication.getName()));
     }
 
-    public UserJoinResponse addUser(UserJoinRequest userJoinRequest){
-        String encodedPassword = encrypterConfig.encoder().encode(userJoinRequest.getPassword());
-        // 비밀번호 확인 로직 추가
-        if (!userJoinRequest.getPassword().equals(userJoinRequest.getPasswordConfirm())){
-
-            throw new AppException(ErrorCode.INVALID_PASSWORD, ErrorCode.INVALID_PASSWORD.getMessage());
-        }
-
-
-        if (userRepository.findByUserId(userJoinRequest.getUserId()).isPresent()){
-            throw new AppException(ErrorCode.DUPLICATED_USERID, ErrorCode.DUPLICATED_USERID.getMessage());
-
-        } // 아이디 중복 확인 버튼 생성?
-
-        if (userRepository.findByUserName(userJoinRequest.getUserName()).isPresent()){
-            throw new AppException(ErrorCode.DUPLICATED_USERNAME, ErrorCode.DUPLICATED_USERNAME.getMessage());
-
-        }
-
-        User user = User.toEntity(userJoinRequest.getUserId(), userJoinRequest.getUserName(), userJoinRequest.getAddress(),
-                encrypterConfig.encoder().encode(userJoinRequest.getPassword()), userJoinRequest.getLikeSoccer(),
-                userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis());
-
-        User saved = userRepository.save(user);
-
-        UserJoinResponse userJoinResponse = new UserJoinResponse(saved.getUserId(), "회원가입 되었습니다.");
-
-        return userJoinResponse;
-    }
 
     @Transactional(rollbackOn = AppException.class)
-    public UserProfileResponse updateUserInfoByUserName(String userName, UserProfileRequest userProfileRequest) {
+    public User updateUserInfoByUserName(String userName, UserProfileRequest userProfileRequest) {
 
         // 비밀번호 확인 로직 따로 빼야할 필요 있음
         if (!userProfileRequest.getPassword().equals(userProfileRequest.getPasswordConfirm())){
@@ -189,7 +162,7 @@ public class UserService {
         User beforeMyUser = myUserOptional.get();
         // request에서 수정된 정보만 반영하기
 
-        String revisedUserName = (userProfileRequest.getUserName().isBlank())? beforeMyUser.getUsername(): userProfileRequest.getUserName();
+        String revisedNickName = (userProfileRequest.getNickName().isBlank())? beforeMyUser.getNickName(): userProfileRequest.getNickName();
         String revisedAddress = (userProfileRequest.getAddress().isBlank())? beforeMyUser.getAddress(): userProfileRequest.getAddress();
         String revisedPassword = (userProfileRequest.getPassword().isBlank())? beforeMyUser.getPassword(): userProfileRequest.getPassword();
         Boolean revisedLikeSoccer = (userProfileRequest.getLikeSoccer().equals(beforeMyUser.getSport().isSoccer()))? beforeMyUser.getSport().isSoccer(): userProfileRequest.getLikeSoccer();
@@ -199,11 +172,12 @@ public class UserService {
         String encodedPassword = encrypterConfig.encoder().encode(revisedPassword);
 
 
-        User revisedMyUser = User.toEntityWithImage(beforeMyUser.getId(), beforeMyUser.getUserId(), revisedUserName, revisedAddress, encodedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis, beforeMyUser.getImagePath());
+        User revisedMyUser = User.toEntityWithImage(beforeMyUser.getId(), beforeMyUser.getUsername(), revisedNickName, revisedAddress, encodedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis, beforeMyUser.getImagePath());
 
         userRepository.save(revisedMyUser);
 
-        return UserProfileResponse.fromEntity(revisedMyUser);
+
+        return revisedMyUser;
 
     }
     public UserProfileResponse getUserInfoByUserName(String userName) {
@@ -235,9 +209,9 @@ public class UserService {
     }
 
     // 중복되면 true
-    public Boolean checkUserNameDuplicate(String userName) {
+    public Boolean checkNickNameDuplicated(String nickName) {
 
-        Optional<User> optionalUser = userRepository.findByUserName(userName);
+        Optional<User> optionalUser = userRepository.findByNickName(nickName);
 
         if(optionalUser.isPresent()){
             return false;

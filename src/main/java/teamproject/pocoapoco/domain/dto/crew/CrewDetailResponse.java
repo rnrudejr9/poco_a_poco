@@ -20,8 +20,8 @@ public class CrewDetailResponse {
     private String title;
     private String content;
     private Integer crewLimit;
-    private String userId;
     private String userName;
+    private String nickName;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
 
@@ -30,6 +30,8 @@ public class CrewDetailResponse {
     private InterestSport interestSport;
     private SportEnum sportEnum;
 
+    private String imagePath;
+
     public static CrewDetailResponse of(Crew crew) {
         return CrewDetailResponse.builder()
                 .id(crew.getId())
@@ -37,10 +39,11 @@ public class CrewDetailResponse {
                 .title(crew.getTitle())
                 .content(crew.getContent())
                 .crewLimit(crew.getCrewLimit())
-                .userId(crew.getUser().getUserId())
+                .nickName(crew.getUser().getNickName())
                 .userName(crew.getUser().getUsername())
                 .createdAt(crew.getCreatedAt())
                 .lastModifiedAt(crew.getLastModifiedAt())
+                .imagePath(crew.getImagePath())
 
                 //crew 종목 검색 test
                 .sprotStr(crew.getSprotStr())
