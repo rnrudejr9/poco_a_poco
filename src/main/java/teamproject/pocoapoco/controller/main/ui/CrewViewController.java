@@ -135,70 +135,6 @@ public class CrewViewController {
         return new ResponseEntity<>(crewMemberDeleteResponse, HttpStatus.OK);
     }
 
-//    // 크루 게시물 전체 조회, 검색 조회, 운동 종목 조회
-//    @GetMapping()
-//    @ApiOperation(value = "크루 게시글 전체조회", notes = "")
-//    public String findAllCrew(Model model,  Authentication authentication,
-//                              @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
-//                              @PageableDefault(page = 0, size = 9, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
-//
-//        // 유저 로그인 확인 후 운동 종목 데이터 확인
-//        List<String> userSportsList = crewService.test(authentication, CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
-//        if(!CollectionUtils.isEmpty(userSportsList)){
-//            crewSportRequest.setSportsList(userSportsList);
-//        }
-////        model.addAttribute("userSportsList", userSportsList); //확인용
-//
-//
-//        // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
-//        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, CollectionUtils.isEmpty(userSportsList), pageable);
-//
-//        // 페이징 처리 변수
-//        int nowPage = list.getPageable().getPageNumber() + 1;
-//        int startPage = Math.max(nowPage - 4, 1);
-//        int endPage = Math.min(nowPage + 5, list.getTotalPages());
-//        int lastPage = list.getTotalPages();
-//
-//        // 게시글 리스트
-//        model.addAttribute("crewList", list);
-//
-//        // 페이징 처리 모델
-//        model.addAttribute("nowPage", nowPage);
-//        model.addAttribute("startPage", startPage);
-//        model.addAttribute("endPage", endPage);
-//        model.addAttribute("lastPage", lastPage);
-//
-//
-//
-//        log.info("list.getPageable() : {} ", list.getPageable());
-//        log.info("list.getPageable().getPageNumber() : {}", list.getPageable().getPageNumber());
-//        log.info("list.getPageable().next() : {}", list.getPageable().next());
-//        log.info("list.getTotalPages() : {}", list.getTotalPages());
-//        log.info("list.getTotalElements() : {}", list.getTotalElements());list.getNumber();
-//
-//
-//        log.info("\nlist.getContent().size() : {}", list.getContent().size());
-//        log.info("list.getContent().get(0) : {}", list.getContent().get(0).getId());
-//        log.info("list.getContent().indexOf(1) : {}", list.getContent().indexOf(12));
-//
-//        for(CrewDetailResponse s : list){
-//                log.info("CrewDetailReponse : {}", s.getId());
-//        }
-//
-//        int i = 0;
-//        for(CrewDetailResponse s : list){
-//
-//            if(s.getId()==12){
-//                log.info("find CrewId : {}, {}", s.getId(), s.getStrict());
-//                log.info("i : {}", i);
-//            }
-//            i++;
-//        }
-//
-//
-//
-//        return "main/main";
-//    }
 
     // 크루 게시물 전체 조회, 검색 조회, 운동 종목 조회
     @GetMapping()
@@ -208,62 +144,13 @@ public class CrewViewController {
                               @PageableDefault(page = 0, size = 9, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
         // 유저 로그인 확인 후 운동 종목 데이터 확인
-//        List<String> userSportsList = crewService.getUserSports(authentication, CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
-//
-//        if(!CollectionUtils.isEmpty(userSportsList)){
-//            crewSportRequest.setSportsList(userSportsList);
-//        }
-
-//        List<String> userSportsList = new ArrayList<>();
-//
-//        if (authentication != null && CollectionUtils.isEmpty(crewSportRequest.getSportsList())) {
-//
-//            User user = crewService.findByUserName(authentication.getName());
-//
-//            if (user.getSport().isSoccer()) {
-//                userSportsList.add("SOCCER");
-//            }
-//            if (user.getSport().isJogging()) {
-//                userSportsList.add("JOGGING");
-//            }
-//            if (user.getSport().isTennis()) {
-//                userSportsList.add("TENNIS");
-//            }
-//        }
-
         List<String> userSportsList = crewService.getUserSports(authentication, CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
-//        crewSportRequest.setSportsList(userSportsList);
 
-        if(crewSportRequest.isLogin())
-            log.info("!!!!! before crewSportRequest.isLogin() : true");
-        else
-            log.info("!!!!! before crewSportRequest.isLogin() : false");
-
-        if(!CollectionUtils.isEmpty(userSportsList)){
+        // 처음 로그인 시, My운동종목 클릭 시 유저 종목 Model에 추가
+        if(!CollectionUtils.isEmpty(userSportsList) && !crewSportRequest.isLoginStatus()){
             crewSportRequest.setSportsList(userSportsList);
-            crewSportRequest.setLogin(true);
+            crewSportRequest.setLoginStatus(true);
         }
-
-
-        if(crewSportRequest.isLogin())
-            log.info("!!!!! after crewSportRequest.isLogin() : true");
-        else
-            log.info("!!!!! after crewSportRequest.isLogin() : false");
-
-        log.info("CollectionUtils.isEmpty(crewSportRequest.getSportsList() : {}", CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
-        log.info("!CollectionUtils.isEmpty(userSportsList) : {}", !CollectionUtils.isEmpty(userSportsList));
-
-
-//        if(!CollectionUtils.isEmpty(userSportsList) && CollectionUtils.isEmpty(crewSportRequest.getSportsList())){
-//            crewSportRequest.setSportsList(userSportsList);
-//        }
-//        else
-//            crewSportRequest.setSportsList(userSportsList);
-
-
-
-//        model.addAttribute("userSportsList", userSportsList); //확인용
-
 
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
         Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, CollectionUtils.isEmpty(userSportsList), pageable);
@@ -283,35 +170,6 @@ public class CrewViewController {
         model.addAttribute("startPage", startPage);
         model.addAttribute("endPage", endPage);
         model.addAttribute("lastPage", lastPage);
-
-
-
-        log.info("list.getPageable() : {} ", list.getPageable());
-        log.info("list.getPageable().getPageNumber() : {}", list.getPageable().getPageNumber());
-        log.info("list.getPageable().next() : {}", list.getPageable().next());
-        log.info("list.getTotalPages() : {}", list.getTotalPages());
-        log.info("list.getTotalElements() : {}", list.getTotalElements());list.getNumber();
-
-
-        log.info("\nlist.getContent().size() : {}", list.getContent().size());
-        log.info("list.getContent().get(0) : {}", list.getContent().get(0).getId());
-        log.info("list.getContent().indexOf(1) : {}", list.getContent().indexOf(12));
-
-        for(CrewDetailResponse s : list){
-            log.info("CrewDetailReponse : {}", s.getId());
-        }
-
-        int i = 0;
-        for(CrewDetailResponse s : list){
-
-            if(s.getId()==12){
-                log.info("find CrewId : {}, {}", s.getId(), s.getStrict());
-                log.info("i : {}", i);
-            }
-            i++;
-        }
-
-
 
         return "main/main";
     }
@@ -345,20 +203,6 @@ public class CrewViewController {
         model.addAttribute("lastPage", lastPage);
 
 
-        log.info("list.getPageable() : {} ", list.getPageable());
-        log.info("list.getPageable().getPageNumber() : {}", list.getPageable().getPageNumber());
-        log.info("list.getPageable().next() : {}", list.getPageable().next());
-        log.info("list.getTotalPages() : {}", list.getTotalPages());
-        log.info("list.getTotalElements() : {}", list.getTotalElements());list.getNumber();
-
-        log.info("\n");
-
-        log.info("list.getContent().size() : {}", list.getContent().size());
-        log.info("list.getContent().get(0) : {}", list.getContent().get(0).getId());
-        log.info("list.getContent().indexOf(1) : {}", list.getContent().indexOf(12));
-
-
-
         try {
             CrewDetailResponse details = crewService.detailCrew(crewId);
             int count = likeViewService.getLikeCrew(crewId);
@@ -369,6 +213,7 @@ public class CrewViewController {
         } catch (EntityNotFoundException e) {
             return "redirect:/index";
         }
+
         return "crew/read-crew";
     }
 
