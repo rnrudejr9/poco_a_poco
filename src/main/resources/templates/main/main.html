@@ -4,7 +4,7 @@
 
 <style>
 
-    .text-strict, .text-peopleNum{
+    .text-strict, .text-peopleNum {
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
@@ -12,7 +12,7 @@
         width: 30%;
     }
 
-    .card-tile{
+    .card-tile {
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
@@ -20,7 +20,7 @@
         width: 90%;
     }
 
-    .card-text{
+    .card-text {
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
@@ -28,7 +28,7 @@
         width: 100%;
     }
 
-    .card-body{
+    .card-body {
         background-color: #f0faff;
     }
 
@@ -36,7 +36,7 @@
 
 <script>
     // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
-    history.replaceState({}, null, location.pathname);
+    // history.replaceState({}, null, location.pathname);
 
     // 운동 종목 체크박스 3개 초과 시 알람
     function count_check(obj) {
@@ -78,13 +78,13 @@
     </section>
 
     <div class="album py-5 bg-light">
-        <div class="container">
+        <div class="container" th:object="${sportRequest}">
 
 
             <!-- 운동 종목 데이터 확인-->
-<!--            <label th:text="|userSportsList : ${userSportsList}|"></label><br>-->
-<!--            <label th:text="|sportRequest.getSportsList() : ${sportRequest.getSportsList()}|"></label>-->
-
+            <!--            <label th:text="|userSportsList : ${userSportsList}|"></label><br>-->
+            <!--            <label th:text="|sportRequest.getSportsList() : ${sportRequest.getSportsList()}|"></label>-->
+            <label th:text="|sportRequest.isLogin() : ${sportRequest.isLogin()}|" th:field="*{login}" th:value="${sportRequest.isLogin()}"></label><br>
             <!-- 운동 체크-->
             <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
                 <div class="d-grid gap-2 d-md-block">
@@ -139,18 +139,19 @@
                 <div class="col" th:each="crew : ${crewList}">
 
                     <div class="card shadow-sm">
-<!--                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img"-->
-<!--                             aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">-->
-<!--                            <title>Placeholder</title>-->
-<!--                            <rect class="bg-pic" width="100%" height="100%" fill="#55595c"/>-->
-<!--                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>-->
-<!--                        </svg>-->
-                        <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100%; height:225px;">
+                        <!--                        <svg class="bd-placeholder-img card-img-top" width="100%" height="225" role="img"-->
+                        <!--                             aria-label="Placeholder: Thumbnail" preserveAspectRatio="xMidYMid slice" focusable="false">-->
+                        <!--                            <title>Placeholder</title>-->
+                        <!--                            <rect class="bg-pic" width="100%" height="100%" fill="#55595c"/>-->
+                        <!--                            <text x="50%" y="50%" fill="#eceeef" dy=".3em">Thumbnail</text>-->
+                        <!--                        </svg>-->
+                        <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png"
+                             class="img-thumbnail" style="width:100%; height:225px;">
 
 
                         <div class="card-body">
 
-                            <div class="test" >
+                            <div class="test">
                                 <h3 class="card-tile" th:text="${crew.title}">제목</h3>
                                 <p class="card-text" th:text="${crew.content}">내용</p>
                             </div>
@@ -160,14 +161,20 @@
                                 <small class="text-muted text-peopleNum" th:text="${crew.crewLimit} + 명">인원</small>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-secondary"><a
-                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id})}">상세보기</a>
+                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
+                                                                               page = ${nowPage - 1},
+                                                                               strict = ${sportRequest.getStrict()},
+                                                                               sportsList = ${sportRequest.getSportsList()}
+                                                                               )}">상세보기</a>
                                     </button>
                                     <!--                        <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
 
                                 </div>
 
                                 <div>
-                                    <button type="button" class="btn btn-secondary" th:crewId="${crew.id}" th:onclick="fetcher(this.getAttribute('crewId'))">참여하기</button>
+                                    <button type="button" class="btn btn-secondary" th:crewId="${crew.id}"
+                                            th:onclick="fetcher(this.getAttribute('crewId'))">참여하기
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -187,10 +194,10 @@
                         <th:block th:each="page : ${#numbers.sequence(startPage, endPage)}">
                             <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
                                                                                 th:href="@{/view/v1/crews(
-                                                                                page = ${page - 1},
-                                                                                strict=${sportRequest.getStrict()},
-                                                                                sportsList=${sportRequest.getSportsList()}
-                                                                                )}" th:text="${page}">1</a></li>
+                                                                                            page = ${page - 1},
+                                                                                            strict=${sportRequest.getStrict()},
+                                                                                            sportsList=${sportRequest.getSportsList()}
+                                                                                            )}" th:text="${page}">1</a></li>
 
                             <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
                                                                                      style="color: red"></strong></li>
@@ -234,10 +241,10 @@
             })
         })
         console.log("end");
-        if(response.ok){
+        if (response.ok) {
             var json = response.json();
             console.log(json);
-        }else{
+        } else {
             var json = response.json();
             console.log(json);
         }

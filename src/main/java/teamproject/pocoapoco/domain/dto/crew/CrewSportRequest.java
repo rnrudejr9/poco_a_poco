@@ -15,4 +15,7 @@ public class CrewSportRequest {
 
     private String strict;
     private List<String> sportsList;
+
+    @Builder.Default
+    private boolean login = false;
 }

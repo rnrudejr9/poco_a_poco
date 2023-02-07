@@ -80,14 +80,18 @@ public class CrewService {
     public Page<CrewDetailResponse> findAllCrewsByStrictAndSportEnum(CrewSportRequest crewSportRequest, boolean sportsListIsEmpty, Pageable pageable) {
 
         if (crewSportRequest.getStrict() == null && CollectionUtils.isEmpty(crewSportRequest.getSportsList()) && sportsListIsEmpty) {
+            log.info("service findAllCrews : action");
             return findAllCrews(pageable);
         } else if (crewSportRequest.getStrict() != null && crewSportRequest.getStrict() != "") {
+            log.info("service findAllCrewsByStrict : action");
             return findAllCrewsByStrict(crewSportRequest, pageable);
         } else {
+            log.info("service findAllCrewsBySport : action");
             return findAllCrewsBySport(crewSportRequest.getSportsList(), pageable);
         }
 
     }
+
 
     // 크루 게시물 전체 조회
     @Transactional
@@ -146,7 +150,7 @@ public class CrewService {
         }
     }
 
-    public List<String> test (Authentication authentication, Boolean sportsListIsEmpty) {
+    public List<String> getUserSports(Authentication authentication, Boolean sportsListIsEmpty) {
 
         List<String> userSportsList = new ArrayList<>();
 
