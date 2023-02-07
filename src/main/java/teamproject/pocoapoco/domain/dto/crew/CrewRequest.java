@@ -19,7 +19,6 @@ public class CrewRequest {
     private Integer crewLimit;
     private String datepick;
     private String timepick;
-    private String imagePath;
     private String chooseSport;
 
 
@@ -32,11 +31,19 @@ public class CrewRequest {
 
                 .datepick(this.datepick)
                 .timepick(this.timepick)
-
+                .sportEnum(of(chooseSport))
                 .user(user)
-                .sprotStr(this.chooseSport)
-                .imagePath(this.imagePath)
-
                 .build();
     }
+
+    public SportEnum of(String value){
+        for(SportEnum sportEnum : SportEnum.values()){
+            if(sportEnum.getValue().equals(value)){
+                return sportEnum;
+            }
+        }
+        return null;
+    }
+
+
 }

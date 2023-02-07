@@ -40,7 +40,9 @@ public enum ErrorCode {
     COMMENT_NOT_FOUND(HttpStatus.NOT_FOUND, "해당 댓글이 없습니다."),
     DB_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "DB 에러입니다."),
     // 수정 시 일치하지 않는 작성자일경우 사용
-    NOT_MATCH(HttpStatus.NOT_FOUND, "작성자가 아닙니다.")
+    NOT_MATCH(HttpStatus.NOT_FOUND, "작성자가 아닙니다."),
+
+    NOT_ALLOWED_PARTICIPATION(HttpStatus.BAD_REQUEST,"참여인원이 가득찼습니다.")
     ;
     private HttpStatus httpStatus;
     private String message;

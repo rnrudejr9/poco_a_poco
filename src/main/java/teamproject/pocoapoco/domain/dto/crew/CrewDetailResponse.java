@@ -24,9 +24,6 @@ public class CrewDetailResponse {
     private String nickName;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
-
-    //crew 종목 검색 test
-    private String sprotStr;
     private InterestSport interestSport;
     private SportEnum sportEnum;
 
@@ -45,8 +42,6 @@ public class CrewDetailResponse {
                 .lastModifiedAt(crew.getLastModifiedAt())
                 .imagePath(crew.getImagePath())
 
-                //crew 종목 검색 test
-                .sprotStr(crew.getSprotStr())
                 .interestSport(crew.getInterestSport())
                 .sportEnum(crew.getSportEnum())
                 .build();
