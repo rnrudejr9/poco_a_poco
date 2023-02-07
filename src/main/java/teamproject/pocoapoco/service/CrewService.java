@@ -33,6 +33,9 @@ public class CrewService {
     // 크루 게시글 등록
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
 
+        log.info("imagePath: {} ", crewRequest.getImagePath());
+        log.info("datePick: {}", crewRequest.getDatepick());
+
         User user = findByUserName(userName);
 
         Crew crew = crewRepository.save(crewRequest.toEntity(user));

@@ -14,6 +14,7 @@
 
     <script src="https://code.jquery.com/jquery-3.2.1.js"></script>
     <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.891.0.min.js"></script>
 
 
 
@@ -214,11 +215,23 @@
 
                 </div>
 
-                    <hr class="my-4">
+
+                <hr class="my-4">
                 <div class="row">
                     <div class="col">
-                    <label for="address_kakao" class="form-label">도로명 주소</label>
-                    <input type="text" class="form-control" id="address_kakao" placeholder="도로명 주소" required>
+                        <input type="file" accept="image/*" id="imageFile"/>
+                        <button type="button" onclick="profileUpload()"> 업로드 </button>
+                        <input type="hidden" value="" name="imagePath" id="imagePath"/>
+                    </div>
+                </div>
+
+
+
+                <hr class="my-4">
+                <div class="row">
+                    <div class="col">
+                        <label for="address_kakao" class="form-label">도로명 주소</label>
+                        <input type="text" class="form-control" id="address_kakao" placeholder="도로명 주소" required>
                     </div>
                     <div class="col">
                         <label for="address_detail" class="form-label">지번 주소</label>
@@ -327,6 +340,7 @@
                 title: document.getElementById("title").value,
                 datepick: document.getElementById("datepicker").value,
                 timepick: document.getElementById("timepicker").value,
+                imagePath: document.getElementById("imagePath").value,
                 chooseSport: choose
             })
 
@@ -343,6 +357,58 @@
             let json = await response.text();
             console.log(json);
         }
+   }
+
+
+    function profileUpload() {
+
+        let uuidString = self.crypto.randomUUID();
+
+        const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
+        const SECRET_ACCESS_KEY = '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';
+        const REGION = 'ap-northeast-2';
+        const BUCKET_NAME = 'poco-bucket-2';
+        const BUCKET_DIRECTORY = '/crewimages';
+        const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+        // AWS ACCESS KEY를 세팅합니다.
+        AWS.config.update({
+            accessKeyId: ACCESS_KEY,
+            secretAccessKey: SECRET_ACCESS_KEY
+        });
+
+        // 버킷에 맞는 이름과 리전을 설정합니다.
+        const myBucket = new AWS.S3({
+            params: { Bucket: S3_BUCKET},
+            region: REGION,
+        });
+
+
+
+        let files = document.getElementById('imageFile').files;
+        let file = files[0];
+
+        let fileName = uuidString + '-' + file.name.replace(' ', '');
+
+
+        const params = {
+            ACL: 'public-read',
+            Body: file,
+            Bucket: S3_BUCKET,
+            Key: fileName
+        };
+
+
+        myBucket.putObject(params)
+            .on('httpUploadProgress', (evt) => {
+                alert("SUCCESS");
+                console.log(fileName);
+                $('#imagePath').val(fileName);
+            })
+            .send((err) => {
+                if (err) console.log(err)
+            })
+
     }
 
 

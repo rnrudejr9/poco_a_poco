@@ -15,13 +15,13 @@ import teamproject.pocoapoco.domain.entity.Follow;
 @Builder
 public class FollowingResponse {
 
-    private String userId;
     private String userName;
+    private String nickName;
 
     public static FollowingResponse of(Follow follow) {
         return FollowingResponse.builder()
-                .userId(follow.getFollowedUser().getUserId())
                 .userName(follow.getFollowedUser().getUsername())
+                .nickName(follow.getFollowedUser().getNickName())
                 .build();
     }
 }
