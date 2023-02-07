@@ -26,9 +26,8 @@
 
             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
             <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                <strong class="d-block text-gray-dark" th:text="${alarm.fromUserName}">alarm.title</strong>
+                <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
                 <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
-                <text th:if="${alarm.readOrNot}">읽음</text>
             </p>
         </div>
         <!-- 읽은 알림 -->
@@ -42,9 +41,9 @@
 
             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
             <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                <strong class="d-block text-gray-dark" th:text="${alarm.fromUserName}">alarm.title</strong>
+                <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
                 <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
-                <text th:if="${alarm.readOrNot}">읽음</text>
+                <text>읽음</text>
             </p>
 
 

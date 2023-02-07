@@ -57,7 +57,7 @@ public class LikeViewService {
                 SseEmitter sseEmitter = sseEmitters.get(crew.getUser().getUsername());
                 try {
                     sseEmitter.send(SseEmitter.event().name("alarm").data(
-                            userName + "님이 \"" + crew.getTitle() + "\" 모임에 좋아요를 눌렀습니다."));
+                            user.getNickName() + "님이 \"" + crew.getTitle() + "\" 모임에 좋아요를 눌렀습니다."));
                 } catch (Exception e) {
                     sseEmitters.remove(crew.getUser().getUsername());
                 }
