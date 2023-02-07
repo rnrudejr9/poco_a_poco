@@ -19,6 +19,7 @@ public class CrewRequest {
     private Integer crewLimit;
     private String datepick;
     private String timepick;
+    private String imagePath;
     private String chooseSport;
 
 
@@ -34,6 +35,7 @@ public class CrewRequest {
 
                 .user(user)
                 .sprotStr(this.chooseSport)
+                .imagePath(this.imagePath)
 
                 .build();
     }

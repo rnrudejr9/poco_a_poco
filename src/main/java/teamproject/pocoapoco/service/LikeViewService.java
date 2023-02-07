@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
 import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
@@ -18,6 +19,8 @@ import teamproject.pocoapoco.repository.LikeRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
 import java.util.List;
+
+import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmitters;
 
 @Service
 @Slf4j
@@ -46,6 +49,19 @@ public class LikeViewService {
             likeRepository.save(Like.builder().crew(crew).user(user).build());
             alarmRepository.save(Alarm.toEntity(user, crew, AlarmType.LIKE_CREW, AlarmType.LIKE_CREW.getText()));
             likeViewResponse.setLikeCheck(1);
+
+            //sse 로직
+            if (sseEmitters.containsKey(crew.getUser().getUsername())) {
+                log.info("userName이 Map으로 등록되어있어 알림 sse 작동됩니다.");
+                log.info("Sse username = {}", crew.getUser().getUsername());
+                SseEmitter sseEmitter = sseEmitters.get(crew.getUser().getUsername());
+                try {
+                    sseEmitter.send(SseEmitter.event().name("addComment").data(
+                            userName + "님이 \"" + crew.getTitle() + "\" 모임에 좋아요를 눌렀습니다."));
+                } catch (Exception e) {
+                    sseEmitters.remove(crew.getUser().getUsername());
+                }
+            }
         }
 
         List<Like> num = likeRepository.findByCrew(crew);

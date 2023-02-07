@@ -51,7 +51,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
 //        String token = jwtProvider.generateAccessToken(user);
         try {
-            viewController.login(new UserLoginRequest(user.getUserId(), "poco a poco"), response);
+            viewController.login(new UserLoginRequest(user.getUsername(), "poco a poco"), response);
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -64,17 +64,17 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         // 함수를 통해 구현해보기
         String provider = oAuth2UserInfo.getProvider(); // google
         String providerId = oAuth2UserInfo.getProviderId();
-        String username = oAuth2UserInfo.getName() + "_" + provider;
-        String userId = provider + "_" + providerId; //google_3894u2138413
+        String nickName = oAuth2UserInfo.getName() + "_" + provider;
+        String userName = provider + "_" + providerId; //google_3894u2138413
         String password = encoder.encode("poco a poco");
         String email = oAuth2UserInfo.getEmail();
 
-        User user = userRepository.findOauthUser(userId);
+        User user = userRepository.findOauthUser(userName);
         if (user == null) {
             log.info("Oauth로그인이 최초입니다.");
             user = User.builder()
-                    .userId(userId)
-                    .userName(username)
+                    .userName(userName)
+                    .nickName(nickName)
                     .password(password)
                     .email(email)
                     .role(UserRole.ROLE_USER)
