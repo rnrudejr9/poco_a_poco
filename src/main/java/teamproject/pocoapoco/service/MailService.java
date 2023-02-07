@@ -98,6 +98,6 @@ public class MailService   {
             throw new IllegalArgumentException();
         }
 
-        return new UserMailResponse(ePw); // 메일로 보냈던 인증 코드를 서버로 반환
+        return new UserMailResponse(ePw,to); // 메일로 보냈던 인증 코드를 서버로 반환
     }
 }

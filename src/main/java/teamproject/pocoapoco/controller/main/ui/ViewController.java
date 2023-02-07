@@ -111,4 +111,13 @@ public class ViewController {
         UserIdFindResponse userIdFindResponse = userService.findUserId(nickName);
         return Response.success(userIdFindResponse);
     }
+    @PostMapping("/api/v1/findPass")
+    @ResponseBody
+    public Response findPass(@RequestParam("userName") String userName) throws Exception {
+
+        UserMailResponse userMailResponse = userService.findUserPass(userName);
+        System.out.println("인증코드 : " + userMailResponse.getCode());
+        return Response.success(userMailResponse);
+
+    }
 }

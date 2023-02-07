@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
 import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.exception.AppException;
@@ -25,6 +26,7 @@ public class UserService {
     private final EncrypterConfig encrypterConfig;
     private final RedisTemplate<String, String> redisTemplate;
     private final JwtProvider jwtProvider;
+    private final MailService mailService;
 
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
@@ -227,5 +229,13 @@ public class UserService {
     }
 
 
+    public UserMailResponse findUserPass(String userName) throws Exception {
+
+        User user = userRepository.findByUserName(userName).get();
+
+        UserMailResponse userMailResponse = mailService.sendSimpleMessage(user.getEmail());
+
+        return userMailResponse;
+    }
 }
 

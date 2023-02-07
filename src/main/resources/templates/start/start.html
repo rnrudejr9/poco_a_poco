@@ -22,7 +22,7 @@
             <input type="text" placeholder="Id" th:field="*{userName}" />
             <input type="password" placeholder="Password" th:field="*{password}"/>
             <input type="password" placeholder="PasswordCheck" th:field="*{passwordConfirm}" />
-            <input type="text" placeholder="Name"th:field="*{nickName}" />
+            <input type="text" placeholder="NickName"th:field="*{nickName}" />
             <input type="text" id="sample4_postcode" placeholder="우편번호">
             <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기">
             <input type="text" id="sample4_roadAddress" placeholder="도로명주소" th:field="*{address}">
@@ -85,9 +85,15 @@
             <h3> 비밀번호 찾기</h3>
             <h5>비밀번호를 재설정 합니다.</h5>
             <form>
+
                 <label>비밀번호를 찾고싶은 Id를 입력해 주세요</label>
-                <input type="text" placeholder="Id"  />
-                <button style="margin-left: 10px" type="submit" >비밀번호 찾기</button>
+                <input type="text" placeholder="Id" id="idForFindPass" />
+                <button style="margin-left: 10px" type="button" id="checkIdForFindPass" >인증코드 전송</button>
+                <div id="findPass" style="display: none">
+                    <input type="text" class="form-control" placeholder="인증코드" >
+                    <button style="margin-left: 10px" type="button"  >인증번호 확인</button>
+                </div>
+
             </form>
         </div>
         <!--팝업 버튼 영역-->
@@ -114,6 +120,26 @@
     document.getElementById('write').addEventListener('click',checkEmail);
     document.getElementById('check').addEventListener('click',checkCode);
     document.getElementById('findId').addEventListener('click',findId);
+    document.getElementById('checkIdForFindPass').addEventListener('click',findPass);
+
+    async function findPass(){
+        let params = document.getElementById("idForFindPass").value;
+        let response = await fetch(`/api/v1/findPass/?userName=${params}`,{
+            method : "POST",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        let data = await response.json()
+        console.log(data)
+
+        if(response.ok){
+            alert(`등록하신 ${data.result.email}로 인증코드를 전송했습니다. 확인해주세요.`)
+            const btn = document.getElementById("findPass")
+            btn.style.display='block'
+        }else
+            alert("아이디를 다시 확인해 주세요")
+    }
 
     async function findId(){
         let params = document.getElementById("nickNameForFindId").value;
@@ -129,7 +155,8 @@
 
 
         if(response.ok){
-            alert(`손님의 아이디는 : ${data.result.userName} 입니다.`)
+            alert(`아이디는 : ${data.result.userName} 입니다.`)
+
         }else
             alert("아이디를 다시 확인해 주세요")
     }
