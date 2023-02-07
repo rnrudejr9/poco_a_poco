@@ -90,8 +90,8 @@
                 <input type="text" placeholder="Id" id="idForFindPass" />
                 <button style="margin-left: 10px" type="button" id="checkIdForFindPass" >인증코드 전송</button>
                 <div id="findPass" style="display: none">
-                    <input type="text" class="form-control" placeholder="인증코드" >
-                    <button style="margin-left: 10px" type="button"  >인증번호 확인</button>
+                    <input type="text" class="form-control" placeholder="인증코드" id="codeForPass">
+                    <button style="margin-left: 10px" type="button" id="btnForFindPass"  >인증번호 확인</button>
                 </div>
 
             </form>
@@ -121,6 +121,7 @@
     document.getElementById('check').addEventListener('click',checkCode);
     document.getElementById('findId').addEventListener('click',findId);
     document.getElementById('checkIdForFindPass').addEventListener('click',findPass);
+    document.getElementById('btnForFindPass').addEventListener('click',checkCodeForPass);
 
     async function findPass(){
         let params = document.getElementById("idForFindPass").value;
@@ -188,10 +189,7 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-            },body: JSON.stringify({
-
-                code: document.getElementById("memailconfirm"),
-            })
+            }
         })
         let data = await response.json()
         console.log(data)
@@ -206,7 +204,26 @@
         }
 
     }
+    async function checkCodeForPass(){
+        let params = document.getElementById("codeForPass").value;
+        let response = await fetch(`/login/verifyCode/?code=${params}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        let data = await response.json()
+        console.log(data)
 
+        if(data==1){
+            alert("확인되었습니다.")
+
+        }else
+        {
+            alert("인증번호가 일치하지 않습니다.")
+        }
+
+    }
     function openPop() {
         document.getElementById("findId_layer").style.display = "block";
 
