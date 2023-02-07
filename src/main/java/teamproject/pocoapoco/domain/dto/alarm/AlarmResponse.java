@@ -20,6 +20,7 @@ public class AlarmResponse {
     private Long targetId;
     private String text;
     private LocalDateTime createdAt;
+    private boolean readOrNot;
 
     public static AlarmResponse fromEntity(Alarm alarm) {
         return AlarmResponse.builder()
@@ -29,6 +30,7 @@ public class AlarmResponse {
                 .targetId(alarm.getTargetCrewId())
                 .text(alarm.getMassage())
                 .createdAt(alarm.getCreatedAt())
+                .readOrNot(alarm.getReadOrNot())
                 .build();
     }
 }

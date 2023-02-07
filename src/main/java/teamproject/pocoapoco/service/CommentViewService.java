@@ -61,7 +61,7 @@ public class CommentViewService {
             log.info("Sse username = {}", parentComment.getUser().getUsername());
             SseEmitter sseEmitter = sseEmitters.get(parentComment.getUser().getUsername());
             try {
-                sseEmitter.send(SseEmitter.event().name("addComment").data(
+                sseEmitter.send(SseEmitter.event().name("alarm").data(
                         userName + "님이 \"" + parentComment.getComment() + "\" 댓글에 댓글을 남겼습니다."));
             } catch (Exception e) {
                 sseEmitters.remove(parentComment.getUser().getUsername());
