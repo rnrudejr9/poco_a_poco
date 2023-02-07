@@ -7,7 +7,7 @@ import teamproject.pocoapoco.domain.entity.User;
 @Builder
 @Getter
 public class UserProfileResponse {
-    private String userName;
+    private String nickName;
     private String address;
     private Boolean likeSoccer;
     private Boolean likeJogging;
@@ -16,7 +16,7 @@ public class UserProfileResponse {
     public static UserProfileResponse fromEntity(User user){
 
         return UserProfileResponse.builder()
-                .userName(user.getUsername())
+                .nickName(user.getNickName())
                 .address(user.getAddress())
                 .likeSoccer(user.getSport().isSoccer())
                 .likeJogging(user.getSport().isJogging())

@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @Builder
 public class UserJoinResponse {
 
-    private String userId;
+    private String userName;
     private String message;
 
 }

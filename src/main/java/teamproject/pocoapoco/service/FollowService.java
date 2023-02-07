@@ -23,7 +23,7 @@ public class FollowService {
     private final FollowRepository followRepository;
     public String follow(String followingUserId, Long userId){
 
-        User followingUser = userRepository.findByUserId(followingUserId).orElseThrow(()->
+        User followingUser = userRepository.findByUserName(followingUserId).orElseThrow(()->
         {
             throw new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage());
         });

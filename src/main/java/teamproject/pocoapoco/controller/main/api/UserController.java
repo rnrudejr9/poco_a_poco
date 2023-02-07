@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.*;
+import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.UserService;
 
@@ -56,8 +57,8 @@ public class UserController {
     public Response userInfoModify(Authentication authentication, @RequestBody UserProfileRequest userProfileRequest){
 
 
-        UserProfileResponse userProfileResponse = userService.updateUserInfoByUserName(authentication.getName(), userProfileRequest);
-
+        User user = userService.updateUserInfoByUserName(authentication.getName(), userProfileRequest);
+        UserProfileResponse userProfileResponse = UserProfileResponse.fromEntity(user);
         return Response.success(userProfileResponse);
 
     }

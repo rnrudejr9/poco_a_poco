@@ -73,7 +73,9 @@
                         <ul>
                             <div>
                                 <!--여기에 사용자의 프로필 image 링크 넣기-->
-                                <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100px; height:100px;">
+                                <img src="" class="rounded mx-auto d-block" style="height: 200px; width: 200px;" id="main-image">
+                                <input type="hidden" name="img-key" th:value="${details.imagePath}">
+
                                 <h4><a class=name th:href="@{/view/v1/users/profile/{userName}(userName=${details.getUserName()})}">
                                     <span th:text="${details.userName}"></span></a>
                                 </h4>
@@ -157,6 +159,7 @@
 
 
 <footer th:replace="fragments/fragment :: footer"></footer>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
 <script th:replace="fragments/fragment :: form-validation"></script>
 <script th:replace="fragments/fragment :: read-crew"></script>
 
