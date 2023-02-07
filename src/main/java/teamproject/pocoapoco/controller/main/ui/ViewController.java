@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
+import teamproject.pocoapoco.domain.dto.user.UserIdFindResponse;
 import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
 import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
 import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
@@ -101,5 +102,13 @@ public class ViewController {
             result =1;
         }
         return result;
+    }
+
+    @GetMapping("/api/v1/findId")
+    @ResponseBody
+    public Response findId(@RequestParam("nickName") String nickName) {
+
+        UserIdFindResponse userIdFindResponse = userService.findUserId(nickName);
+        return Response.success(userIdFindResponse);
     }
 }

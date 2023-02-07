@@ -73,7 +73,7 @@ public class UserService {
 
         User user = User.toEntity(userJoinRequest.getUserName(), userJoinRequest.getNickName(), userJoinRequest.getAddress(),
                 encrypterConfig.encoder().encode(userJoinRequest.getPassword()), userJoinRequest.getLikeSoccer(),
-                userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis());
+                userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis(),userJoinRequest.getEmail());
 
         User saved = userRepository.save(user);
 
@@ -215,7 +215,15 @@ public class UserService {
             return true;
         }
     }
+    public UserIdFindResponse findUserId(String nickName){
+        User user = userRepository.findByNickName(nickName).get();
 
+        UserIdFindResponse userIdFindResponse = UserIdFindResponse.builder()
+                .userName(user.getUsername())
+                .build();
+
+        return userIdFindResponse;
+    }
 
 
 }
