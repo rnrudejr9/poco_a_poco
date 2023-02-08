@@ -4,6 +4,12 @@ package teamproject.pocoapoco.enums;
 
 import lombok.Getter;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Getter
 public enum SportEnum {
 
@@ -36,7 +42,10 @@ public enum SportEnum {
     CHESS("체스"),
     ;
 
+
+    @Getter
     private String value;
+
 
     SportEnum(String value){
         this.value = value;

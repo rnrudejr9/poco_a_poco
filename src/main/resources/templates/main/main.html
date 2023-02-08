@@ -138,8 +138,11 @@
                                 <p class="card-text" th:text="${crew.content}">내용</p>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted text-strict" th:text="${crew.strict}">지역</small>
-                                <small class="text-muted text-peopleNum" th:text="${crew.crewLimit} + 명">인원</small>
+
+                                <small class="text-muted" th:text="${crew.strict}">지역</small>
+                                <div th:id="${crew.id}">
+                                </div>
+                                <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
                                 <div class="btn-group">
                                     <button type="button" class="btn btn-secondary"><a
                                             th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
@@ -149,17 +152,70 @@
                                                                                sportsList = ${sportRequest.getSportsList()}
                                                                                )}">상세보기</a>
                                     </button>
-                                    <!--                        <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
+                                    <!--                    <button type="button" class="btn btn-danger" id="crew-btn-detail"><a th:href="@{/crews/{crewId}(crewId = )}">출력</a></button>-->
+
                                 </div>
 
-                                <div>
-                                    <button type="button" class="btn btn-secondary" th:crewId="${crew.id}"
-                                            th:onclick="fetcher(this.getAttribute('crewId'))">참여하기
-                                    </button>
-                                </div>
+
+<!--                                <div>-->
+<!--                                    <button type="button" th:onclick="changeID(this.getAttribute('id'))" th:id="${crew.id}" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">참여하기</button>-->
+<!--                                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">-->
+<!--                                        <div class="modal-dialog">-->
+<!--                                            <div class="modal-content">-->
+<!--                                                <input type="hidden" id="dataId" name="dataId" th:value="${crew.id}">-->
+<!--                                                <div class="modal-header">-->
+<!--                                                    <h1 class="modal-title fs-5" id="exampleModalLabel">New message</h1>-->
+<!--                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--                                                </div>-->
+<!--                                                <div class="modal-body">-->
+<!--                                                        <div class="mb-3">-->
+<!--                                                            <label for="recipient-name" class="col-form-label">제목</label>-->
+<!--                                                            <input type="text" class="form-control" id="recipient-name">-->
+<!--                                                        </div>-->
+<!--                                                        <div class="mb-3">-->
+<!--                                                            <label for="message-text" class="col-form-label">소개말</label>-->
+<!--                                                            <textarea class="form-control" id="message-text"></textarea>-->
+<!--                                                        </div>-->
+<!--                                                </div>-->
+<!--                                                <div class="modal-footer">-->
+<!--                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--                                                    <button type="button" class="btn btn-primary" th:id="join" th:value="join" th:onclick="joinCrewAwait(this.getAttribute('value'))">참여하기</button>-->
+<!--                                                </div>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                    </div>-->
+<!--                                </div>-->
+
+
                             </div>
                         </div>
                     </div>
+                    <script th:inline="javascript">
+                        async function findPart(crewId) {
+                            var crewId = crewId;
+                            let response = await fetch("/api/v1/part/find/" + crewId, {
+                                method: "GET",
+                                headers: {
+                                    "Content-Type": "application/json"
+                                },
+                                credentials: "include",
+                            })
+                            console.log("end");
+                            if(response.ok){
+                                var json = await response.json();
+                                console.log(json);
+                                var str = "<b>" + json.result.now + "</b>";
+                                    document.getElementById(crewId).innerHTML = str;
+                            }else{
+                                var json = await response.json();
+                                console.log(json);
+                            }
+                        }
+
+                        var crewId = "[[${crew.id}]]";
+                        findPart(crewId);
+                    </script>
+
                 </div>
             </div>
 
@@ -205,9 +261,56 @@
         crossorigin="anonymous"></script>
 
 <script>
-    async function fetcher(crewId) {
+    function changeID(checkID) {
+        document.getElementById("join").value = checkID;
+    }
+
+
+    const exampleModal = document.getElementById('exampleModal')
+    exampleModal.addEventListener('show.bs.modal', event => {
+        // Button that triggered the modal
+        const button = event.relatedTarget
+        // Extract info from data-bs-* attributes
+        const recipient = button.getAttribute('data-bs-whatever')
+        // If necessary, you could initiate an AJAX request here
+        // and then do the updating in a callback.
+        //
+        // Update the modal's content.
+        const modalTitle = exampleModal.querySelector('.modal-title')
+        const modalBodyInput = exampleModal.querySelector('.modal-body input')
+
+        modalTitle.textContent = `New message to ${recipient}`
+        modalBodyInput.value = recipient
+    })
+
+    // async function joinCrew(crewId) {
+    //     var crewId = crewId;
+    //     console.log(crewId);
+    //     let response = await fetch("/api/v1/part", {
+    //         method: "POST",
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         credentials: "include",
+    //         body: JSON.stringify({
+    //             crewId: crewId
+    //         })
+    //     })
+    //     console.log("end");
+    //     if(response.ok){
+    //         var json = await response.json();
+    //         alert(json.result);
+    //         console.log(json);
+    //     }else{
+    //         var json = await response.json();
+    //         console.log(json);
+    //     }
+    // }
+
+    async function joinCrewAwait(crewId){
         var crewId = crewId;
-        let response = await fetch("/api/v1/part", {
+        console.log(crewId);
+        let response = await fetch("/api/v1/part/gen", {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -218,11 +321,35 @@
             })
         })
         console.log("end");
-        if (response.ok) {
-            var json = response.json();
+        if(response.ok){
+            var json = await response.json();
+            alert(json.result);
             console.log(json);
-        } else {
-            var json = response.json();
+        }else{
+            var json = await response.json();
+            console.log(json);
+        }
+    }
+
+
+    async function findPart(crewId) {
+        var crewId = crewId;
+        let response = await fetch("/api/v1/part/" + crewId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+        })
+        console.log("end");
+        if(response.ok){
+            var json = await response.json();
+            alert(json.result);
+            console.log(json);
+            var str = "<b>" + json.result.now + "</b>";
+            document.getElementById("nowsize").innerHTML = str;
+        }else{
+            var json = await response.json();
             console.log(json);
         }
     }

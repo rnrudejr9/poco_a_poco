@@ -27,8 +27,7 @@ public class RoomController {
     @GetMapping(value = "/rooms")
     public String rooms(Model model, Authentication authentication){
         log.info("# All Chat Rooms");
-        model.addAttribute("list",chatRoomService.findBy(authentication.getName()));
-        model.addAttribute("joinlist",chatRoomService.findByParticipation(authentication.getName()));
+        model.addAttribute("list",chatRoomService.findByParticipation(authentication.getName()));
         return "chat/rooms";
     }
 

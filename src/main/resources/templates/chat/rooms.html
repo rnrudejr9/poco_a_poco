@@ -15,12 +15,6 @@
                     <li><div class="alert alert-primary" role="alert"><a th:href="@{/view/v1/room(roomId=${room.roomId})}" class="alert-link">[[${room.name}]]</a></div></li>
                 </ul>
             </div>
-
-            <div>
-                <ul th:each="room : ${joinlist}">
-                    <li><div class="alert alert-primary" role="alert"><a th:href="@{/view/v1/room(roomId=${room.roomId})}" class="alert-link">[[${room.name}]]</a></div></li>
-                </ul>
-            </div>
         </div>
 <!--        <form th:action="@{/view/v1/room}" method="post">-->
 <!--            <input type="text" name="name" class="form-control">-->

@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import teamproject.pocoapoco.domain.dto.chat.ChatRoomDTO;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
@@ -43,8 +44,6 @@ public class Crew extends BaseEntity{
     @JoinColumn(name="room_id")
     private ChatRoom chatRoom;
 
-    //crew 종목 검색 test
-    private String sprotStr;
     @Enumerated(value = EnumType.STRING)
     private InterestSport interestSport;
 
@@ -57,6 +56,10 @@ public class Crew extends BaseEntity{
 
     @OneToMany(mappedBy = "crew")
     private List<Like> likes = new ArrayList<>();
+
+    //참여중인사람 조회
+    @OneToMany(mappedBy = "crew")
+    private List<Participation> participations = new ArrayList<>();
 
     @OneToOne
     private CrewMembers members;

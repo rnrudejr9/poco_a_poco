@@ -83,7 +83,7 @@
                     <div class="row g-3">
                         <div>
                         <th:block th:each="sport : ${sportEnums}">
-                            <label class="btn btn-outline-secondary"> <input name="sportradio" type="radio" th:value="${sport}" th:text="${sport}">
+                            <label class="btn btn-outline-secondary"> <input name="sportradio" type="radio" th:value="${sport.value}" th:text="${sport.value}">
 
                             </label>
                         </th:block>
@@ -352,12 +352,37 @@
             alert("모임등록성공!");
             let crewId = json.result.crewId;
             chatRoomMake(crewId);
+            joinCrewAwait(crewId);
             location.href="/view/v1/crews";
         }else{
             let json = await response.text();
             console.log(json);
         }
    }
+
+    async function joinCrewAwait(crewId){
+        var crewId = crewId;
+        console.log(crewId);
+        let response = await fetch("/api/v1/part/gen", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                crewId: crewId
+            })
+        })
+        console.log("end");
+        if(response.ok){
+            var json = await response.json();
+            alert(json.result);
+            console.log(json);
+        }else{
+            var json = await response.json();
+            console.log(json);
+        }
+    }
 
 
     function profileUpload() {

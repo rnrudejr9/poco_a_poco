@@ -1,5 +1,6 @@
 package teamproject.pocoapoco.domain.dto.part;
 
+
 import lombok.*;
 
 @Getter
@@ -7,8 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter
-public class PartDto {
+public class PartJoinDto {
     private Long crewId;
+    private Long userId;
+    private String nickName;
     private String title;
     private String body;
 }

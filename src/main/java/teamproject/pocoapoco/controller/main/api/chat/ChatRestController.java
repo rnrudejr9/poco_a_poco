@@ -26,7 +26,7 @@ public class ChatRestController {
     @GetMapping("/{roomId}")
     public Response listChat(@PathVariable Long roomId){
         log.info("roomId : " + roomId);
-        List<Chat> list = chatService.listChat(roomId);
+        List<ChatMessageDTO> list = chatService.listChat(roomId);
         return Response.success(list);
     }
 }
