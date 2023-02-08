@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,11 +16,19 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+<<<<<<< src/main/java/teamproject/pocoapoco/controller/main/ui/CrewViewController.java
 import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.entity.User;
+=======
+import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
+>>>>>>> src/main/java/teamproject/pocoapoco/controller/main/ui/CrewViewController.java
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberDeleteResponse;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
+import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.repository.CrewRepository;
@@ -50,6 +57,7 @@ public class CrewViewController {
 
     // 크루 게시물 상세 페이지
     @GetMapping("/{crewId}")
+<<<<<<< src/main/java/teamproject/pocoapoco/controller/main/ui/CrewViewController.java
     public String detailCrew(@PathVariable Long crewId, Model model, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
                              @PageableDefault(page = 0, size = 1, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
@@ -58,6 +66,15 @@ public class CrewViewController {
 
         try {
             CrewDetailResponse details = list.getContent().get(0);
+            //알림 체크
+            crewService.readAlarms(crewId, authentication.getName());
+=======
+    public String detailCrew(@PathVariable Long crewId, Model model, Authentication authentication) {
+        try {
+            
+
+            CrewDetailResponse details = crewService.detailCrew(crewId);
+>>>>>>> src/main/java/teamproject/pocoapoco/controller/main/ui/CrewViewController.java
             int count = likeViewService.getLikeCrew(crewId);
 
             model.addAttribute("details", details);
