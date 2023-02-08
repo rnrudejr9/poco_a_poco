@@ -6,8 +6,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import teamproject.pocoapoco.domain.dto.crew.*;
+import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
 import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
+import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
@@ -185,6 +189,19 @@ public class CrewService {
 
         return UserProfileResponse.fromEntity(selectedUser);
 
+    }
+
+    @Transactional
+    public void readAlarms(Long crewId, String username) {
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+        List<Alarm> alarms = user.getAlarms();
+        for (Alarm alarm : alarms) {
+            boolean readOrNot = alarm.getReadOrNot();
+            if (alarm.getTargetCrewId() == crewId && !readOrNot) {
+                alarm.setReadOrNot();
+                log.info("알람을 읽었습니다 : {}        알림 : {}", alarm.getId(), alarm.getReadOrNot());
+            }
+        }
     }
 
 }

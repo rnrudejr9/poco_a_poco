@@ -8,7 +8,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.security.core.Authentication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -18,12 +17,14 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import teamproject.pocoapoco.domain.dto.crew.*;
-import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
-import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberDeleteResponse;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
+import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
@@ -31,11 +32,10 @@ import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.CrewMemberService;
 import teamproject.pocoapoco.service.CrewService;
-import teamproject.pocoapoco.service.UserService;
 import teamproject.pocoapoco.service.LikeViewService;
 
-import java.util.ArrayList;
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -54,8 +54,11 @@ public class CrewViewController {
 
     // 크루 게시물 상세 페이지
     @GetMapping("/{crewId}")
-    public String detailCrew(@PathVariable Long crewId, Model model) {
+    public String detailCrew(@PathVariable Long crewId, Model model, Authentication authentication) {
         try {
+            //알림 체크
+            crewService.readAlarms(crewId, authentication.getName());
+
             CrewDetailResponse details = crewService.detailCrew(crewId);
             int count = likeViewService.getLikeCrew(crewId);
 
