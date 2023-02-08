@@ -3,6 +3,7 @@ package teamproject.pocoapoco.domain.dto.crew;
 import lombok.*;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.SportEnum;
 
@@ -32,6 +33,7 @@ public class CrewRequest {
                 .datepick(this.datepick)
                 .timepick(this.timepick)
                 .imagePath(this.imagePath)
+                .chatRoom(ChatRoom.builder().name(title).user(user).build())
                 .sportEnum(of(chooseSport))
                 .user(user)
                 .build();
