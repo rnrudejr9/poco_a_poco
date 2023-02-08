@@ -240,10 +240,11 @@ public class UserService {
 
     public UserPassResetResponse resetPass(String userName, String password) {
         User user = userRepository.findByUserName(userName).get();
-        user.setPassword(password);
+        String encodedPassword = encrypterConfig.encoder().encode(password);
+        user.setPassword(encodedPassword);
         userRepository.save(user);
         UserPassResetResponse userPassResetResponse = UserPassResetResponse.builder()
-                .password(password)
+                .password(encodedPassword)
                 .userName(userName)
                 .build();
 

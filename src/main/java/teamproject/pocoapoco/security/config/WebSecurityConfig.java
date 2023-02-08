@@ -31,7 +31,7 @@ public class WebSecurityConfig {
                 .csrf().disable()
                 .cors().and()
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/join", "/api/v1/users/login", "/api/v1/users/regenerateToken").permitAll()
+                .antMatchers("/api/v1/users/join", "/api/v1/users/login", "/api/v1/users/regenerateToken","/api/v1/resetPass","/api/v1/findPass").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/resetPass").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/regenerateToken").permitAll()

@@ -119,7 +119,7 @@ public class ViewController {
     }
     @PostMapping("/api/v1/resetPass")
     @ResponseBody
-    public Response resetPass(String userName, String password){
+    public Response resetPass(@RequestParam("userName") String userName, @RequestParam("password") String password){
 
         UserPassResetResponse userPassResetResponse = userService.resetPass(userName,password);
         return Response.success(userPassResetResponse);

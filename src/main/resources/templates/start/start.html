@@ -129,25 +129,28 @@
     document.getElementById('resetPass').addEventListener('click',resetPass);
 
     async function resetPass(){
-        let response = await fetch("/api/v1/resetPass",{
+        let userName = localStorage.getItem("userName")
+        let password = document.getElementById("newPass").value
+        let response = await fetch(`/api/v1/resetPass/?userName=${userName}&password=${password}`,{
             method : "POST",
             headers : {
                 "Content-Type": "application/json",
-            },
-            body:{
-                userName : document.getElementById("idForFindPass"),
-                password : document.getElementById("newPass")
-
             }
 
         })
-        let data = await response.json()
+        let data = await response
         console.log(data)
+        if(response.ok){
+            alert("비밀번호가 초기화되었습니다.")
+
+        }else
+            alert("알수없는 오류 발생")
     }
 
 
     async function findPass(){
         let params = document.getElementById("idForFindPass").value;
+        localStorage.setItem("userName",params)
         let response = await fetch(`/api/v1/findPass/?userName=${params}`,{
             method : "GET",
             headers: {
@@ -156,6 +159,7 @@
         })
         let data = await response.json()
         console.log(data)
+
 
         if(response.ok){
             alert(`등록하신 ${data.result.email}로 인증코드를 전송했습니다. 확인해주세요.`)
@@ -227,7 +231,7 @@
         }
 
     }
-    async function checkCodeForPass(){
+    async function checkCodeForPass() {
         let params = document.getElementById("codeForPass").value;
         let response = await fetch(`/login/verifyCode/?code=${params}`, {
             method: "POST",
@@ -238,13 +242,12 @@
         let data = await response.json()
         console.log(data)
 
-        if(data==1){
+        if (data == 1) {
             alert("확인되었습니다.")
             const btn = document.getElementById("findPass2")
-            btn.style.display='block'
+            btn.style.display = 'block'
 
-        }else
-        {
+        } else {
             alert("인증번호가 일치하지 않습니다.")
         }
 
