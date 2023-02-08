@@ -36,8 +36,15 @@ public class ParticipationService {
         Crew crew = crewRepository.findById(partJoinDto.getCrewId()).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
         User user = userRepository.findByNickName(partJoinDto.getNickName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
 
+        int size = 0;
+        for(Participation participation : crew.getParticipations()){
+            if(participation.getStatus()==2){
+                size++;
+            }
+        }
+
         //같거나 클 경우에는 참여 못함
-        if(crew.getParticipations().size() >= crew.getCrewLimit()){
+        if(size >= crew.getCrewLimit()){
             return Response.error(new ErrorResponse(ErrorCode.NOT_ALLOWED_PARTICIPATION,ErrorCode.NOT_ALLOWED_PARTICIPATION.getMessage()));
         }
 

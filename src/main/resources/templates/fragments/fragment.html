@@ -83,10 +83,10 @@
             </div>
 
             <div class="dropdown">
-                <button onclick="findPartSign()" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                <button onclick="findPartSign()" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonAllowArea" data-bs-toggle="dropdown" aria-expanded="false">
                     Dropdown button
                 </button>
-                <ul id="liArea" class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                <ul id="allowArea" class="dropdown-menu" aria-labelledby="dropdownMenuButtonAllowArea">
                     <li><a class="dropdown-item" href="#">Action</a></li>
                 </ul>
             </div>
@@ -95,7 +95,7 @@
             <script>
 
                 async function findPartSign() {
-                    document.getElementById("liArea").innerHTML = "";
+                    document.getElementById("allowArea").innerHTML = "";
                     let response = await fetch("/api/v1/part/sign", {
                         method: "GET",
                         headers: {
@@ -119,7 +119,7 @@
                             str += "</button>"
                             str += "</li>";
                             console.log(str);
-                            document.getElementById("liArea").innerHTML += str;
+                            document.getElementById("allowArea").innerHTML += str;
                         }
 
                     }else{
