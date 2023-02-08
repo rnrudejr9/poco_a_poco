@@ -14,8 +14,6 @@ import teamproject.pocoapoco.security.config.EncrypterConfig;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -163,16 +161,14 @@ public class UserService {
         // request에서 수정된 정보만 반영하기
 
         String revisedNickName = (userProfileRequest.getNickName().isBlank())? beforeMyUser.getNickName(): userProfileRequest.getNickName();
-        String revisedAddress = (userProfileRequest.getAddress().isBlank())? beforeMyUser.getAddress(): userProfileRequest.getAddress();
+        String revisedAddress = (userProfileRequest.getAddress().isBlank())? beforeMyUser.getAddress(): encrypterConfig.encoder().encode(userProfileRequest.getAddress());
         String revisedPassword = (userProfileRequest.getPassword().isBlank())? beforeMyUser.getPassword(): userProfileRequest.getPassword();
         Boolean revisedLikeSoccer = (userProfileRequest.getLikeSoccer().equals(beforeMyUser.getSport().isSoccer()))? beforeMyUser.getSport().isSoccer(): userProfileRequest.getLikeSoccer();
         Boolean revisedLikeJogging = (userProfileRequest.getLikeJogging().equals(beforeMyUser.getSport().isJogging()))? beforeMyUser.getSport().isJogging(): userProfileRequest.getLikeJogging();
         Boolean revisedLikeTennis = (userProfileRequest.getLikeTennis().equals(beforeMyUser.getSport().isTennis()))? beforeMyUser.getSport().isTennis(): userProfileRequest.getLikeTennis();
 
-        String encodedPassword = encrypterConfig.encoder().encode(revisedPassword);
 
-
-        User revisedMyUser = User.toEntityWithImage(beforeMyUser.getId(), beforeMyUser.getUsername(), revisedNickName, revisedAddress, encodedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis, beforeMyUser.getImagePath());
+        User revisedMyUser = User.toEntityWithImage(beforeMyUser.getId(), beforeMyUser.getUsername(), revisedNickName, revisedAddress, revisedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis, beforeMyUser.getImagePath(), beforeMyUser.getEmail());
 
         userRepository.save(revisedMyUser);
 
