@@ -72,4 +72,36 @@ public class SseController {
 
         return emitter;
     }
+
+    //랜덤매칭 만들어야한다.
+//    @GetMapping(value = "/random", consumes = MediaType.ALL_VALUE)
+//    public SseEmitter random(@RequestParam String userId) {
+//        log.info("userId = {}", userId);
+//
+//        // 현재 클라이언트를 위한 SseEmitter 생성
+//        SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
+//        try {
+//            // 연결!!
+//            emitter.send(SseEmitter.event().name("connect"));
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//
+//        // user의 pk값을 key값으로 해서 SseEmitter를 저장
+//        sseEmitters.put(userId, emitter);
+//
+//        Iterator<String> iter = sseEmitters.keySet().iterator();
+//        while (iter.hasNext()) {
+//            String key = iter.next();
+//            String value = String.valueOf(sseEmitters.get(key));
+//
+//            log.info(key + " : " + value);
+//        }
+//
+//        emitter.onCompletion(() -> sseEmitters.remove(userId));
+//        emitter.onTimeout(() -> sseEmitters.remove(userId));
+//        emitter.onError((e) -> sseEmitters.remove(userId));
+//
+//        return emitter;
+//    }
 }
