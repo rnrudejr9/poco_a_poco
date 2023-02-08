@@ -35,4 +35,5 @@ public class ChatRoomDTO {
     public ChatRoom of(User user){
         return ChatRoom.builder().name(name).user(user).build();
     }
+
 }

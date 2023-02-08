@@ -23,4 +23,5 @@ public class ChatMessageDTO {
                 .isChecked(false)
                 .build();
     }
+
 }

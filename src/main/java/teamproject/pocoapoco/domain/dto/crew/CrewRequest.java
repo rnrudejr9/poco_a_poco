@@ -20,6 +20,7 @@ public class CrewRequest {
     private String datepick;
     private String timepick;
     private String chooseSport;
+    private String imagePath;
 
 
     public Crew toEntity(User user) {
@@ -28,9 +29,9 @@ public class CrewRequest {
                 .title(this.title)
                 .content(this.content)
                 .crewLimit(this.crewLimit)
-
                 .datepick(this.datepick)
                 .timepick(this.timepick)
+                .imagePath(this.imagePath)
                 .sportEnum(of(chooseSport))
                 .user(user)
                 .build();

@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.part.PartDto;
+import teamproject.pocoapoco.domain.dto.part.PartJoinDto;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.service.part.ParticipationService;
 
@@ -14,16 +15,26 @@ import teamproject.pocoapoco.service.part.ParticipationService;
 @Slf4j
 public class ParticipationController {
     private final ParticipationService participationService;
+
+    @PostMapping("/gen")
+    public Response generatePart(@RequestBody PartDto partDto, Authentication authentication){
+        return participationService.generatePart(partDto, authentication.getName());
+    }
+
     @PostMapping()
-    public Response participate(@RequestBody PartDto partDto, Authentication authentication){
+    public Response participate(@RequestBody PartJoinDto partDto){
         log.info("#1 participateController crewId: "+ partDto.getCrewId());
-        return participationService.participate(partDto.getCrewId(), authentication.getName());
+        return participationService.participate(partDto.getCrewId(), partDto.getNickName());
+    }
+
+    @GetMapping("/sign")
+    public Response notAllowedPart(Authentication authentication){
+        return Response.success(participationService.notAllowedPart(authentication.getName()));
     }
 
     @GetMapping("/{crewId}")
-    public Response findParticipate(@PathVariable Long crewId){
+    public Response findParticipate(@PathVariable Long crewId, Authentication authentication){
         log.info("#1 participateController crewId: "+ crewId);
-
-        return Response.success(participationService.findParticipate(crewId));
+        return Response.success(participationService.findParticipate(crewId, authentication.getName()));
     }
 }

@@ -58,12 +58,12 @@
 <section class="bg-gray200 pt-5 pb-5">
     <div class="container">
         <div class="row justify-content-center">
+            <div class="col-md-2" id="members">
+
+            </div>
             <div class="col-md-7">
                 <!-- Begin Sidebar -replace demowebsite with your own id
                         ================================================== -->
-                <aside class="right">
-                    <div id="joinMember">참여 중인 members</div>
-                </aside>
 
                 <article class="card">
                     <h1 class="card-title display-5">
@@ -157,12 +157,101 @@
             id="button-send" style="width:500px;margin:auto;" onclick="joinCrew()">참여하기</button>
 </div>
 
+                                    <div>
+                                        <button type="button" class="btn btn-primary" style="display: none" id="signed" >참여 중</button>
+                                        <button type="button" id="sendtogle" sec:authorize="isAuthenticated()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">참여하기</button>
+                                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">참여하기양식</h1>
+                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                            <div class="mb-3">
+                                                                <label for="recipient-name" class="col-form-label">제목</label>
+                                                                <input type="text" class="form-control" id="recipient-name">
+                                                            </div>
+                                                            <div class="mb-3">
+                                                                <label for="message-text" class="col-form-label">소개말</label>
+                                                                <textarea class="form-control" id="message-text"></textarea>
+                                                            </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                                        <button type="button" class="btn btn-primary" th:id="join"  th:onclick="joinCrewAwait()">참여하기</button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
 
 <footer th:replace="fragments/fragment :: footer"></footer>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script th:replace="fragments/fragment :: form-validation"></script>
 <script th:replace="fragments/fragment :: read-crew"></script>
 
+
+<script>
+    enterCheck();
+    async function enterCheck(){
+        var crewId = [[${crewId}]];
+        console.log(crewId);
+        let response = await fetch("/api/v1/part/"+crewId, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include"
+        })
+        if(response.ok){
+            var json = await response.json();
+            var str = "참여하기";
+            if(json.result.status === 1) {
+                str = "승인대기";
+            }
+            if(json.result.status === 2){
+                str = "참여중";
+                document.getElementById("sendtogle").style.display = "none";
+                document.getElementById("signed").style.display = "block";
+            }
+            document.getElementById("sendtogle").innerHTML = str;
+            document.getElementById("join").innerHTML = str;
+            console.log(json);
+        }else{
+            var json = await response.json();
+            console.log(json);
+        }
+    }
+
+
+
+    async function joinCrewAwait(){
+        var crewId = [[${crewId}]];
+        console.log(crewId);
+        let response = await fetch("/api/v1/part/gen", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                crewId: crewId
+            })
+        })
+        console.log("end");
+        if(response.ok){
+            var json = await response.json();
+            alert(json.result);
+            console.log(json);
+            enterCheck();
+        }else{
+            var json = await response.json();
+            console.log(json);
+        }
+    }
+</script>
 
 </body>
 </html>
