@@ -10,10 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.dto.user.UserIdFindResponse;
-import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
-import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
-import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
+import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.service.MailService;
 import teamproject.pocoapoco.service.UserService;
 
@@ -119,5 +116,12 @@ public class ViewController {
         System.out.println("인증코드 : " + userMailResponse.getCode());
         return Response.success(userMailResponse);
 
+    }
+    @PostMapping("/api/v1/resetPass")
+    @ResponseBody
+    public Response resetPass(String userName, String password){
+
+        UserPassResetResponse userPassResetResponse = userService.resetPass(userName,password);
+        return Response.success(userPassResetResponse);
     }
 }

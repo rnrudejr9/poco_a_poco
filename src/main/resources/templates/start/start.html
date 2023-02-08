@@ -126,6 +126,25 @@
     document.getElementById('findId').addEventListener('click',findId);
     document.getElementById('checkIdForFindPass').addEventListener('click',findPass);
     document.getElementById('btnForFindPass').addEventListener('click',checkCodeForPass);
+    document.getElementById('resetPass').addEventListener('click',resetPass);
+
+    async function resetPass(){
+        let response = await fetch("/api/v1/resetPass",{
+            method : "POST",
+            headers : {
+                "Content-Type": "application/json",
+            },
+            body:{
+                userName : document.getElementById("idForFindPass"),
+                password : document.getElementById("newPass")
+
+            }
+
+        })
+        let data = await response.json()
+        console.log(data)
+    }
+
 
     async function findPass(){
         let params = document.getElementById("idForFindPass").value;

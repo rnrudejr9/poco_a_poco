@@ -33,6 +33,7 @@ public class WebSecurityConfig {
                 .authorizeRequests()
                 .antMatchers("/api/v1/users/join", "/api/v1/users/login", "/api/v1/users/regenerateToken").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/v1/**").permitAll()
+                .antMatchers(HttpMethod.POST, "/api/v1/resetPass").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/users/regenerateToken").permitAll()
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()

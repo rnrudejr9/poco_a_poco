@@ -237,5 +237,17 @@ public class UserService {
 
         return userMailResponse;
     }
+
+    public UserPassResetResponse resetPass(String userName, String password) {
+        User user = userRepository.findByUserName(userName).get();
+        user.setPassword(password);
+        userRepository.save(user);
+        UserPassResetResponse userPassResetResponse = UserPassResetResponse.builder()
+                .password(password)
+                .userName(userName)
+                .build();
+
+        return userPassResetResponse;
+    }
 }
 

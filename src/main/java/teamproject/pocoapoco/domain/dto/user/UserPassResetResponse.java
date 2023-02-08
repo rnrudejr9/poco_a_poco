@@ -11,5 +11,6 @@ import lombok.NoArgsConstructor;
 @Getter
 @Builder
 public class UserPassResetResponse {
+    String userName;
     String password;
 }
