@@ -93,11 +93,15 @@
                     <input type="text" class="form-control" placeholder="인증코드" id="codeForPass">
                     <button style="margin-left: 10px" type="button" id="btnForFindPass"  >인증번호 확인</button>
                 </div>
+                <div id="findPass2" style="display: none">
+                    <input type="text" class="form-control" placeholder="새 비밀번호" id="newPass">
+                    <button style="margin-left: 10px" type="button" id="resetPass"  >비밀번호 재설정</button>
+                </div>
 
             </form>
         </div>
         <!--팝업 버튼 영역-->
-        <div class="popup_btn" style="float: bottom; margin-top: 200px;">
+        <div class="popup_btn" style="float: bottom; margin-top: 50px;">
             <a href="javascript:closePopPass();">닫기</a>
         </div>
     </div>
@@ -217,6 +221,8 @@
 
         if(data==1){
             alert("확인되었습니다.")
+            const btn = document.getElementById("findPass2")
+            btn.style.display='block'
 
         }else
         {
