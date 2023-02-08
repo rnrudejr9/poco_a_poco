@@ -63,22 +63,23 @@ public class ParticipationService {
 
         if(participationRepository.existsByCrewAndAndUser(crew,user)){
             Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
-            //존재하는 경우
-            participation.setStatus(0);
-            return Response.success("참여하기 취소");
-        }else{
-            //존재하지 않는 경우
-            Participation savedParticipation = Participation.builder().crew(crew).title(crew.getTitle()).body(partDto.getBody()).user(user).status(1).build();
-
-            //작성자일 경우 자동참여
-            for(Crew c : user.getCrews()) {
-                if(c.equals(crew)) {
-                    savedParticipation.setStatus(2);
-                }
+            if(participation.getStatus() == 1){
+                participation.setStatus(0);
+                return Response.success("참여하기 취소");
             }
-            participationRepository.save(savedParticipation);
-            return Response.success("참여하기 동작");
+            if(participation.getStatus() == 0){
+                participation.setStatus(1);
+                return Response.success("참여 신청완료");
+            }
         }
+        Participation savedParticipation = Participation.builder().crew(crew).title(crew.getTitle()).body(partDto.getBody()).user(user).status(1).build();
+        for(Crew c : user.getCrews()) {
+            if(c.equals(crew)) {
+                savedParticipation.setStatus(2);
+            }
+        }
+        participationRepository.save(savedParticipation);
+        return Response.success("참여하기 동작");
     }
 
     //참여유무확인

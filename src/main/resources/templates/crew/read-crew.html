@@ -143,48 +143,43 @@
                     <!--End Comments
                     ================================================== -->
                 </article>
+
+                <div class="row justify-content-center">
+                    <button type="button" class="btn btn-primary" style="display: none" id="signed" >참여 중</button>
+                    <button type="button" class="btn btn-success" style="display: none" id="notallowed" th:onclick="joinCrewAwait()">승인 대기/취소 하기</button>
+                    <a type="button" th:href="@{/view/v1/room(roomId=${details.chatRoomId})}" class="btn btn-primary" style="display: none" id="chatroom">채팅방</a>
+                    <button type="button" id="sendtogle" sec:authorize="isAuthenticated()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">참여하기</button>
+                    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="exampleModalLabel">참여하기양식</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <label for="recipient-name" class="col-form-label">제목</label>
+                                        <input type="text" class="form-control" id="recipient-name">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="message-text" class="col-form-label">소개말</label>
+                                        <textarea class="form-control" id="message-text"></textarea>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                    <button type="button" aria-label="Close" data-bs-dismiss="modal" class="btn btn-primary" th:id="join"  th:onclick="joinCrewAwait()">참여하기</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
     </div>
 </section>
 
-
-<div id="wrapper">
-    <input type="text" hidden th:value="${crewId}" id="crewIdJoin">
-    <input type="text" hidden th:value="${details.title}" id="crewName">
-    <button class="w-100 btn btn-secondary btn-lg" sec:authorize="isAuthenticated()"
-            id="button-send" style="width:500px;margin:auto;" onclick="joinCrew()">참여하기</button>
-</div>
-
-                                    <div>
-                                        <button type="button" class="btn btn-primary" style="display: none" id="signed" >참여 중</button>
-                                        <button type="button" id="sendtogle" sec:authorize="isAuthenticated()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">참여하기</button>
-                                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h1 class="modal-title fs-5" id="exampleModalLabel">참여하기양식</h1>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                            <div class="mb-3">
-                                                                <label for="recipient-name" class="col-form-label">제목</label>
-                                                                <input type="text" class="form-control" id="recipient-name">
-                                                            </div>
-                                                            <div class="mb-3">
-                                                                <label for="message-text" class="col-form-label">소개말</label>
-                                                                <textarea class="form-control" id="message-text"></textarea>
-                                                            </div>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                        <button type="button" class="btn btn-primary" th:id="join"  th:onclick="joinCrewAwait()">참여하기</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
 
 
 <footer th:replace="fragments/fragment :: footer"></footer>
@@ -194,6 +189,11 @@
 
 
 <script>
+    findMember();
+    enterCheck();
+
+
+
     async function findMember(){
         var crewId = [[${crewId}]];
         console.log(crewId);
@@ -220,8 +220,6 @@
             document.getElementById("members").innerHTML = str;
         }
     }
-    findMember();
-    enterCheck();
     async function enterCheck(){
         var crewId = [[${crewId}]];
         console.log(crewId);
@@ -234,19 +232,27 @@
         })
         if(response.ok){
             var json = await response.json();
-            var str = "참여하기";
+            if(json.result.status === 0){
+                document.getElementById("sendtogle").style.display = "block";
+                document.getElementById("notallowed").style.display = "none";
+                document.getElementById("signed").style.display = "none";
+                document.getElementById("chatroom").style.display = "none";
+                document.getElementById("members").style.display = "none";
+            }
             if(json.result.status === 1) {
-                str = "승인대기";
+                document.getElementById("sendtogle").style.display = "none";
+                document.getElementById("notallowed").style.display = "block";
+                document.getElementById("signed").style.display = "none";
+                document.getElementById("chatroom").style.display = "none";
+                document.getElementById("members").style.display = "none";
             }
             if(json.result.status === 2){
-                str = "참여중";
                 document.getElementById("sendtogle").style.display = "none";
                 document.getElementById("signed").style.display = "block";
+                document.getElementById("chatroom").style.display = "block";
                 findMember();
                 document.getElementById("members").style.display = "block";
             }
-            document.getElementById("sendtogle").innerHTML = str;
-            document.getElementById("join").innerHTML = str;
             console.log(json);
         }else{
             var json = await response.json();

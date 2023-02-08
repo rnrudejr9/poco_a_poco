@@ -26,7 +26,7 @@ public class CrewDetailResponse {
     private LocalDateTime lastModifiedAt;
     private InterestSport interestSport;
     private SportEnum sportEnum;
-
+    private Long chatRoomId;
     private String imagePath;
 
     public static CrewDetailResponse of(Crew crew) {
@@ -41,7 +41,7 @@ public class CrewDetailResponse {
                 .createdAt(crew.getCreatedAt())
                 .lastModifiedAt(crew.getLastModifiedAt())
                 .imagePath(crew.getImagePath())
-
+                .chatRoomId(crew.getChatRoom().getRoomId())
                 .interestSport(crew.getInterestSport())
                 .sportEnum(crew.getSportEnum())
                 .build();
