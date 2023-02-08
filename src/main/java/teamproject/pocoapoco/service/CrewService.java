@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
@@ -22,8 +23,8 @@ import teamproject.pocoapoco.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Service
@@ -82,6 +83,23 @@ public class CrewService {
         return CrewDetailResponse.of(crew);
     }
 
+    // 크루 게시물 전체조회, 지역조회, 운동종목 조회
+    public Page<CrewDetailResponse> findAllCrewsByStrictAndSportEnum(CrewSportRequest crewSportRequest, boolean sportsListIsEmpty, Pageable pageable) {
+
+        if (crewSportRequest.getStrict() == null && CollectionUtils.isEmpty(crewSportRequest.getSportsList()) && sportsListIsEmpty) {
+            log.info("service findAllCrews : action");
+            return findAllCrews(pageable);
+        } else if (crewSportRequest.getStrict() != null && crewSportRequest.getStrict() != "") {
+            log.info("service findAllCrewsByStrict : action");
+            return findAllCrewsByStrict(crewSportRequest, pageable);
+        } else {
+            log.info("service findAllCrewsBySport : action");
+            return findAllCrewsBySport(crewSportRequest.getSportsList(), pageable);
+        }
+
+    }
+
+
     // 크루 게시물 전체 조회
     @Transactional
     public Page<CrewDetailResponse> findAllCrews(Pageable pageable) {
@@ -91,8 +109,8 @@ public class CrewService {
         return crews.map(CrewDetailResponse::of);
     }
 
-    // 크루 게시물 지역 검색 조회
-    public Page<CrewDetailResponse> findAllCrewsWithStrict(CrewSportRequest crewSportRequest, Pageable pageable) {
+    // 크루 게시물 조회 By 지역 검색어
+    public Page<CrewDetailResponse> findAllCrewsByStrict(CrewSportRequest crewSportRequest, Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewSportRequest.getStrict());
 
@@ -100,49 +118,12 @@ public class CrewService {
     }
 
 
-    // test : 크루 게시물 검색 조회
-    public Page<CrewDetailResponse> findAllCrewsBySport(CrewSportRequest crewSportRequest, Pageable pageable) {
-
-        //전체검색
-//        Page<Crew> crews = crewRepository.findAll(pageable);
-
-        //지역 검색 by String
-//        String strict = "대구";
-//        Page<Crew> crews = crewRepository.findByStrictContaining(pageable, strict);
-
-
-        //운동 검색 by String
-//        String sport = "축구";
-//        Page<Crew> crews = crewRepository.findBySprotStrContaining(pageable, sport);
-
-        //운동 다중검색1 by String
-//        String sport = "축구";
-//        String sport2 = "";
-//        String sport3 = "";
-//        Page<Crew> crews = crewRepository.findBySprotStrOrSprotStrOrSprotStr(pageable, sport, sport2, sport3);
-
-
-        //운동 다중검색2 by String
-//        String sport = "축구";
-//        String sport2 = "";
-//        String sport3 = "";
-//
-//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
-//            sport ="축구";
-//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
-//            sport2="조깅";
-//        if(crewSportRequest.getSportsList().contains(SportEnum.SOCCER))
-//            sport3="테니스";
-//
-//        Page<Crew> crews = crewRepository.findBySprotStr(pageable, sport, sport2, sport3);
-
-
-        //운동 검색 by Enum
+    // 크루 게시물 조회 By 운동종목
+    public Page<CrewDetailResponse> findAllCrewsBySport(List<String> sportsList, Pageable pageable) {
 
         Page<Crew> crews;
-        List<String> sportsList = crewSportRequest.getSportsList();
 
-        if (sportsList.isEmpty()) {
+        if (CollectionUtils.isEmpty(sportsList)) {
             crews = crewRepository.findAll(pageable);
         } else {
             SportEnum[] sports = new SportEnum[3];
@@ -156,7 +137,6 @@ public class CrewService {
         }
         return crews.map(CrewDetailResponse::of);
     }
-
 
     // User 존재 확인
     public User findByUserName(String userName) {
@@ -177,18 +157,25 @@ public class CrewService {
         }
     }
 
-    public UserProfileResponse findByUserNameGetUserProfile(String userName) {
+    public List<String> getUserSports(Authentication authentication, Boolean sportsListIsEmpty) {
 
-        Optional<User> selectedUserOptional = userRepository.findByUserName(userName);
+        List<String> userSportsList = new ArrayList<>();
 
-        if(selectedUserOptional.isEmpty()){
-            throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
+        if (authentication != null && sportsListIsEmpty) {
+
+            User user = findByUserName(authentication.getName());
+
+            if (user.getSport().isSoccer()) {
+                userSportsList.add("SOCCER");
+            }
+            if (user.getSport().isJogging()) {
+                userSportsList.add("JOGGING");
+            }
+            if (user.getSport().isTennis()) {
+                userSportsList.add("TENNIS");
+            }
         }
-
-        User selectedUser = selectedUserOptional.get();
-
-        return UserProfileResponse.fromEntity(selectedUser);
-
+        return userSportsList;
     }
 
     @Transactional
