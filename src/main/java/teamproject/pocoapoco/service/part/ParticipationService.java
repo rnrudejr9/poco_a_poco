@@ -6,6 +6,7 @@ import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.error.ErrorResponse;
 import teamproject.pocoapoco.domain.dto.part.PartDto;
+import teamproject.pocoapoco.domain.dto.part.PartJoinDto;
 import teamproject.pocoapoco.domain.dto.part.PartJoinResponse;
 import teamproject.pocoapoco.domain.dto.part.PartResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
@@ -31,9 +32,9 @@ public class ParticipationService {
     private final CrewRepository crewRepository;
 
     @Transactional
-    public Response participate(Long crewId, String nickName){
-        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
-        User user = userRepository.findByNickName(nickName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
+    public Response participate(PartJoinDto partJoinDto){
+        Crew crew = crewRepository.findById(partJoinDto.getCrewId()).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+        User user = userRepository.findByNickName(partJoinDto.getNickName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
 
         //같거나 클 경우에는 참여 못함
         if(crew.getParticipations().size() >= crew.getCrewLimit()){
@@ -46,6 +47,16 @@ public class ParticipationService {
     }
 
     @Transactional
+    public Response reject(PartJoinDto partJoinDto){
+        Crew crew = crewRepository.findById(partJoinDto.getCrewId()).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+        User user = userRepository.findByNickName(partJoinDto.getNickName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
+
+        Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
+        participation.setStatus(0);
+        return Response.success("신청이 취소됨");
+    }
+
+    @Transactional
     public Response generatePart(PartDto partDto, String userName){
         User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
         Crew crew = crewRepository.findById(partDto.getCrewId()).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
@@ -53,7 +64,7 @@ public class ParticipationService {
         if(participationRepository.existsByCrewAndAndUser(crew,user)){
             Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
             //존재하는 경우
-            participationRepository.delete(participation);
+            participation.setStatus(0);
             return Response.success("참여하기 취소");
         }else{
             //존재하지 않는 경우
@@ -66,7 +77,7 @@ public class ParticipationService {
                 }
             }
             participationRepository.save(savedParticipation);
-            return Response.success("참여하기 승인대기");
+            return Response.success("참여하기 동작");
         }
     }
 
@@ -81,13 +92,29 @@ public class ParticipationService {
         return PartResponse.builder().now(crew.getParticipations().size()).limit(crew.getCrewLimit()).status(participation.getStatus()).build();
    }
 
-   public List<PartJoinResponse> notAllowedPart(String userName){
+
+   //현재 크루 참여자 수 확인
+   public PartResponse findCrewInfo(Long crewId){
+       Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+       int size = 0;
+       for(Participation p : crew.getParticipations()){
+           if(p.getStatus() == 2){
+               size++;
+           }
+       }
+       return PartResponse.builder().now(size).build();
+   }
+
+
+   //미승인된 멤버 조회
+   public List<PartJoinResponse> notAllowedMember(String userName){
        User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
        List<PartJoinResponse> participations = new ArrayList<>();
        for(Crew crew : user.getCrews()) {
            for (Participation participation : crew.getParticipations()) {
                if (participation.getStatus() == 1) {
                    participations.add(PartJoinResponse.builder()
+                           .crewId(participation.getCrew().getId())
                            .body(participation.getBody())
                            .title(participation.getTitle())
                            .joinUserName(participation.getUser().getUsername())
@@ -98,6 +125,26 @@ public class ParticipationService {
            }
        }
        return participations;
+   }
+
+   //승인된 멤버 조회
+   public List<PartJoinResponse> AllowedMember(long crewId){
+       Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+       List<PartJoinResponse> list = new ArrayList<>();
+       for(Participation p : crew.getParticipations()){
+           if(p.getStatus() == 2){
+               PartJoinResponse partJoinResponse =  PartJoinResponse.builder()
+                       .crewTitle(crew.getTitle())
+                       .status(p.getStatus())
+                       .writerUserName(crew.getUser().getNickName())
+                       .joinUserName(p.getUser().getNickName())
+                       .now(crew.getParticipations().size())
+                       .limit(crew.getCrewLimit())
+                       .build();
+               list.add(partJoinResponse);
+           }
+       }
+       return list;
    }
 
 

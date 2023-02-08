@@ -24,17 +24,33 @@ public class ParticipationController {
     @PostMapping()
     public Response participate(@RequestBody PartJoinDto partDto){
         log.info("#1 participateController crewId: "+ partDto.getCrewId());
-        return participationService.participate(partDto.getCrewId(), partDto.getNickName());
+        return participationService.participate(partDto);
+    }
+    @PostMapping("/reject")
+    public Response reject(@RequestBody PartJoinDto partDto){
+        log.info("#1 participateController crewId: "+ partDto.getCrewId());
+        return participationService.reject(partDto);
     }
 
     @GetMapping("/sign")
     public Response notAllowedPart(Authentication authentication){
-        return Response.success(participationService.notAllowedPart(authentication.getName()));
+        return Response.success(participationService.notAllowedMember(authentication.getName()));
     }
 
     @GetMapping("/{crewId}")
     public Response findParticipate(@PathVariable Long crewId, Authentication authentication){
         log.info("#1 participateController crewId: "+ crewId);
         return Response.success(participationService.findParticipate(crewId, authentication.getName()));
+    }
+
+    @GetMapping("/find/{crewId}")
+    public Response findCrewInfo(@PathVariable Long crewId){
+        return Response.success(participationService.findCrewInfo(crewId));
+    }
+
+    @GetMapping("/members/{crewId}")
+    public Response findJoinMember(@PathVariable long crewId){
+        log.info("#1 participateController crewId: "+ crewId);
+        return Response.success(participationService.AllowedMember(crewId));
     }
 }

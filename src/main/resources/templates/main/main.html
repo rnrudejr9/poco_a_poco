@@ -206,7 +206,7 @@
                     <script th:inline="javascript">
                         async function findPart(crewId) {
                             var crewId = crewId;
-                            let response = await fetch("/api/v1/part/" + crewId, {
+                            let response = await fetch("/api/v1/part/find/" + crewId, {
                                 method: "GET",
                                 headers: {
                                     "Content-Type": "application/json"
@@ -219,7 +219,6 @@
                                 console.log(json);
                                 var str = "<b>" + json.result.now + "</b>";
                                     document.getElementById(crewId).innerHTML = str;
-                                    // document.getElementById(crewId).innerHTML = "승인대기";
                             }else{
                                 var json = await response.json();
                                 console.log(json);
