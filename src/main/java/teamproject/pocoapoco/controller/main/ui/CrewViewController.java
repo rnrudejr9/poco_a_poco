@@ -60,7 +60,7 @@ public class CrewViewController {
         try {
             CrewDetailResponse details = list.getContent().get(0);
             //알림 체크
-            crewService.readAlarms(crewId, authentication.getName());
+            if(authentication != null) crewService.readAlarms(crewId, authentication.getName());
             int count = likeViewService.getLikeCrew(crewId);
 
             model.addAttribute("details", details);
