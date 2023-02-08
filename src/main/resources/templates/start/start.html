@@ -126,7 +126,7 @@
     async function findPass(){
         let params = document.getElementById("idForFindPass").value;
         let response = await fetch(`/api/v1/findPass/?userName=${params}`,{
-            method : "POST",
+            method : "GET",
             headers: {
                 "Content-Type": "application/json",
             }

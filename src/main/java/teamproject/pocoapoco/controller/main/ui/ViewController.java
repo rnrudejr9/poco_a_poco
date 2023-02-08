@@ -111,7 +111,7 @@ public class ViewController {
         UserIdFindResponse userIdFindResponse = userService.findUserId(nickName);
         return Response.success(userIdFindResponse);
     }
-    @PostMapping("/api/v1/findPass")
+    @GetMapping("/api/v1/findPass")
     @ResponseBody
     public Response findPass(@RequestParam("userName") String userName) throws Exception {
 
