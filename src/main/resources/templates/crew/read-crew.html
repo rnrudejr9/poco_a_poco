@@ -50,6 +50,11 @@
 <body>
 <header th:replace="fragments/fragment :: nav"></header>
 
+<script type="text/javascript" src="/js/read-crew.js"></script>
+
+<input type="text" hidden th:value="${crewId}" id="crewIdJoin">
+<input type="text" hidden th:value="${details.title}" id="crewName">
+
 <section class="bg-gray200 pt-5 pb-5">
     <div class="container">
         <div class="row justify-content-center">
@@ -195,12 +200,6 @@
     </li>
 </ul>
 
-<div id="wrapper">
-    <input type="text" hidden th:value="${crewId}" id="crewIdJoin">
-    <input type="text" hidden th:value="${details.title}" id="crewName">
-    <button class="w-100 btn btn-secondary btn-lg" sec:authorize="isAuthenticated()"
-            id="button-send" style="width:500px;margin:auto;" onclick="joinCrew()">참여하기</button>
-</div>
 
 
 <footer th:replace="fragments/fragment :: footer"></footer>
@@ -208,105 +207,9 @@
 <script th:replace="fragments/fragment :: form-validation"></script>
 <script th:replace="fragments/fragment :: read-crew"></script>
 
-
 <script>
     findMember();
     enterCheck();
-
-
-
-    async function findMember(){
-        var crewId = [[${crewId}]];
-        console.log(crewId);
-        let response = await fetch("/api/v1/part/members/"+crewId, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include"
-        })
-        if(response.ok){
-            var json = await response.json();
-            console.log(json.result);
-            var str = "<ul class='list-group'>";
-            for (var i in json.result) {
-                str += "<li class='list-group-item'>"
-                str += "<span>"
-                str += "참여자 : " + json.result[i].joinUserName;
-                str += "</span>"
-                str += "</li>"
-            }
-            str += "</ul>"
-
-            document.getElementById("members").innerHTML = str;
-        }
-    }
-    async function enterCheck(){
-        var crewId = [[${crewId}]];
-        console.log(crewId);
-        let response = await fetch("/api/v1/part/"+crewId, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include"
-        })
-        if(response.ok){
-            var json = await response.json();
-            if(json.result.status === 0){
-                document.getElementById("sendtogle").style.display = "block";
-                document.getElementById("notallowed").style.display = "none";
-                document.getElementById("signed").style.display = "none";
-                document.getElementById("chatroom").style.display = "none";
-                document.getElementById("members").style.display = "none";
-            }
-            if(json.result.status === 1) {
-                document.getElementById("sendtogle").style.display = "none";
-                document.getElementById("notallowed").style.display = "block";
-                document.getElementById("signed").style.display = "none";
-                document.getElementById("chatroom").style.display = "none";
-                document.getElementById("members").style.display = "none";
-            }
-            if(json.result.status === 2){
-                document.getElementById("sendtogle").style.display = "none";
-                document.getElementById("signed").style.display = "block";
-                document.getElementById("chatroom").style.display = "block";
-                findMember();
-                document.getElementById("members").style.display = "block";
-            }
-            console.log(json);
-        }else{
-            var json = await response.json();
-            console.log(json);
-        }
-    }
-
-
-
-    async function joinCrewAwait(){
-        var crewId = [[${crewId}]];
-        console.log(crewId);
-        let response = await fetch("/api/v1/part/gen", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                crewId: crewId
-            })
-        })
-        console.log("end");
-        if(response.ok){
-            var json = await response.json();
-            alert(json.result);
-            console.log(json);
-            enterCheck();
-        }else{
-            var json = await response.json();
-            console.log(json);
-        }
-    }
 </script>
 
 </body>
