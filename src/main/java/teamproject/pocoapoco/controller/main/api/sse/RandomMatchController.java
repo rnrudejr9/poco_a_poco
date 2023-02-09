@@ -22,7 +22,9 @@ public class RandomMatchController {
     public int randomMatch(@RequestParam String username) {
         if(randomMatchCnt % 3 == 0) randomMatchCnt = 0;
         log.info("username = {}", username);
-        redisTemplate.opsForZSet().add("randomMatching", username + matchOrder, ++matchOrder);
+        redisTemplate.opsForZSet().add("randomMatching", username, ++matchOrder);
+//        String isInit = redisTemplate.opsForZSet().;
+//        log.info("redis에 저장되었는지 확인 = {}",isInit);
         return ++randomMatchCnt;
     }
 
