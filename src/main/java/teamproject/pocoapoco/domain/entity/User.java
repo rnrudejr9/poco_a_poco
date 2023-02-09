@@ -1,9 +1,6 @@
 package teamproject.pocoapoco.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "Users")
 @Builder
 @AllArgsConstructor
@@ -86,8 +84,7 @@ public class User implements UserDetails {
         return false;
     }
 
-    public static User toEntity(String userName, String nickName, String address, String password, Boolean likeSoccer, Boolean likeJogging, Boolean likeTennis){
-
+    public static User toEntity(String userName, String nickName, String address, String password, Boolean likeSoccer, Boolean likeJogging, Boolean likeTennis,String email){
         return User.builder()
                 .userName(userName)
                 .nickName(nickName)
@@ -95,6 +92,7 @@ public class User implements UserDetails {
                 .role(UserRole.ROLE_USER)
                 .sport(Sport.setSport(likeSoccer, likeJogging, likeTennis))
                 .password(password)
+                .email(email)
                 .build();
     }
 

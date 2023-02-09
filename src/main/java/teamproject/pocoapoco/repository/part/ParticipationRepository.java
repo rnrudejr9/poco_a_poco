@@ -13,4 +13,5 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
     Boolean existsByCrewAndAndUser(Crew crew, User user);
     List<Participation> findByUser(User user);
     Optional<Participation> findByCrewAndUser(Crew crew,User user);
+    List<Participation> findByCrew(Crew crew);
 }

@@ -3,6 +3,7 @@ package teamproject.pocoapoco.domain.dto.chat;
 
 import lombok.*;
 import org.springframework.web.socket.WebSocketSession;
+import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
 import java.util.ArrayList;
@@ -20,8 +21,6 @@ public class ChatRoomDTO {
     private Long roomId;
     private String name;
     private Long crewId;
-    private Set<WebSocketSession> sessions = new HashSet<>();
-    //WebSocketSession은 Spring에서 Websocket Connection이 맺어진 세션
 
     public static List<ChatRoomDTO> createList(List<ChatRoom> list){
         List<ChatRoomDTO> result = new ArrayList<>();
@@ -32,4 +31,9 @@ public class ChatRoomDTO {
         }
         return result;
     }
+
+    public ChatRoom of(User user){
+        return ChatRoom.builder().name(name).user(user).build();
+    }
+
 }
