@@ -1,8 +1,29 @@
 <!doctype html>
+<link href='//fonts.googleapis.com/css?family=Signika+Negative:300,400' rel='stylesheet' type='text/css'>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="fragments/fragment :: head"></head>
 
 <style>
+
+    .typeText::after {
+        content: "|";
+        animation:  blink 1s step-end infinite;
+    }
+
+    @keyframes blink {
+        0% {
+            opacity:1;
+        }
+        49% {
+            opacity:1;
+        }
+        50% {
+            opacity:0;
+        }
+        100% {
+            opacity:0;
+        }
+    }
 
     .text-strict, .text-peopleNum {
         display: inline-block;
@@ -36,7 +57,7 @@
 
 <script>
     // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
-    // history.replaceState({}, null, location.pathname);
+    history.replaceState({}, null, location.pathname);
 
     // 운동 종목 체크박스 3개 초과 시 알람
     function count_check(obj) {
@@ -67,12 +88,16 @@
     <section class="py-5 text-center container">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-                <h1 class="home">운동 메이트</h1>
+                <div  class="">
+                    <h1 style="display:inline;">운동</h1>
+                    <h1 style="display:inline;" class="typeText"></h1>
+                </div>
                 <p class="lead text-muted">
                     <br>
                     운동 메이트로 함께 운동하고, <br>
                     동네 이웃과 운동 메이트가 되어 보세요.
                 </p>
+
             </div>
         </div>
     </section>
@@ -329,6 +354,48 @@
 
     }
 
+    // 타이핑 효과
+    var typeText = document.querySelector(".typeText")
+    var textToBeTyped = "운동 메이트"
+    var textToBeTypedArr = ["메", "\0메이트!"]
+    var index = 0, isAdding = true, textToBeTypedIndex = 0
+
+    function playAnim() {
+        setTimeout(function () {
+            // set the text of typeText to a substring of the text to be typed using index.
+            typeText.innerText = textToBeTypedArr[textToBeTypedIndex].slice(0, index)
+            if (isAdding) {
+                // adding text
+                if (index > textToBeTypedArr[textToBeTypedIndex].length) {
+                    // no more text to add
+                    isAdding = false
+                    //break: wait 2s before playing again
+                    setTimeout(function () {
+                        playAnim()
+                    }, 2500)
+                    return
+                } else {
+                    // increment index by 1
+                    index++
+                }
+            } else {
+                // removing text
+                if (index === 0) {
+                    // no more text to remove
+                    isAdding = true
+                    //switch to next text in text array
+                    textToBeTypedIndex = (textToBeTypedIndex + 1) % textToBeTypedArr.length
+                } else {
+                    // decrement index by 1
+                    index--
+                }
+            }
+            // call itself
+            playAnim()
+        }, isAdding ? 200 : 150)
+    }
+    // start animation
+    playAnim()
 
 </script>
 

@@ -30,14 +30,14 @@ public class Review{
     @JoinColumn(name = "toUser_id")
     private User toUser;
 
-    private Double mannerScore;
+    private Double reviewScore;
     private String reviewContext;
 
-    public void of(Crew crew, User fromUser, User toUser, Double mannerScore, String review) {
+    public void of(Crew crew, User fromUser, User toUser, Double reviewScore, String review) {
         this.crew = crew;
         this.fromUser = fromUser;
         this.toUser = toUser;
-        this.mannerScore = mannerScore;
+        this.reviewScore= reviewScore;
         this.reviewContext = review;
     }
 }
