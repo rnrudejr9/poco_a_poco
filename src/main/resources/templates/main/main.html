@@ -177,6 +177,29 @@
     .participation{
         color: black;
     }
+
+    .btnBar{
+        width: 100%;
+        /*background-color: #585858;*/
+        /*border:3px solid red;*/
+    }
+    .searchBar{
+        width: 40%;
+        position: center;
+    }
+    .searchBar2{
+        width: 100%;
+        position: center;
+        padding-left: 10%;
+    }
+    .mid{
+        width: 10%;
+    }
+    btn3{
+        width: 30%;
+        background-color: rgb(101, 68, 76);
+        border:3px solid rgba(46, 223, 255, 0.9);
+    }
 </style>
 
 
@@ -212,17 +235,23 @@
             <!--            <label th:text="|sportRequest.getSportsList() : ${sportRequest.getSportsList()}|"></label>-->
 
             <!-- 운동 체크-->
-            <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
-                <div class="d-grid gap-2 d-md-block">
+            <div class="btnBar row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
+                <div class="btn3 d-grid gap-2 d-md-block">
                     <button class="btn btn-gradient cyan btn-jittery" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                         <strong>Like 운동</strong>
                     </button>
                 </div>
-                <div></div>
-                <div></div>
-                <div></div>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <label class="mid"></label>
+                <div class="searchBar">
+                    <!-- 검색-->
+                    <form class="row searchBar2" role="search" action="/view/v1/crews" method="get" name="findAllCrewWithStrict" >
+                        <input type="search" name="strict" class="form-control form-control-dark text-bg-blue"
+                               placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
+                    </form>
+                </div>
+                <label class="mid"></label>
+                <div class="btn3 d-grid gap-3 d-md-flex justify-content-md-end">
                     <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews/write'">
                         <strong>+ 모임 등록</strong>
                     </button>
