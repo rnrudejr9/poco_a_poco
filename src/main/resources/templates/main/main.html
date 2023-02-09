@@ -129,7 +129,7 @@
             <!-- 앨범-->
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div class="col" th:each="crew : ${crewList}">
-                    <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
+<!--                    <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>-->
                         <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
                         <input type="hidden" name="img-key" th:value="${crew.imagePath}">
                         <div class="card-body">
@@ -141,6 +141,30 @@
 
                                 <small class="text-muted" th:text="${crew.strict}">지역</small>
                                 <div th:id="${crew.id}">
+                                    <script type="text/javascript" th:inline="javascript">
+                                        async function findPart(crewId) {
+                                            var crewId = crewId;
+                                            let response = await fetch("/api/v1/part/find/" + crewId, {
+                                                method: "GET",
+                                                headers: {
+                                                    "Content-Type": "application/json"
+                                                },
+                                                credentials: "include",
+                                            })
+                                            console.log("end");
+                                            if(response.ok){
+                                                var json = await response.json();
+                                                console.log(json);
+                                                var str = "<b>" + json.result.now + "</b>";
+                                                document.getElementById(crewId).innerHTML = str;
+                                            }else{
+                                                var json = await response.json();
+                                                console.log(json);
+                                            }
+                                        }
+                                        findPart([[${crew.id}]])
+
+                                    </script>
                                 </div>
                                 <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
                                 <div class="btn-group">
@@ -190,31 +214,7 @@
                             </div>
                         </div>
                     </div>
-                    <script th:inline="javascript">
-                        async function findPart(crewId) {
-                            var crewId = crewId;
-                            let response = await fetch("/api/v1/part/find/" + crewId, {
-                                method: "GET",
-                                headers: {
-                                    "Content-Type": "application/json"
-                                },
-                                credentials: "include",
-                            })
-                            console.log("end");
-                            if(response.ok){
-                                var json = await response.json();
-                                console.log(json);
-                                var str = "<b>" + json.result.now + "</b>";
-                                    document.getElementById(crewId).innerHTML = str;
-                            }else{
-                                var json = await response.json();
-                                console.log(json);
-                            }
-                        }
 
-                        var crewId = "[[${crew.id}]]";
-                        findPart(crewId);
-                    </script>
 
                 </div>
             </div>
@@ -332,27 +332,27 @@
     }
 
 
-    async function findPart(crewId) {
-        var crewId = crewId;
-        let response = await fetch("/api/v1/part/" + crewId, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-        })
-        console.log("end");
-        if(response.ok){
-            var json = await response.json();
-            alert(json.result);
-            console.log(json);
-            var str = "<b>" + json.result.now + "</b>";
-            document.getElementById("nowsize").innerHTML = str;
-        }else{
-            var json = await response.json();
-            console.log(json);
-        }
-    }
+    // async function findPart(crewId) {
+    //     var crewId = crewId;
+    //     let response = await fetch("/api/v1/part/" + crewId, {
+    //         method: "GET",
+    //         headers: {
+    //             "Content-Type": "application/json"
+    //         },
+    //         credentials: "include",
+    //     })
+    //     console.log("end");
+    //     if(response.ok){
+    //         var json = await response.json();
+    //         alert(json.result);
+    //         console.log(json);
+    //         var str = "<b>" + json.result.now + "</b>";
+    //         document.getElementById("nowsize").innerHTML = str;
+    //     }else{
+    //         var json = await response.json();
+    //         console.log(json);
+    //     }
+    // }
 </script>
 
 <script type="text/javascript" th:inline="javascript">
