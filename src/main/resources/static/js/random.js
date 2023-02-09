@@ -1,7 +1,9 @@
 function randomMatch() {
+
+    let username = document.getElementById("myName").innerText;
     $.ajax({
         type: "POST",
-        url: '/api/v1/match/random',
+        url: '/api/v1/match/random'+ "?username=" + + username,
         success: function (data) {
             let listCnt = data;
             if (listCnt != 0) {
