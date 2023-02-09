@@ -1,15 +1,20 @@
 <!doctype html>
-<link href='//fonts.googleapis.com/css?family=Signika+Negative:300,400' rel='stylesheet' type='text/css'>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="fragments/fragment :: head"></head>
+<!--<link href="/css/main.css" rel="stylesheet">-->
 
+<html lang="ko" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/fragment :: head">
+    <meta charset="UTF-8">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+
+</head>
 <style>
 
+    /*타이핑*/
     .typeText::after {
         content: "|";
         animation:  blink 1s step-end infinite;
     }
-
     @keyframes blink {
         0% {
             opacity:1;
@@ -25,67 +30,164 @@
         }
     }
 
-    .text-strict, .text-peopleNum {
+
+    /*긴 문자 처리*/
+    .text-strict {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        width: 50%;
+    }
+    .text-strict2 {
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         width: 30%;
     }
-
     .card-tile {
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        color: #333838;
         width: 90%;
     }
-
     .card-text {
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        color: #323334;
         width: 100%;
     }
-
     .card-body {
-        background-color: #f0faff;
+        background-color: rgba(248, 253, 253, 0.98);
     }
 
+    /*크루 모집글 박스*/
+    .crewBoxParent {
+        width:100%;
+        margin:0px auto;
+        padding:0px;
+        overflow: auto;
+
+        /*background-color: #585858;*/
+        /*border:3px solid red;*/
+
+    }
+    .crewBox {
+        background-color: rgba(248, 253, 253, 0.98);
+        border-radius: 20px;
+        box-shadow: 0 8px 14px rgba(82, 216, 254, 0.71),
+        0 5px 5px rgba(0,0,0,0.22);
+        position: center;
+        overflow: hidden;
+        width: 31.3%;
+        border: rgba(63, 122, 254, 0.7);
+        padding: 0.7%;
+        margin: 1%;
+    }
+    /*크루 사진*/
+    .img-thumbnail{
+        width: 100%;
+        height: 225px;
+        border-radius: 20px;
+        margin-bottom: 7px;
+    }
+
+    /*운동 선택 무빙 효과*/
+    .btn-jittery {
+        animation: jittery 8s infinite;
+    }
+    @keyframes jittery {
+        5%,
+        50% {
+            transform: scale(1);
+        }
+
+        10% {
+            transform: scale(0.9);
+        }
+
+        15% {
+            transform: scale(1.15);
+        }
+
+        20% {
+            transform: scale(1.15) rotate(-5deg);
+        }
+
+        25% {
+            transform: scale(1.15) rotate(5deg);
+        }
+
+        30% {
+            transform: scale(1.15) rotate(-3deg);
+        }
+
+        35% {
+            transform: scale(1.15) rotate(2deg);
+        }
+
+        40% {
+            transform: scale(1.15) rotate(0);
+        }
+    }
+
+    /*운동선택 효과*/
+    .btn.cyan{
+        background-color: #7fccde;
+        box-shadow:0px 4px 0px #73B9C9;
+        padding: 8px 18px;
+        font-size: 16px;
+        color: white;
+    }
+    .btn-gradient.cyan {
+        background: rgba(27,188,194,1);
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27,188,194,1)), to(rgba(24,163,168,1)));
+        background: -webkit-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+        background: -moz-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+        background: -o-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+        background: linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1bbcc2', endColorstr='#18a3a8', GradientType=0);
+    }
+
+    /*모임등록 효과*/
+    .btn.blue{
+        background: #6698cb;
+        box-shadow:0px 4px 0px  #7fb1bf;
+        padding: 8px 18px;
+        font-size: 16px;
+        color: white;
+    }
+    .btn.blue {box-shadow: 0px 4px #74a3b0;}
+    .btn.blue:active {box-shadow: 0 0 #74a3b0; background-color: #709CA8;}
+    .btn-gradient.blue {
+        background: rgba(102, 152, 203, 1);
+        background: -moz-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
+        background: -webkit-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
+        background: -o-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
+        background: -ms-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
+        background: linear-gradient(to bottom, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6698cb', endColorstr='#5c8ab8', GradientType=0);
+    }
+
+    .participation{
+        color: black;
+    }
 </style>
 
-<script>
-    // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
-    history.replaceState({}, null, location.pathname);
-
-    // 운동 종목 체크박스 3개 초과 시 알람
-    function count_check(obj) {
-
-        var chkBox = document.getElementById("btn-sports");
-        var chkCnt = 0;
-
-        for (var i = 0; i < chkBox.length; i++) {
-            if (chkBox[i].checked) {
-                chkCnt++;
-            }
-        }
-        if (chkCnt > 3) {
-            alert("최대 3개 체크 가능합니다.");
-            obj.checked = false;
-            return false;
-        }
-    }
 
 
-</script>
 <body>
 <!-- 네비바-->
 <header th:replace="fragments/fragment :: nav"></header>
 
 <main>
     <!-- 소개-->
-    <section class="py-5 text-center container">
+    <section class="py-5 text-center">
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <div  class="">
@@ -112,17 +214,17 @@
             <!-- 운동 체크-->
             <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
                 <div class="d-grid gap-2 d-md-block">
-                    <button class="btn btn-primary" type="button" data-bs-toggle="collapse"
+                    <button class="btn btn-gradient cyan btn-jittery" type="button" data-bs-toggle="collapse"
                             data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                        운동 선택
+                        <strong>Like 운동</strong>
                     </button>
                 </div>
                 <div></div>
                 <div></div>
                 <div></div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-primary" type="button" onclick="location.href='/view/v1/crews/write'">
-                        + 모집 등록
+                    <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews/write'">
+                        <strong>+ 모임 등록</strong>
                     </button>
                 </div>
             </div>
@@ -152,10 +254,16 @@
             </div>
 
             <!-- 앨범-->
-            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
-                <div class="col" th:each="crew : ${crewList}">
+            <div class="crewBoxParent row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 ">
+                <div class="col crewBox" th:each="crew : ${crewList}">
+                    <a class="link-light" th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
+                                                                               page = (${nowPage} - 1) * 9 + ${crewStat.index},
+                                                                               loginStatus = ${sportRequest.loginStatus},
+                                                                               strict = ${sportRequest.getStrict()},
+                                                                               sportsList = ${sportRequest.getSportsList()}
+                                                                               )}">
                     <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
-                        <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
+                        <img src="" class="img-thumbnail" id="main-image">
                         <input type="hidden" name="img-key" th:value="${crew.imagePath}">
                         <div class="card-body">
                             <div class="test">
@@ -163,8 +271,9 @@
                                 <p class="card-text" th:text="${crew.content}">내용</p>
                             </div>
                             <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted" th:text="${crew.strict}">지역</small>
-                                <div th:id="${crew.id}">
+                                <small class="text-muted text-strict" th:text="${crew.strict}">지역</small>
+                                <small class="text-muted text-strict2" ></small>
+                                <small class="participation text-muted" th:id="${crew.id}">참여
                                     <script type="text/javascript" th:inline="javascript">
                                         async function findPart(crewId) {
                                             var crewId = crewId;
@@ -188,21 +297,22 @@
                                         }
                                         findPart([[${crew.id}]])
                                     </script>
-                                </div>
-                                <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary">
-                                        <a class="link-light" th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
-                                                                               page = (${nowPage} - 1) * 9 + ${crewStat.index},
-                                                                               loginStatus = ${sportRequest.loginStatus},
-                                                                               strict = ${sportRequest.getStrict()},
-                                                                               sportsList = ${sportRequest.getSportsList()}
-                                                                               )}">상세보기</a>
-                                    </button>
-                                </div>
+                                </small>
+                                <small class="text-muted" > / [(${crew.crewLimit})] 명</small>
+<!--                                <div class="btn-group">-->
+<!--                                    <button type="button" class="btn btn-secondary">-->
+<!--                                        <a class="link-light" th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},-->
+<!--                                                                               page = (${nowPage} - 1) * 9 + ${crewStat.index},-->
+<!--                                                                               loginStatus = ${sportRequest.loginStatus},-->
+<!--                                                                               strict = ${sportRequest.getStrict()},-->
+<!--                                                                               sportsList = ${sportRequest.getSportsList()}-->
+<!--                                                                               )}">상세보기</a>-->
+<!--                                    </button>-->
+<!--                                </div>-->
 
                             </div>
                         </div>
+                    </a>
                     </div>
 
 
@@ -251,51 +361,7 @@
         crossorigin="anonymous"></script>
 
 <script>
-    function changeID(checkID) {
-        document.getElementById("join").value = checkID;
-    }
 
-
-    const exampleModal = document.getElementById('exampleModal')
-    exampleModal.addEventListener('show.bs.modal', event => {
-        // Button that triggered the modal
-        const button = event.relatedTarget
-        // Extract info from data-bs-* attributes
-        const recipient = button.getAttribute('data-bs-whatever')
-        // If necessary, you could initiate an AJAX request here
-        // and then do the updating in a callback.
-        //
-        // Update the modal's content.
-        const modalTitle = exampleModal.querySelector('.modal-title')
-        const modalBodyInput = exampleModal.querySelector('.modal-body input')
-
-        modalTitle.textContent = `New message to ${recipient}`
-        modalBodyInput.value = recipient
-    })
-
-    async function joinCrewAwait(crewId){
-        var crewId = crewId;
-        console.log(crewId);
-        let response = await fetch("/api/v1/part/gen", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                crewId: crewId
-            })
-        })
-        console.log("end");
-        if(response.ok){
-            var json = await response.json();
-            alert(json.result);
-            console.log(json);
-        }else{
-            var json = await response.json();
-            console.log(json);
-        }
-    }
 
 </script>
 
@@ -398,7 +464,30 @@
     playAnim()
 
 </script>
+<script>
+    // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
+    history.replaceState({}, null, location.pathname);
 
+    // 운동 종목 체크박스 3개 초과 시 알람
+    function count_check(obj) {
+
+        var chkBox = document.getElementById("btn-sports");
+        var chkCnt = 0;
+
+        for (var i = 0; i < chkBox.length; i++) {
+            if (chkBox[i].checked) {
+                chkCnt++;
+            }
+        }
+        if (chkCnt > 3) {
+            alert("최대 3개 체크 가능합니다.");
+            obj.checked = false;
+            return false;
+        }
+    }
+
+
+</script>
 
 </body>
 </html>
