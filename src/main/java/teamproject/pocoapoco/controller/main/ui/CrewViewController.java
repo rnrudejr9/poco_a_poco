@@ -27,13 +27,12 @@ import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.CrewMemberService;
+import teamproject.pocoapoco.service.CrewReviewService;
 import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.LikeViewService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 @RequiredArgsConstructor
@@ -47,6 +46,7 @@ public class CrewViewController {
     private final CrewMemberService crewMemberService;
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
+    private final CrewReviewService crewReviewService;
 
     // 크루 게시물 상세 페이지
     @GetMapping("/{crewId}")
@@ -198,19 +198,22 @@ public class CrewViewController {
         Optional<User> nowUser = userRepository.findByUserName(authentication.getName());
 
         List<CrewMemberResponse> crewMemberResponseList= crewMemberService.getJoinMemberList(crewId);
-        List<User> members = new ArrayList<>();
+        Deque<User> members = new ArrayDeque<>();
         User u;
         for(CrewMemberResponse s : crewMemberResponseList){
             log.info("Id() : {}, CrewId(): {}, UserName(): {}, JoinCheck(): {}", s.getId(), s.getCrewId(), s.getUserName(), s.getJoinCheck());
             u =userRepository.findByUserName(s.getUserName()).get();
-            members.add(u);
+            if(crew.getUser().getId() == u.getId())
+                members.addFirst(u);
+            else
+                members.add(u);
         }
 
         //현재 유저
         model.addAttribute("nowUser", nowUser.get().getId());
 
         // 크루 id, title. userId
-                model.addAttribute("crew", crew);
+        model.addAttribute("crew", crew);
 
         // 유저 id, nicname, mannaerScore
         model.addAttribute("members", members);
@@ -226,22 +229,25 @@ public class CrewViewController {
     // 크루 리뷰 완료
     @PostMapping("/review")
     public String reviewCrew(Model model,
-                             @ModelAttribute("reviewRequest") CrewReviewRequest crewReviewRequest
-    ) {
+                             @ModelAttribute("reviewRequest") CrewReviewRequest crewReviewRequest) {
         log.info("post review");
 
+        log.info("CrewId().size() : {}", crewReviewRequest.getCrewId().size());
         log.info("CrewId() : {}", crewReviewRequest.getCrewId());
 
+        log.info("FromUserId().size() : {}", crewReviewRequest.getFromUserId().size());
         log.info("FromUserId() : {}", crewReviewRequest.getFromUserId());
 
         log.info("ToUserId().size() : {}", crewReviewRequest.getToUserId().size());
-        log.info("ToUserId().get(0) : {}\n", crewReviewRequest.getToUserId().get(1));
+        log.info("ToUserId().get(0) : {}\n", crewReviewRequest.getToUserId());
 
         log.info("MannerScore().size() : {}", crewReviewRequest.getMannerScore().size());
-        log.info("MannerScore().get(0) : {}\n", crewReviewRequest.getMannerScore().get(0));
+        log.info("MannerScore().get(0) : {}\n", crewReviewRequest.getMannerScore());
 
         log.info("UserReview().size() : {}", crewReviewRequest.getUserReview().size());
-        log.info("UserReview().get() : {}\n", crewReviewRequest.getUserReview().get(0));
+        log.info("UserReview().get() : {}\n", crewReviewRequest.getUserReview());
+
+        crewReviewService.addReview(crewReviewRequest);
 
         return "redirect:/";
     }

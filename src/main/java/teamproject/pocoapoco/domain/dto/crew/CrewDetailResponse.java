@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamproject.pocoapoco.domain.entity.Crew;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.SportEnum;
 
 import java.time.LocalDateTime;

@@ -166,8 +166,8 @@
                                 </div>
                                 <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
                                 <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary"><a
-                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
+                                    <button type="button" class="btn btn-secondary">
+                                        <a class="link-light" th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
                                                                                page = (${nowPage} - 1) * 9 + ${crewStat.index},
                                                                                loginStatus = ${sportRequest.loginStatus},
                                                                                strict = ${sportRequest.getStrict()},

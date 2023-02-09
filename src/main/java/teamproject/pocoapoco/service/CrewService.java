@@ -8,10 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
-import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
-import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
-import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
+import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
@@ -157,6 +154,7 @@ public class CrewService {
         }
     }
 
+    // 유저 선호 운동종목 확인
     public List<String> getUserSports(Authentication authentication, Boolean sportsListIsEmpty) {
 
         List<String> userSportsList = new ArrayList<>();
