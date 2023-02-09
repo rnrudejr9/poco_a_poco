@@ -96,7 +96,7 @@ public class User implements UserDetails {
                 .build();
     }
 
-    public static User toRevisedEntity(Long id,  String userName, String revisedNickName, String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis) {
+    public static User toRevisedEntity(Long id,  String userName, String revisedNickName, String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis, String email) {
         return User.builder()
                 .id(id)
                 .userName(userName)
@@ -104,11 +104,12 @@ public class User implements UserDetails {
                 .address(revisedAddress)
                 .role(UserRole.ROLE_USER)
                 .sport(Sport.setSport(revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis))
+                .email(email)
                 .password(encodedPassword)
                 .build();
     }
 
-    public static User toEntityWithImage(Long id, String userName, String revisedNickName,  String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis, String imagePath) {
+    public static User toEntityWithImage(Long id, String userName, String revisedNickName,  String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis, String imagePath, String email) {
         return User.builder()
                 .id(id)
                 .userName(userName)
@@ -117,6 +118,7 @@ public class User implements UserDetails {
                 .role(UserRole.ROLE_USER)
                 .imagePath(imagePath)
                 .sport(Sport.setSport(revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis))
+                .email(email)
                 .password(encodedPassword)
                 .build();
     }

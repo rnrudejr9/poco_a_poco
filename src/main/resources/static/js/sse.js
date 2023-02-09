@@ -5,7 +5,7 @@ let userId = document.getElementById("myName").innerText;
 
     if (userId.length > 0) {
     const eventSource = new EventSource("/sse" + "?userId=" + userId)
-    eventSource.addEventListener("addComment", function (event) {
+    eventSource.addEventListener("alarm", function (event) {
         let message = event.data;
         Swal.fire({
             // toast:true,

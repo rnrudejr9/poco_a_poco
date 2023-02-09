@@ -32,10 +32,17 @@ public class Alarm extends BaseEntity {
         Alarm alarm = Alarm.builder()
                 .user(crew.getUser())
                 .alarmType(alarmType)
-                .fromUserName(user.getUsername())
+                .fromUserName(user.getNickName())
                 .targetCrewId(crew.getId())
                 .massage(comment)
                 .build();
         return alarm;
+    }
+
+    public boolean getReadOrNot() {
+        return readOrNot;
+    }
+    public void setReadOrNot() {
+        this.readOrNot = true;
     }
 }

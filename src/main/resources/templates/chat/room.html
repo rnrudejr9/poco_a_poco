@@ -97,14 +97,13 @@
     });
 
     async function loadFetcher(){
-        let url = "/api/v1/chat/" + [[${room.roomId}]];
-        let response = await fetch(url,{
+        var roomid = [[${room.roomId}]];
+        let response = await fetch("/api/v1/chat/" + roomid,{
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
-                credentials: "same-origin",
-                credentials: 'include'
-            }
+            },
+            credentials: 'include'
         })
         if(response.ok){
             let json = await response.json();

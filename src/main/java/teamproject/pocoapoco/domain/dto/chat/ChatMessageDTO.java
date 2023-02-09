@@ -1,5 +1,7 @@
 package teamproject.pocoapoco.domain.dto.chat;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import teamproject.pocoapoco.domain.entity.chat.Chat;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
+@AllArgsConstructor
+@Builder
 public class ChatMessageDTO {
 
     private Long roomId;
@@ -23,4 +27,5 @@ public class ChatMessageDTO {
                 .isChecked(false)
                 .build();
     }
+
 }
