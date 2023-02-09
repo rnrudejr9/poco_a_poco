@@ -1,18 +1,16 @@
 package teamproject.pocoapoco.domain.dto.chat;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import teamproject.pocoapoco.domain.entity.chat.Chat;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
 import java.time.LocalDateTime;
 
+@Builder
 @Getter
 @Setter
 @AllArgsConstructor
-@Builder
+@NoArgsConstructor
 public class ChatMessageDTO {
 
     private Long roomId;
