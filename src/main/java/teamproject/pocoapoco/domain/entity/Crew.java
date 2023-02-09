@@ -5,9 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
-import teamproject.pocoapoco.domain.dto.chat.ChatRoomDTO;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
@@ -45,8 +43,6 @@ public class Crew extends BaseEntity{
 
     //crew 종목 검색 test
     private String sprotStr;
-    @Enumerated(value = EnumType.STRING)
-    private InterestSport interestSport;
 
     @Enumerated(value = EnumType.STRING)
     private SportEnum sportEnum;

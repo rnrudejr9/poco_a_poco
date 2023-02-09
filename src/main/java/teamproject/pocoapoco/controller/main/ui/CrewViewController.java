@@ -17,10 +17,7 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
-import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
-import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
-import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
+import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberDeleteResponse;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
@@ -34,7 +31,9 @@ import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.LikeViewService;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -190,34 +189,63 @@ public class CrewViewController {
         return "main/main";
     }
 
-//    @GetMapping("/{crewId}")
-//    public String detailCrew(@PathVariable Long crewId, Model model,
-//                             @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
-//                             @PageableDefault(page = 0, size = 1, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
-//
-//        // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
-//        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
-//
-//        try {
-//            CrewDetailResponse details = list.getContent().get(0);
-//            int count = likeViewService.getLikeCrew(crewId);
-//
-//            model.addAttribute("details", details);
-//            model.addAttribute("likeCnt", count);
-//        } catch (EntityNotFoundException e) {
-//            return "redirect:/index";
-//        }
-//
-//        // 페이징 처리 변수
-//        int nowPage = list.getPageable().getPageNumber();
-//        int lastPage = list.getTotalPages() - 1;
-//
-//        // 페이징 처리 모델
-//        model.addAttribute("nowPage", nowPage);
-//        model.addAttribute("lastPage", lastPage);
-//
-//        return "crew/read-crew";
-//    }
+    // 크루 리뷰 작성
+    @GetMapping("/review/{crewId}")
+    public String reviewCrew(@PathVariable Long crewId, Authentication authentication, Model model) {
+
+        Crew crew = crewService.findByCrewId(crewId);
+
+        Optional<User> nowUser = userRepository.findByUserName(authentication.getName());
+
+        List<CrewMemberResponse> crewMemberResponseList= crewMemberService.getJoinMemberList(crewId);
+        List<User> members = new ArrayList<>();
+        User u;
+        for(CrewMemberResponse s : crewMemberResponseList){
+            log.info("Id() : {}, CrewId(): {}, UserName(): {}, JoinCheck(): {}", s.getId(), s.getCrewId(), s.getUserName(), s.getJoinCheck());
+            u =userRepository.findByUserName(s.getUserName()).get();
+            members.add(u);
+        }
+
+
+        model.addAttribute("nowUser", nowUser.get().getId());
+
+        // 크루 id, title. userId
+                model.addAttribute("crew", crew);
+
+        // 유저 id, nicname, mannaerScore
+        model.addAttribute("members", members);
+
+
+        CrewReviewRequest crewReviewRequest = new CrewReviewRequest();
+        model.addAttribute("reviewRequest", crewReviewRequest);
+
+        return "crew/review-crew";
+    }
+
+
+    // 크루 리뷰 완료
+    @PostMapping("/review")
+    public String reviewCrew(Model model,
+                             @ModelAttribute("reviewRequest") CrewReviewRequest crewReviewRequest
+//                             @ModelAttribute("test") List<CrewReviewRequest2> crewReviewRequest2
+    ) {
+        log.info("post review");
+
+        log.info("CrewId() : {}", crewReviewRequest.getCrewId());
+
+        log.info("FromUserId() : {}", crewReviewRequest.getFromUserId());
+
+        log.info("ToUserId().size() : {}", crewReviewRequest.getToUserId().size());
+        log.info("ToUserId().get(0) : {}\n", crewReviewRequest.getToUserId().get(1));
+
+        log.info("MannerScore().size() : {}", crewReviewRequest.getMannerScore().size());
+        log.info("MannerScore().get(0) : {}\n", crewReviewRequest.getMannerScore().get(0));
+
+        log.info("UserReview().size() : {}", crewReviewRequest.getUserReview().size());
+        log.info("UserReview().get() : {}\n", crewReviewRequest.getUserReview().get(0));
+
+        return "redirect:/";
+    }
 
     @ModelAttribute("sportEnums")
     private List<SportEnum> sportEnums() {

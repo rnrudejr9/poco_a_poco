@@ -105,7 +105,7 @@
                                     <button th:if="${#authentication.name} == ${details.userName}" id="btn-post-delete" class="btn btn-danger " type="button" onclick="confirmDelete()">글 삭제</button>
                                 </div>
                                 <div class="form-group" align="center">
-                                    <a th:href="@{'/view/v1/crews/update/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName}"  class="btn btn-info" aria-describedby="submitHelp">모입 종료</a>
+                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName}"  class="btn btn-info" aria-describedby="submitHelp">모입 종료</a>
                                 </div>
                             </form>
                         </div>
@@ -118,7 +118,6 @@
                                 <button type="button" class="btn btn-light btn-lg" id="like-btn" onclick="likeBtn(crewId)" style="width:60px;height:50px;font-size: 20px">👍
                                 </button>
                                 <tr><div id="likeCnt" th:text="${likeCnt}"></div> </tr>
-
                             </form>
                         </div>
 
