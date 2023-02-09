@@ -12,6 +12,7 @@ import teamproject.pocoapoco.repository.chat.ChatRepository;
 import teamproject.pocoapoco.repository.chat.ChatRoomRepository;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -26,9 +27,17 @@ public class ChatService {
         return Response.success(chater);
     }
 
-    public List<Chat> listChat(Long id){
+    public List<ChatMessageDTO> listChat(Long id){
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(id).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,""));
-        List<Chat> list = chatRepository.findByChatRoom(chatRoom);
+        List<Chat> chats = chatRepository.findByChatRoom(chatRoom);
+        List<ChatMessageDTO> list = new ArrayList<>();
+        for(Chat chat : chats){
+            ChatMessageDTO chatMessageDTO = ChatMessageDTO.builder().message(chat.getMessage())
+                    .writer(chat.getWriter())
+                    .createdAt(chat.getCreatedAt())
+                    .build();
+            list.add(chatMessageDTO);
+        }
         return list;
     }
 }

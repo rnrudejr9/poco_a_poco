@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.SportEnum;
 
 import java.time.LocalDateTime;
@@ -23,11 +24,8 @@ public class CrewDetailResponse {
     private String nickName;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
-
-    //crew 종목 검색 test
-    private String sprotStr;
     private SportEnum sportEnum;
-
+    private Long chatRoomId;
     private String imagePath;
 
     public static CrewDetailResponse of(Crew crew) {
@@ -42,9 +40,7 @@ public class CrewDetailResponse {
                 .createdAt(crew.getCreatedAt())
                 .lastModifiedAt(crew.getLastModifiedAt())
                 .imagePath(crew.getImagePath())
-
-                //crew 종목 검색 test
-                .sprotStr(crew.getSprotStr())
+                .chatRoomId(crew.getChatRoom().getRoomId())
                 .sportEnum(crew.getSportEnum())
                 .build();
     }

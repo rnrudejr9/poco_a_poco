@@ -61,7 +61,7 @@ public class ChatRoomService {
     public ChatRoom createChatRoomDTO(ChatRoomDTO chatRoomDTO, String userName){
         User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
         Crew crew = crewRepository.findById(chatRoomDTO.getCrewId()).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
-        ChatRoom chatRoom = ChatRoom.builder().name(chatRoomDTO.getName()).build();
+        ChatRoom chatRoom = chatRoomDTO.of(user);
         crew.setChatRoom(chatRoom);
         ChatRoom savedRoom = chatRoomRepository.save(chatRoom);
         return savedRoom;

@@ -16,6 +16,7 @@ public class UserJoinRequest {
     private String password;
     private String passwordConfirm;
     private String address;
+    private String email;
     @Builder.Default
     private Boolean likeSoccer = false;
     @Builder.Default

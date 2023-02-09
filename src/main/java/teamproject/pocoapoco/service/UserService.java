@@ -5,6 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.ObjectUtils;
+import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
 import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.exception.AppException;
@@ -25,6 +26,7 @@ public class UserService {
     private final EncrypterConfig encrypterConfig;
     private final RedisTemplate<String, String> redisTemplate;
     private final JwtProvider jwtProvider;
+    private final MailService mailService;
 
 
     public UserLoginResponse login(UserLoginRequest userLoginRequest) {
@@ -73,7 +75,7 @@ public class UserService {
 
         User user = User.toEntity(userJoinRequest.getUserName(), userJoinRequest.getNickName(), userJoinRequest.getAddress(),
                 encrypterConfig.encoder().encode(userJoinRequest.getPassword()), userJoinRequest.getLikeSoccer(),
-                userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis());
+                userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis(),userJoinRequest.getEmail());
 
         User saved = userRepository.save(user);
 
@@ -215,8 +217,38 @@ public class UserService {
             return true;
         }
     }
+    public UserIdFindResponse findUserId(String nickName){
+        User user = userRepository.findByNickName(nickName).get();
 
 
+        UserIdFindResponse userIdFindResponse = UserIdFindResponse.builder()
+                .userName(user.getUsername())
+                .build();
 
+        return userIdFindResponse;
+    }
+
+
+    public UserMailResponse findUserPass(String userName) throws Exception {
+
+        User user = userRepository.findByUserName(userName).get();
+
+        UserMailResponse userMailResponse = mailService.sendSimpleMessage(user.getEmail());
+
+        return userMailResponse;
+    }
+
+    public UserPassResetResponse resetPass(String userName, String password) {
+        User user = userRepository.findByUserName(userName).get();
+        String encodedPassword = encrypterConfig.encoder().encode(password);
+        user.setPassword(encodedPassword);
+        userRepository.save(user);
+        UserPassResetResponse userPassResetResponse = UserPassResetResponse.builder()
+                .password(encodedPassword)
+                .userName(userName)
+                .build();
+
+        return userPassResetResponse;
+    }
 }
 
