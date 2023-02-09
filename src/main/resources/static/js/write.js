@@ -1,8 +1,4 @@
-document.getElementById('backBtn').addEventListener('click', back);
 
-function back() {
-    location.href = "/view/v1/crews";
-}
 
 async function chatRoomMake(crewId) {
     let response = await fetch("/api/v1/room", {

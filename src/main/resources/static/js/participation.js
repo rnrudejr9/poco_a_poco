@@ -65,7 +65,7 @@ async function participate(index) {
     console.log(document.getElementById(index));
     var crewId = document.getElementById(index).value;
     var userName = document.getElementById(index).name;
-    let response = await fetch("/api/v1/part/", {
+    let response = await fetch("/api/v1/part", {
         method: "POST",
         headers: {
             "Content-Type": "application/json"
