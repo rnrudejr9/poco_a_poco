@@ -206,7 +206,7 @@ public class CrewViewController {
             members.add(u);
         }
 
-
+        //현재 유저
         model.addAttribute("nowUser", nowUser.get().getId());
 
         // 크루 id, title. userId
@@ -227,7 +227,6 @@ public class CrewViewController {
     @PostMapping("/review")
     public String reviewCrew(Model model,
                              @ModelAttribute("reviewRequest") CrewReviewRequest crewReviewRequest
-//                             @ModelAttribute("test") List<CrewReviewRequest2> crewReviewRequest2
     ) {
         log.info("post review");
 
