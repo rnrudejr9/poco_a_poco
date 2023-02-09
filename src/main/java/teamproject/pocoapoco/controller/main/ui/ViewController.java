@@ -10,9 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
-import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
-import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
+import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.service.MailService;
 import teamproject.pocoapoco.service.UserService;
 
@@ -101,5 +99,29 @@ public class ViewController {
             result =1;
         }
         return result;
+    }
+
+    @GetMapping("/api/v1/findId")
+    @ResponseBody
+    public Response findId(@RequestParam("nickName") String nickName) {
+
+        UserIdFindResponse userIdFindResponse = userService.findUserId(nickName);
+        return Response.success(userIdFindResponse);
+    }
+    @GetMapping("/api/v1/findPass")
+    @ResponseBody
+    public Response findPass(@RequestParam("userName") String userName) throws Exception {
+
+        UserMailResponse userMailResponse = userService.findUserPass(userName);
+        System.out.println("인증코드 : " + userMailResponse.getCode());
+        return Response.success(userMailResponse);
+
+    }
+    @PostMapping("/api/v1/resetPass")
+    @ResponseBody
+    public Response resetPass(@RequestParam("userName") String userName, @RequestParam("password") String password){
+
+        UserPassResetResponse userPassResetResponse = userService.resetPass(userName,password);
+        return Response.success(userPassResetResponse);
     }
 }
