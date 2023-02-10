@@ -11,7 +11,7 @@ import lombok.*;
 public class PartJoinDto {
     private Long crewId;
     private Long userId;
-    private String nickName;
+    private String userName;
     private String title;
     private String body;
 }

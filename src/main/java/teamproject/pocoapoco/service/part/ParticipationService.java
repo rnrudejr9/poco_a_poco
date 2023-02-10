@@ -31,10 +31,12 @@ public class ParticipationService {
     private final UserRepository userRepository;
     private final CrewRepository crewRepository;
 
+
+    //참여 기능
     @Transactional
     public Response participate(PartJoinDto partJoinDto){
         Crew crew = crewRepository.findById(partJoinDto.getCrewId()).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
-        User user = userRepository.findByNickName(partJoinDto.getNickName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
+        User user = userRepository.findByUserName(partJoinDto.getUserName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
 
         int size = 0;
         for(Participation participation : crew.getParticipations()){
@@ -56,7 +58,7 @@ public class ParticipationService {
     @Transactional
     public Response reject(PartJoinDto partJoinDto){
         Crew crew = crewRepository.findById(partJoinDto.getCrewId()).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
-        User user = userRepository.findByNickName(partJoinDto.getNickName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
+        User user = userRepository.findByUserName(partJoinDto.getUserName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
 
         Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
         participation.setStatus(0);

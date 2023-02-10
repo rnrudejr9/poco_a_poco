@@ -13,6 +13,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByUserName(String userName);
 
+    Optional<User> findByEmail(String email);
+
     @Query("select m from User m where m.userName=?1")
     User findOauthUser(String username);
 
