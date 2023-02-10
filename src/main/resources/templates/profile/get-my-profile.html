@@ -57,7 +57,14 @@
             font-weight: bold;
         }
 
-
+        .layer{position: relative;top:50%;left:40%; overflow: auto; height: 600px; width:375px; margin-top: auto}
+        .merge {
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            align-content: space-between;
+            width: 100%;
+        }
     </style>
 
 
@@ -82,6 +89,7 @@
 
         <li><a class="home" href="/view/v1/crews/">홈화면</a></li>
         <li><a href="/view/v1/users/profile/my">프로필 수정</a></li>
+        <li id="sns"><a href="#">친구목록</a></li>
         <li><a href="#">참여중인 모임</a></li>
         <li><a href="#">333444</a></li>
     </div>
@@ -144,6 +152,32 @@
 
     </div>
 
+    <div id="snsList" style="display: none" class="layer">
+        <div class="merge" >
+            <div style="margin-right: auto">
+                <h2>
+                    팔로윙
+                </h2>
+                <div th:each="followingList : ${followingResponse}">
+            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
+                <strong class="d-block text-gray-dark" th:text="|${followingList.nickName}님|"></strong>
+            </p>
+                </div>
+            </div>
+            <div >
+                <h2>
+                    팔로워
+                </h2>
+                <div th:each="followedList : ${followedResponse}">
+                    <p  class="pb-3 mb-0 small lh-sm border-bottom" >
+                        <strong class="d-block text-gray-dark" th:text="|${followedList.nickName}님|"></strong>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
 </div>
 
@@ -204,6 +238,13 @@
         console.log(url);
 
 
+        const showSns = document.getElementById('sns');
+        const content = document.getElementById('container-profile')
+        const snsContent = document.getElementById('snsList')
+        showSns.addEventListener('click',()=>{
+            content.style.display='none';
+            snsContent.style.display='block';
+        })
 
     }
 
