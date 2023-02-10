@@ -30,5 +30,4 @@ public class Participation {
 
     private Integer status;
 
-
 }

@@ -21,15 +21,14 @@ import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberDeleteResponse;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
+import teamproject.pocoapoco.domain.dto.part.PartJoinResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
-import teamproject.pocoapoco.service.CrewMemberService;
-import teamproject.pocoapoco.service.CrewReviewService;
-import teamproject.pocoapoco.service.CrewService;
-import teamproject.pocoapoco.service.LikeViewService;
+import teamproject.pocoapoco.service.*;
+import teamproject.pocoapoco.service.part.ParticipationService;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.*;
@@ -47,6 +46,8 @@ public class CrewViewController {
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
     private final CrewReviewService crewReviewService;
+
+    private final ParticipationService participationService;
 
     // 크루 게시물 상세 페이지
     @GetMapping("/{crewId}")
@@ -193,27 +194,35 @@ public class CrewViewController {
     @GetMapping("/review/{crewId}")
     public String reviewCrew(@PathVariable Long crewId, Authentication authentication, Model model) {
 
-        Crew crew = crewService.findByCrewId(crewId);
+        //현재 유저
+        User nowUser = crewService.findByUserName(authentication.getName());
+        model.addAttribute("nowUser", nowUser.getId());
 
-        Optional<User> nowUser = userRepository.findByUserName(authentication.getName());
+        // 크루 id, title. userId
+        Crew crew = crewService.findByCrewId(crewId);
+        model.addAttribute("crew", crew);
+
 
         List<CrewMemberResponse> crewMemberResponseList= crewMemberService.getJoinMemberList(crewId);
         Deque<User> members = new ArrayDeque<>();
         User u;
         for(CrewMemberResponse s : crewMemberResponseList){
-            log.info("Id() : {}, CrewId(): {}, UserName(): {}, JoinCheck(): {}", s.getId(), s.getCrewId(), s.getUserName(), s.getJoinCheck());
-            u =userRepository.findByUserName(s.getUserName()).get();
+            log.info("CrewId(): {}, UserName(): {}, JoinCheck(): {}", s.getCrewId(), s.getUserName(), s.getJoinCheck());
+            u =crewService.findByUserName(s.getUserName());
             if(crew.getUser().getId() == u.getId())
                 members.addFirst(u);
             else
                 members.add(u);
         }
 
-        //현재 유저
-        model.addAttribute("nowUser", nowUser.get().getId());
 
-        // 크루 id, title. userId
-        model.addAttribute("crew", crew);
+        List<PartJoinResponse> partJoinResponses = participationService.AllowedMember(crewId);
+
+        for (PartJoinResponse p : partJoinResponses){
+
+            log.info("!!p.getCrewId() : {}, p.getNow() : {}, p.getJoinUserName() : {}, p.getWriterUserName() : {}", p.getCrewId(), p.getNow(), p.getJoinUserName(), p.getWriterUserName());
+        }
+
 
         // 유저 id, nicname, mannaerScore
         model.addAttribute("members", members);

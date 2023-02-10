@@ -10,6 +10,8 @@ import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.CrewReviewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.repository.part.ParticipationRepository;
+import teamproject.pocoapoco.service.part.ParticipationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,9 @@ public class CrewReviewService {
     private final CrewRepository crewRepository;
 
     private final CrewReviewRepository crewReviewRepository;
+
+
+    private final ParticipationService participationService;
 
     // 리뷰 저장
     public void addReview(CrewReviewRequest crewReviewRequest) {
@@ -41,5 +46,8 @@ public class CrewReviewService {
         log.info("!!!!!!!!!!!!! {}", reviewList.size());
         crewReviewRepository.saveAll(reviewList);
     }
+
+
+
 
 }
