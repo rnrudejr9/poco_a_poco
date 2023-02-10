@@ -83,7 +83,7 @@
         box-shadow: 0 8px 14px rgba(82, 216, 254, 0.71),
         0 5px 5px rgba(0,0,0,0.22);
         position: center;
-        overflow: hidden;
+        overflow: auto;
         width: 31.3%;
         border: rgba(63, 122, 254, 0.7);
         padding: 0.7%;
@@ -178,6 +178,7 @@
         color: black;
     }
 
+    /*검색바*/
     .btnBar{
         width: 100%;
         /*background-color: #585858;*/
@@ -185,12 +186,16 @@
     }
     .searchBar{
         width: 40%;
+        padding-left: 10%;
         position: center;
     }
     .searchBar2{
         width: 100%;
         position: center;
-        padding-left: 10%;
+        border-radius: 5px;
+        box-shadow: 0 4px 10px rgba(1, 119, 152, 0.98),
+        0 5px 5px rgba(0,0,0,0.22);
+        border: rgba(1, 27, 86, 0.94);
     }
     .mid{
         width: 10%;
@@ -200,6 +205,38 @@
         background-color: rgb(101, 68, 76);
         border:3px solid rgba(46, 223, 255, 0.9);
     }
+
+    /*체크박스*/
+    .collapse{
+        width:100%;
+        margin:0px auto;
+        padding:0px;
+        overflow: auto;
+    }
+    .collapse-body{
+        width: 98%;
+        position: center;
+        margin: 2%;
+        padding: 2%;
+        border-radius: 10px;
+    }
+    .checkBox-sport {
+        box-shadow: 0 4px 7px rgba(82, 216, 254, 0.71),
+        0 5px 5px rgba(0,0,0,0.22);
+        color: black;
+    }
+
+    /*체크박스 버튼*/
+    .checkBox-btn{
+        margin-top: 2%;
+        width:100%;
+        padding:0px;
+        overflow: auto;
+    }
+
+
+
+
 </style>
 
 
@@ -259,24 +296,26 @@
             </div>
 
             <div class="collapse" id="collapseExample">
-                <div class="card card-body">
+                <div class="card card-body collapse-body">
                     <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
                         <small class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}"></small>
                         <div class="grid text-center">
                             <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
-                                <label class="btn btn-outline-secondary" th:each="sport : ${sportEnums}">
+                                    <label class="checkBox-sport btn btn-outline-info" th:each="sport : ${sportEnums}">
                                     <input type="checkbox"
                                            onclick="count_check(this)"
                                            name="chk"
                                            th:field="*{sportsList}"
                                            th:value="${sport}"
-                                           th:text="${sport.getValue()}">
+                                           th:text="${sport.getValue()}">운동
                                 </label>
                             </div>
-                            <button class="btn btn-primary" type="submit" >조회 버튼</button>
-                            <button class="btn btn-primary" type="button" onclick="location.href='/view/v1/crews'">
+                            <div class="checkBox-btn btn3">
+                            <button class="btn btn-gradient blue" type="submit" >조회 버튼</button>
+                            <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews'">
                                 My운동종목
                             </button>
+                            </div>
                         </div>
                     </form>
                 </div>
