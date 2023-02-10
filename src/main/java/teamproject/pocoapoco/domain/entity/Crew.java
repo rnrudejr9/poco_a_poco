@@ -8,7 +8,6 @@ import org.hibernate.annotations.Where;
 import teamproject.pocoapoco.domain.dto.chat.ChatRoomDTO;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
 import teamproject.pocoapoco.domain.entity.part.Participation;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
@@ -43,9 +42,6 @@ public class Crew extends BaseEntity{
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="room_id")
     private ChatRoom chatRoom;
-
-    @Enumerated(value = EnumType.STRING)
-    private InterestSport interestSport;
 
     @Enumerated(value = EnumType.STRING)
     private SportEnum sportEnum;
