@@ -40,7 +40,6 @@ async function crewMake() {
         credentials: "include",
         body: JSON.stringify({
             strict: document.getElementById("address_detail").value,
-            roadName: document.getElementById("address_kakao").value,
             crewLimit: document.getElementById("myRange").value,
             content: document.getElementById("content").value,
             title: document.getElementById("title").value,

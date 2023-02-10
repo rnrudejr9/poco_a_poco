@@ -18,7 +18,7 @@ public class ChatMessageDTO {
     private String writer;
     private String message;
 
-    private LocalDateTime createdAt;
+    private String createdAt;
     public Chat toChat(ChatRoom chatRoom){
         return Chat.builder().message(message)
                 .writer(writer)

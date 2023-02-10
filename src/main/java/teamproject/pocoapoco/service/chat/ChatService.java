@@ -12,6 +12,7 @@ import teamproject.pocoapoco.repository.chat.ChatRepository;
 import teamproject.pocoapoco.repository.chat.ChatRoomRepository;
 
 import javax.transaction.Transactional;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ChatService {
         for(Chat chat : chats){
             ChatMessageDTO chatMessageDTO = ChatMessageDTO.builder().message(chat.getMessage())
                     .writer(chat.getWriter())
-                    .createdAt(chat.getCreatedAt())
+                    .createdAt(chat.getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")))
                     .build();
             list.add(chatMessageDTO);
         }
