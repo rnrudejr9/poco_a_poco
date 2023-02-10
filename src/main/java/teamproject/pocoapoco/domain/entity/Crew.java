@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
-import teamproject.pocoapoco.domain.dto.chat.ChatRoomDTO;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
 import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.enums.SportEnum;
@@ -62,6 +61,10 @@ public class Crew extends BaseEntity{
 
     public void setChatRoom(ChatRoom chatRoom){
         this.chatRoom = chatRoom;
+    }
+
+    public void setParticipations(List<Participation> participations){
+        this.participations = participations;
     }
 
     public void of(CrewRequest request) {

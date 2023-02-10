@@ -19,16 +19,14 @@ if (userId.length > 0) {
 }
 
 if (userId.length > 0) {
-    const eventSource = new EventSource("/sse/random")
-    eventSource.addEventListener("random", function (event) {
+    const eventSource = new EventSource("/sse/for")
+    eventSource.onmessage = event => {
         let message = event.data;
-        console.log("random = ",message);
 
         $("#randomCnt").empty();
         $("#randomCnt").append('현재 대기중인 인원 :' + message);
-    });
+    }
 }
 
-//
 
 
