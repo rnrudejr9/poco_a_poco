@@ -67,8 +67,8 @@
         <div class="popup_cont">
             <h3> 아이디 찾기</h3>
             <form>
-                <label>회원가입시 입력한 닉네임을 입력해주세요.</label>
-                <input type="text" placeholder="Id" id="nickNameForFindId" />
+                <label>회원가입시 등록한 이메일을 입력해주세요.</label>
+                <input type="text" placeholder="email" id="nickNameForFindId" />
                 <button style="margin-left: 10px" type="button" id="findId">아이디 찾기</button>
             </form>
         </div>
@@ -171,7 +171,7 @@
 
     async function findId(){
         let params = document.getElementById("nickNameForFindId").value;
-        let response = await fetch(`/api/v1/findId/?nickName=${params}`,{
+        let response = await fetch(`/api/v1/findId/?email=${params}`,{
             method : "GET",
             headers: {
                 "Content-Type": "application/json",

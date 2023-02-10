@@ -102,9 +102,9 @@ public class ViewController {
 
     @GetMapping("/api/v1/findId")
     @ResponseBody
-    public Response findId(@RequestParam("nickName") String nickName) {
+    public Response findId(@RequestParam("email") String email) {
 
-        UserIdFindResponse userIdFindResponse = userService.findUserId(nickName);
+        UserIdFindResponse userIdFindResponse = userService.findUserId(email);
         return Response.success(userIdFindResponse);
     }
     @GetMapping("/api/v1/findPass")
