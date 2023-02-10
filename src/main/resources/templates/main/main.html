@@ -64,9 +64,6 @@
 </script>
 
 
-
-
-
 <body>
 <!-- 네비바-->
 <header th:replace="fragments/fragment :: nav"></header>
@@ -104,9 +101,7 @@
                     </button>
                 </div>
                 <div></div>
-                <body>
-                <div id="messages"></div>
-                </body>
+                <div></div>
                 <div>
                     <p>
                     <div id="randomCnt" th:text="${randomCnt}"></div>
@@ -151,24 +146,24 @@
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3">
                 <div class="col" th:each="crew : ${crewList}">
                     <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
-                        <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
-                        <input type="hidden" name="img-key" th:value="${crew.imagePath}">
-                        <div class="card-body">
-                            <div class="test">
-                                <h3 class="card-tile" th:text="${crew.title}">제목</h3>
-                                <p class="card-text" th:text="${crew.content}">내용</p>
+                    <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
+                    <input type="hidden" name="img-key" th:value="${crew.imagePath}">
+                    <div class="card-body">
+                        <div class="test">
+                            <h3 class="card-tile" th:text="${crew.title}">제목</h3>
+                            <p class="card-text" th:text="${crew.content}">내용</p>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <small class="text-muted" th:text="${crew.strict}">지역</small>
+                            <div th:id="${crew.id}">
+                                <script th:inline="javascript">
+                                    findPart([[${crew.id}]]);
+                                </script>
                             </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted" th:text="${crew.strict}">지역</small>
-                                <div th:id="${crew.id}">
-                                    <script th:inline="javascript">
-                                        findPart([[${crew.id}]]);
-                                    </script>
-                                </div>
-                                <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary"><a
-                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
+                            <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
+                            <div class="btn-group">
+                                <button type="button" class="btn btn-secondary"><a
+                                        th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
                                                                                page = (${nowPage} - 1) * 9 + ${crewStat.index},
                                                                                loginStatus = ${sportRequest.loginStatus},
                                                                                strict = ${sportRequest.getStrict()},
