@@ -217,8 +217,8 @@ public class UserService {
             return true;
         }
     }
-    public UserIdFindResponse findUserId(String nickName){
-        User user = userRepository.findByNickName(nickName).get();
+    public UserIdFindResponse findUserId(String email){
+        User user = userRepository.findByEmail(email).get();
 
 
         UserIdFindResponse userIdFindResponse = UserIdFindResponse.builder()
