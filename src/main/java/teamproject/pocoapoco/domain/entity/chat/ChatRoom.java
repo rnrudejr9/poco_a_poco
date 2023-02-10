@@ -17,6 +17,7 @@ public class ChatRoom {
     private Long roomId;
     private String name;
 
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;

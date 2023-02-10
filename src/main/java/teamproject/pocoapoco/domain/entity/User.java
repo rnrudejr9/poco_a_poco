@@ -5,7 +5,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.UserRole;
 
 import javax.persistence.*;
@@ -15,6 +14,7 @@ import java.util.List;
 
 @Entity
 @Getter
+@Setter
 @Table(name = "Users")
 @Builder
 @AllArgsConstructor
@@ -23,14 +23,17 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String userId;
     private String userName;
+    private String nickName;
     private String password;
     private String address;
     private Integer manner;
     private String email;
     private String imagePath;
     private UserRole role = UserRole.ROLE_USER;
+
+    @Builder.Default
+    private Double mannerScore = 36.5;
 
     @OneToOne(cascade = CascadeType.ALL)
     private Sport sport;
@@ -52,7 +55,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "user")
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "user")
+    private List<CrewMembers> members = new ArrayList<>();
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<GrantedAuthority>(List.of(new SimpleGrantedAuthority(role.name())));
@@ -83,38 +87,41 @@ public class User implements UserDetails {
         return false;
     }
 
-    public static User toEntity(String userId, String userName, String address, String password, Boolean likeSoccer, Boolean likeJogging, Boolean likeTennis){
+    public static User toEntity(String userName, String nickName, String address, String password, Boolean likeSoccer, Boolean likeJogging, Boolean likeTennis,String email){
         return User.builder()
-                .userId(userId)
                 .userName(userName)
+                .nickName(nickName)
                 .address(address)
                 .role(UserRole.ROLE_USER)
                 .sport(Sport.setSport(likeSoccer, likeJogging, likeTennis))
                 .password(password)
+                .email(email)
                 .build();
     }
 
-    public static User toRevisedEntity(Long id, String userId, String revisedUserName, String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis) {
+    public static User toRevisedEntity(Long id,  String userName, String revisedNickName, String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis, String email) {
         return User.builder()
                 .id(id)
-                .userId(userId)
-                .userName(revisedUserName)
+                .userName(userName)
+                .nickName(revisedNickName)
                 .address(revisedAddress)
                 .role(UserRole.ROLE_USER)
                 .sport(Sport.setSport(revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis))
+                .email(email)
                 .password(encodedPassword)
                 .build();
     }
 
-    public static User toEntityWithImage(Long id, String userId, String revisedUserName, String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis, String imagePath) {
+    public static User toEntityWithImage(Long id, String userName, String revisedNickName,  String revisedAddress, String encodedPassword, Boolean revisedLikeSoccer, Boolean revisedLikeJogging, Boolean revisedLikeTennis, String imagePath, String email) {
         return User.builder()
                 .id(id)
-                .userId(userId)
-                .userName(revisedUserName)
+                .userName(userName)
+                .nickName(revisedNickName)
                 .address(revisedAddress)
                 .role(UserRole.ROLE_USER)
                 .imagePath(imagePath)
                 .sport(Sport.setSport(revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis))
+                .email(email)
                 .password(encodedPassword)
                 .build();
     }

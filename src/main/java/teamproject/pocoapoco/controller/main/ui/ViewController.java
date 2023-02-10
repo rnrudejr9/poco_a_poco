@@ -2,17 +2,15 @@ package teamproject.pocoapoco.controller.main.ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.parameters.P;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.dto.user.UserJoinRequest;
-import teamproject.pocoapoco.domain.dto.user.UserLoginRequest;
-import teamproject.pocoapoco.domain.dto.user.UserLoginResponse;
+import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.service.MailService;
 import teamproject.pocoapoco.service.UserService;
 
@@ -80,7 +78,6 @@ public class ViewController {
         cookie.setPath("/");
         response.addCookie(cookie);
 
-        session.removeAttribute("Authorization");
         return "redirect:/view/v1/crews";
     }
     @PostMapping("/login/mailConfirm")
@@ -101,5 +98,29 @@ public class ViewController {
             result =1;
         }
         return result;
+    }
+
+    @GetMapping("/api/v1/findId")
+    @ResponseBody
+    public Response findId(@RequestParam("email") String email) {
+
+        UserIdFindResponse userIdFindResponse = userService.findUserId(email);
+        return Response.success(userIdFindResponse);
+    }
+    @GetMapping("/api/v1/findPass")
+    @ResponseBody
+    public Response findPass(@RequestParam("userName") String userName) throws Exception {
+
+        UserMailResponse userMailResponse = userService.findUserPass(userName);
+        System.out.println("인증코드 : " + userMailResponse.getCode());
+        return Response.success(userMailResponse);
+
+    }
+    @PostMapping("/api/v1/resetPass")
+    @ResponseBody
+    public Response resetPass(@RequestParam("userName") String userName, @RequestParam("password") String password){
+
+        UserPassResetResponse userPassResetResponse = userService.resetPass(userName,password);
+        return Response.success(userPassResetResponse);
     }
 }

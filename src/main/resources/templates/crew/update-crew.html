@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/fragment :: head"></head>
+<body class="bg-light">
+<!-- 네비바-->
+<header th:replace="fragments/fragment :: nav"></header>
+<div id="main-title" class="py-5 text-center">
+    <h2>모임 수정</h2>
+</div>
+<div class="row justify-content-center">
+    <form class="needs-validation col-sm-6" action="#"
+          th:action="@{'/view/v1/crews/'+ ${crewId}}" th:object="${crewRequest}" th:method="put" novalidate>
+        <div th:if="${message != null}" class="alert alert-warning alert-dismissible fade show" role="alert">
+            <span th:text="${message}"></span>
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="form-group">
+            <label for="title">모임 제목</label>
+            <input id="title" type="text" th:field="*{title}" class="form-control"
+                   placeholder="축구 하고싶은 사람" aria-describedby="titleHelp" required minlength="3" maxlength="20">
+            <small class="invalid-feedback">모임 제목을 입력하세요.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="content">모임 내용</label>
+            <textarea id="content" th:field="*{content}" class="form-control"
+                      aria-describedby="contentsHelp" required minlength="30" maxlength="500" rows="5"></textarea>
+            <small id="contentsHelp" class="form-text text-muted">
+                30자 이상 500자 이내로 입력하세요.
+            </small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">title Error</small>
+
+            <small class="invalid-feedback">모임 내용을 입력하세요.</small>
+            <small class="form-text text-danger" th:if="${#fields.hasErrors('content')}" th:errors="*{content}">contents Error</small>
+        </div>
+        <div>
+            <label class="form-label" id="rangeHuman">인원수</label>
+            <input type="range" th:field="*{crewLimit}" class="form-range" min="1" max="99" step="1" id="customRange3" onchange="changeLabel()">
+        </div>
+        <div>
+            <label class="form-label">지역</label>
+            <textarea class="form-control" th:field="*{strict}" id="address" placeholder="모임 위치"></textarea>
+        </div>
+
+        <div class="form-group">
+            <a th:href="@{'/view/v1/crews/' + ${crewId}}" class="btn btn-secondary float-left" >게시글로 이동</a>
+            <button class="btn btn-primary float-right" type="submit"
+                    aria-describedby="submitHelp">글 수정</button>
+        </div>
+    </form>
+</div>
+<div th:replace="fragments/fragment :: footer"></div>
+<script th:replace="fragments/fragment :: form-validation"></script>
+</body>
+</html>

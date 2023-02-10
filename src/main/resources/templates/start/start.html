@@ -12,17 +12,17 @@
         <form  action="/view/v1/signup" method="post" th:object="${userJoinRequest}" >
             <h3>회원가입</h3>
             <div class="merge">
-            <input type="text" class="form-control"  placeholder="이메일을 입력해 주세요" name="memail" id="memail">
-            <button style="margin-left: 10px" type="button"  id="write">인증번호 전송</button>
+                <input type="text" class="form-control"  placeholder="이메일을 입력해 주세요" name="memail" id="memail" th:field="*{email}" >
+                <button style="margin-left: 10px" type="button"  id="write">인증번호 전송</button>
             </div>
             <div class="merge">
-            <input type="text" class="form-control" placeholder="인증번호를 입력해주세요" id="memailconfirm">
-            <button style="margin-left: 10px" type="button"  id="check">인증번호 확인</button>
+                <input type="text" class="form-control" placeholder="인증번호를 입력해주세요" id="memailconfirm">
+                <button style="margin-left: 10px" type="button"  id="check">인증번호 확인</button>
             </div>
-            <input type="text" placeholder="Id" th:field="*{userId}" />
+            <input type="text" placeholder="Id" th:field="*{userName}" />
             <input type="password" placeholder="Password" th:field="*{password}"/>
             <input type="password" placeholder="PasswordCheck" th:field="*{passwordConfirm}" />
-            <input type="text" placeholder="Name"th:field="*{userName}" />
+            <input type="text" placeholder="NickName"th:field="*{nickName}" />
             <input type="text" id="sample4_postcode" placeholder="우편번호">
             <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기">
             <input type="text" id="sample4_roadAddress" placeholder="도로명주소" th:field="*{address}">
@@ -38,9 +38,10 @@
                 <a href="#" th:href="@{/oauth2/authorization/naver}" class="social">네이버<i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your account</span>
-            <input type="text" placeholder="Email" th:field="*{userId}" />
+            <input type="text" placeholder="Id" th:field="*{userName}" />
             <input type="password" placeholder="Password"th:field="*{password}" />
-            <a href="#">Forgot your password?</a>
+
+            <span><a href="javascript:openPop()">아이디 찾기</a> / <a href="javascript:openPopPass()">비밀번호 찾기</a> </span>
             <button type="submit">로그인</button>
         </form>
     </div>
@@ -56,6 +57,52 @@
                 <p>동네 근처 이웃들과 함께 즐기는 스포츠!<br>회원 가입 하고 같이 운동 메이트를 만들어요.</p>
                 <button class="ghost" id="signUp">Sign Up</button>
             </div>
+        </div>
+    </div>
+</div>
+
+<!--아이디 찾기 팝업 창-->
+<div class="popup_layer" id="findId_layer" style="display: none;">
+    <div class="popup_box">
+        <div class="popup_cont">
+            <h3> 아이디 찾기</h3>
+            <form>
+                <label>회원가입시 등록한 이메일을 입력해주세요.</label>
+                <input type="text" placeholder="email" id="nickNameForFindId" />
+                <button style="margin-left: 10px" type="button" id="findId">아이디 찾기</button>
+            </form>
+        </div>
+        <!--팝업 버튼 영역-->
+        <div class="popup_btn" style="float: bottom; margin-top: 200px;">
+            <a href="javascript:closePop();">닫기</a>
+        </div>
+    </div>
+</div>
+<!--비밀번호 찾기 팝업 창-->
+<div class="popup_layer" id="findPassword_layer" style="display: none;">
+    <div class="popup_box">
+        <div class="popup_cont">
+            <h3> 비밀번호 찾기</h3>
+            <h5>비밀번호를 재설정 합니다.</h5>
+            <form>
+
+                <label>비밀번호를 찾고싶은 Id를 입력해 주세요</label>
+                <input type="text" placeholder="Id" id="idForFindPass" />
+                <button style="margin-left: 10px" type="button" id="checkIdForFindPass" >인증코드 전송</button>
+                <div id="findPass" style="display: none">
+                    <input type="text" class="form-control" placeholder="인증코드" id="codeForPass">
+                    <button style="margin-left: 10px" type="button" id="btnForFindPass"  >인증번호 확인</button>
+                </div>
+                <div id="findPass2" style="display: none">
+                    <input type="text" class="form-control" placeholder="새 비밀번호" id="newPass">
+                    <button style="margin-left: 10px" type="button" id="resetPass"  >비밀번호 재설정</button>
+                </div>
+
+            </form>
+        </div>
+        <!--팝업 버튼 영역-->
+        <div class="popup_btn" style="float: bottom; margin-top: 50px;">
+            <a href="javascript:closePopPass();">닫기</a>
         </div>
     </div>
 </div>
@@ -76,6 +123,72 @@
 
     document.getElementById('write').addEventListener('click',checkEmail);
     document.getElementById('check').addEventListener('click',checkCode);
+    document.getElementById('findId').addEventListener('click',findId);
+    document.getElementById('checkIdForFindPass').addEventListener('click',findPass);
+    document.getElementById('btnForFindPass').addEventListener('click',checkCodeForPass);
+    document.getElementById('resetPass').addEventListener('click',resetPass);
+
+    async function resetPass(){
+        let userName = localStorage.getItem("userName")
+        let password = document.getElementById("newPass").value
+        let response = await fetch(`/api/v1/resetPass/?userName=${userName}&password=${password}`,{
+            method : "POST",
+            headers : {
+                "Content-Type": "application/json",
+            }
+
+        })
+        let data = await response
+        console.log(data)
+        if(response.ok){
+            alert("비밀번호가 초기화되었습니다.")
+
+        }else
+            alert("알수없는 오류 발생")
+    }
+
+
+    async function findPass(){
+        let params = document.getElementById("idForFindPass").value;
+        localStorage.setItem("userName",params)
+        let response = await fetch(`/api/v1/findPass/?userName=${params}`,{
+            method : "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+        })
+        let data = await response.json()
+        console.log(data)
+
+
+        if(response.ok){
+            alert(`등록하신 ${data.result.email}로 인증코드를 전송했습니다. 확인해주세요.`)
+            const btn = document.getElementById("findPass")
+            btn.style.display='block'
+        }else
+            alert("아이디를 다시 확인해 주세요")
+    }
+
+    async function findId(){
+        let params = document.getElementById("nickNameForFindId").value;
+        let response = await fetch(`/api/v1/findId/?email=${params}`,{
+            method : "GET",
+            headers: {
+                "Content-Type": "application/json",
+            }
+
+        })
+        let data = await response.json()
+        console.log(data)
+
+
+        if(response.ok){
+            alert(`아이디는 : ${data.result.userName} 입니다.`)
+
+        }else
+            alert("아이디를 다시 확인해 주세요")
+    }
+
 
     async function checkEmail(){
         let params = document.getElementById("memail").value;
@@ -103,16 +216,13 @@
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
-            },body: JSON.stringify({
-
-                code: document.getElementById("memailconfirm"),
-            })
+            }
         })
         let data = await response.json()
         console.log(data)
 
         if(data==1){
-           alert("확인되었습니다.")
+            alert("확인되었습니다.")
             const btn = document.getElementById("last")
             btn.style.display='block'
         }else
@@ -121,7 +231,47 @@
         }
 
     }
+    async function checkCodeForPass() {
+        let params = document.getElementById("codeForPass").value;
+        let response = await fetch(`/login/verifyCode/?code=${params}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        })
+        let data = await response.json()
+        console.log(data)
 
+        if (data == 1) {
+            alert("확인되었습니다.")
+            const btn = document.getElementById("findPass2")
+            btn.style.display = 'block'
+
+        } else {
+            alert("인증번호가 일치하지 않습니다.")
+        }
+
+    }
+    function openPop() {
+        document.getElementById("findId_layer").style.display = "block";
+
+    }
+
+    //팝업 닫기
+    function closePop() {
+        document.getElementById("findId_layer").style.display = "none";
+    }
+    function openPopPass() {
+        document.getElementById("findPassword_layer").style.display = "block";
+
+    }
+
+    //팝업 닫기
+    function closePopPass() {
+        document.getElementById("findPassword_layer").style.display = "none";
+    }
+
+    // 주소검색 api 함수
     function sample4_execDaumPostcode() {
         new daum.Postcode({
             oncomplete: function(data) {

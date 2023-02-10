@@ -62,38 +62,11 @@
     </style>
 
 </head>
+
+<header th:replace="fragments/fragment :: nav"></header>
+
 <body>
 
-<header class="p-3 text-bg-dark">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"/></svg>
-            </a>
-            <!-- 메뉴-->
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 text-white"><h4>💪운동메&emsp;&emsp;</h4></a></li>
-                <li><a href="/view/v1/crews/" class="nav-link px-2 text-white"><h5>모집글&emsp;&emsp;</h5></a></li>
-                <li><a href="/alarm/v1/alarm" th:href="@{/alarm/v1/alarm}" class="nav-link px-2 text-white"><h5>운동메톡&emsp;&emsp;</h5></a></li>
-                <li><a href="/view/v1/users/profile/my" th:href="@{/view/v1/users/profile/my}" class="nav-link px-2 text-white"><h5>My프로필&emsp;&emsp;</h5></a></li>
-            </ul>
-
-            <!-- 검색-->
-            <form class="col-3 col-lg-3 mb-4 mb-lg-0 me-lg-3" role="search" action="/view/v1/crews/strict" method="post" name="findAllCrewWithStrict">
-                <input type="search" name="strict" class="form-control form-control-dark text-bg-dark" placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
-            </form>
-
-            <!-- 로그인&회원가입-->
-            <div class="text-end" th:classappend="${2 == nowPage} ? 'disabled'">
-                <button type="button" class="btn btn-outline-light me-2">Login</button>
-                <button type="button" class="btn btn-warning">Sign-up</button>
-
-            </div>
-
-
-        </div>
-    </div>
-</header>
 
 <ul id="left-box">
     <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100px; height:100px;">
@@ -120,7 +93,7 @@
             </div>
             <div class="col-md-7">
                 <div class="container-profile" style="padding:20px;">
-                    <h4 th:text = "${userProfileResponse.userName}"></h4>
+                    <h4 th:text = "${userProfileResponse.nickName}"></h4>
                     <input class="form-check-input" type="checkbox" id="likeSoccer" th:checked= "${userProfileResponse.likeSoccer}">축구</input>
                     <input class="form-check-input" type="checkbox" id="likeJogging" th:checked= "${userProfileResponse.likeJogging}">조깅</input>
                     <input class="form-check-input" type="checkbox" id="likeTennis" th:checked= "${userProfileResponse.likeTennis}">테니스</input>

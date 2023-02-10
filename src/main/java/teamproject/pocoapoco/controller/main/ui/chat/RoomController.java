@@ -27,7 +27,7 @@ public class RoomController {
     @GetMapping(value = "/rooms")
     public String rooms(Model model, Authentication authentication){
         log.info("# All Chat Rooms");
-        model.addAttribute("list",chatRoomService.findBy(authentication.getName()));
+        model.addAttribute("list",chatRoomService.findByParticipation(authentication.getName()));
         return "chat/rooms";
     }
 
@@ -41,8 +41,9 @@ public class RoomController {
 
     //채팅방 조회
     @GetMapping("/room")
-    public String getRoom(Long roomId, Model model){
+    public String getRoom(Long roomId, Long crewId, Model model){
         log.info("# get Chat Room, roomID : " + roomId);
+        model.addAttribute("crewId",crewId);
         model.addAttribute("room", chatRoomService.findRoomById(roomId));
         return "chat/room";
     }

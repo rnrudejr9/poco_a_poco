@@ -3,12 +3,13 @@ package teamproject.pocoapoco.domain.dto.crew;
 import lombok.*;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.enums.InterestSport;
+import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 import teamproject.pocoapoco.enums.SportEnum;
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 @Builder
 public class CrewRequest {
 
@@ -16,6 +17,10 @@ public class CrewRequest {
     private String title;
     private String content;
     private Integer crewLimit;
+    private String datepick;
+    private String timepick;
+    private String chooseSport;
+    private String imagePath;
 
 
     public Crew toEntity(User user) {
@@ -23,15 +28,27 @@ public class CrewRequest {
                 .strict(this.strict)
                 .title(this.title)
                 .content(this.content)
-
                 .crewLimit(this.crewLimit)
-                .chatroomId(null)
-                .user(user)
 
-                //crew 종목 검색 test
-                .sprotStr("테니스")
-                .interestSport(InterestSport.TENNIS)
-                .sportEnum(SportEnum.TENNIS)
+                .datepick(this.datepick)
+                .timepick(this.timepick)
+
+                .user(user)
+                .imagePath(this.imagePath)
+                .chatRoom(ChatRoom.builder().name(title).user(user).build())
+                .sportEnum(of(chooseSport))
+                .user(user)
                 .build();
     }
+
+    public SportEnum of(String value){
+        for(SportEnum sportEnum : SportEnum.values()){
+            if(sportEnum.getValue().equals(value)){
+                return sportEnum;
+            }
+        }
+        return null;
+    }
+
+
 }

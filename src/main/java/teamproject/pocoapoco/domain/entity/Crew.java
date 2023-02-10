@@ -5,9 +5,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
-import teamproject.pocoapoco.domain.dto.chat.ChatRoomDTO;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
-import teamproject.pocoapoco.enums.InterestSport;
+import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
@@ -27,21 +26,21 @@ public class Crew extends BaseEntity{
     private Long id;
 
     private String strict;
+    private String roadName;
     private String title;
     private String content;
     private Integer crewLimit;
-    private Integer chatroomId;
 
-    // participant_id 추후 추가예정
+    private String imagePath;
 
-    @OneToOne
+    private String datepick;
+    private String timepick;
+
+
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="room_id")
     private ChatRoom chatRoom;
-
-    //crew 종목 검색 test
-    private String sprotStr;
-    @Enumerated(value = EnumType.STRING)
-    private InterestSport interestSport;
 
     @Enumerated(value = EnumType.STRING)
     private SportEnum sportEnum;
@@ -53,8 +52,19 @@ public class Crew extends BaseEntity{
     @OneToMany(mappedBy = "crew")
     private List<Like> likes = new ArrayList<>();
 
+    //참여중인사람 조회
+    @OneToMany(mappedBy = "crew")
+    private List<Participation> participations = new ArrayList<>();
+
+    @OneToOne
+    private CrewMembers members;
+
     public void setChatRoom(ChatRoom chatRoom){
         this.chatRoom = chatRoom;
+    }
+
+    public void setParticipations(List<Participation> participations){
+        this.participations = participations;
     }
 
     public void of(CrewRequest request) {

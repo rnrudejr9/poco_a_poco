@@ -11,11 +11,12 @@ import org.springframework.context.annotation.Bean;
 @Setter
 public class UserJoinRequest {
 
-    private String userId;
     private String userName;
+    private String nickName;
     private String password;
     private String passwordConfirm;
     private String address;
+    private String email;
     @Builder.Default
     private Boolean likeSoccer = false;
     @Builder.Default

@@ -11,7 +11,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
-import teamproject.pocoapoco.domain.dto.crew.CrewStrictRequest;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.service.CrewService;
 
@@ -66,6 +65,6 @@ public class CrewController {
     @ApiOperation(value = "크루 게시글 지역 검색조회", notes = "")
     public Response findAllCrewWithStrict(@RequestBody CrewSportRequest crewSportRequest,
                                           @PageableDefault(page = 0, size = 20, sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
-        return Response.success(crewService.findAllCrewsWithStrict(crewSportRequest, pageable));
+        return Response.success(crewService.findAllCrewsByStrict(crewSportRequest, pageable));
     }
 }
