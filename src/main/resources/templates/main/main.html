@@ -185,21 +185,20 @@
         /*border:3px solid red;*/
     }
     .searchBar{
-        width: 40%;
-        padding-left: 10%;
+        width: 100%;
         position: center;
     }
     .searchBar2{
-        width: 100%;
+        width: 80%;
+        margin-left: 10%;
+        margin-top: 7%;
         position: center;
         border-radius: 5px;
         box-shadow: 0 4px 10px rgba(1, 119, 152, 0.98),
         0 5px 5px rgba(0,0,0,0.22);
         border: rgba(1, 27, 86, 0.94);
     }
-    .mid{
-        width: 10%;
-    }
+
     btn3{
         width: 30%;
         background-color: rgb(101, 68, 76);
@@ -249,8 +248,8 @@
 
 <main>
     <!-- 소개-->
-<!--    <section class="py-5 text-center container ">-->
-    <section class="py-5 text-center">
+    <section class="py-5 text-center container ">
+<!--    <section class="py-5 text-center">-->
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
                 <div  class="">
@@ -262,6 +261,12 @@
                     운동 메이트로 함께 운동하고, <br>
                     동네 이웃과 운동 메이트가 되어 보세요.
                 </p>
+                <div class="searchBar">
+                    <form class="row searchBar2" role="search" action="/view/v1/crews" method="get" name="findAllCrewWithStrict" >
+                        <input type="search" name="strict" class="form-control form-control-dark text-bg-blue"
+                               placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
+                    </form>
+                </div>
 
             </div>
         </div>
@@ -291,13 +296,6 @@
                     <div id="randomCnt" th:text="${randomCnt}"></div>
                     </p>
                 </div>
-<!--                <div class="searchBar">-->
-<!--                    &lt;!&ndash; 검색&ndash;&gt;-->
-<!--                    <form class="row searchBar2" role="search" action="/view/v1/crews" method="get" name="findAllCrewWithStrict" >-->
-<!--                        <input type="search" name="strict" class="form-control form-control-dark text-bg-blue"-->
-<!--                               placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">-->
-<!--                    </form>-->
-<!--                </div>-->
                 <div class="btn3 d-grid gap-3 d-md-flex justify-content-md-end">
                     <button class="btn btn-outline-danger" type="button" onclick="randomMatch()">
                         + 랜덤 매칭🔥
@@ -320,16 +318,18 @@
                                            name="chk"
                                            th:field="*{sportsList}"
                                            th:value="${sport}"
-                                           th:text="${sport.getValue()}">운동
+                                           th:text="${sport.getValue()}">
                                 </label>
                             </div>
                             <div class="checkBox-btn btn3">
-                            <button class="btn btn-gradient blue" type="submit" >조회 버튼</button>
-                            <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews'">
-                                My운동종목
-                            </button>
+                                <button class="btn btn-gradient blue" type="submit" ><strong>조회 버튼</strong></button>
+                                <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews'">
+                                    <strong>My운동종목</strong>
+                                </button>
+                            </div>
                         </div>
                     </form>
+
                 </div>
             </div>
 
@@ -461,9 +461,6 @@
         img2.src = url;
 
         console.log(url);
-
-
-
     }
 
     // 타이핑 효과
@@ -509,8 +506,6 @@
     // start animation
     playAnim()
 
-</script>
-<script>
     // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
     history.replaceState({}, null, location.pathname);
 
@@ -531,8 +526,6 @@
             return false;
         }
     }
-
-
 </script>
 
 </body>
