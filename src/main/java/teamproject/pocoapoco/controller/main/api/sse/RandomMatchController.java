@@ -36,8 +36,8 @@ public class RandomMatchController {
     private final CrewRepository crewRepository;
     private final ParticipationRepository participationRepository;
     private final RedisTemplate<String, String> redisTemplate;
-    private String randomComment = "랜덤매칭입니다. 채팅방에서 협의 후 결정해 주세요";
-    private String randomKey = "randomMatching";
+    private final String randomComment = "랜덤매칭입니다. 채팅방에서 협의 후 결정해 주세요";
+    private final String randomKey = "randomMatching";
 
     @PostMapping("/random")
     @Transactional
@@ -60,7 +60,6 @@ public class RandomMatchController {
         String[] matchListInRedis = new String[4];
 
         log.info("현재 redis의 대기열의 숫자는 : {} 입니다", randomMatchListInRedis);
-
 
 //         대기리스트에 3명이 들어왔다면
         if (randomMatchListInRedis >= 3) {
@@ -149,12 +148,24 @@ public class RandomMatchController {
 
         }
 
-
-
         //sse에 대기인원 표시
         randomMatchListCnt = randomMatchListInRedis;
         if(randomMatchListCnt % 3 == 0) randomMatchListCnt = 0;
 
+        return 1;
+    }
+
+    @PostMapping("/random/cancel")
+    @Transactional
+    public int randomMatchCancel(@RequestParam String username) {
+        // redis에 있는 userName을 삭제
+        redisTemplate.opsForZSet().remove(randomKey, username);
+
+        Long randomMatchListInRedisCnt = redisTemplate.opsForZSet().zCard(randomKey);
+        log.info("현재 redis의 대기열의 숫자는 : {} 입니다", randomMatchListInRedisCnt);
+
+        //sse에 대기인원 표시
+        randomMatchListCnt = randomMatchListInRedisCnt;
         return 1;
     }
 
@@ -163,5 +174,4 @@ public class RandomMatchController {
             return new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
         });
     }
-
 }

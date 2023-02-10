@@ -108,7 +108,10 @@
                     </p>
                 </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-outline-danger" type="button" onclick="randomMatch()">
+                    <button class="btn btn-danger" style="display: none" type="button" id="randomMatchCancel_btn" onclick="randomMatchCancel()">
+                        + 랜덤 매칭 취소🌌
+                    </button>
+                    <button class="btn btn-outline-danger" type="button" id="randomMatch_btn" onclick="randomMatch()">
                         + 랜덤 매칭🔥
                     </button>
                     <button class="btn btn-primary" type="button" onclick="location.href='/view/v1/crews/write'">
