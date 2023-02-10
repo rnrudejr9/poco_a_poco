@@ -13,20 +13,21 @@
     /*타이핑*/
     .typeText::after {
         content: "|";
-        animation:  blink 1s step-end infinite;
+        animation: blink 1s step-end infinite;
     }
+
     @keyframes blink {
         0% {
-            opacity:1;
+            opacity: 1;
         }
         49% {
-            opacity:1;
+            opacity: 1;
         }
         50% {
-            opacity:0;
+            opacity: 0;
         }
         100% {
-            opacity:0;
+            opacity: 0;
         }
     }
 
@@ -39,6 +40,7 @@
         text-overflow: ellipsis;
         width: 50%;
     }
+
     .text-strict2 {
         display: inline-block;
         white-space: nowrap;
@@ -46,6 +48,7 @@
         text-overflow: ellipsis;
         width: 30%;
     }
+
     .card-tile {
         display: inline-block;
         white-space: nowrap;
@@ -54,6 +57,7 @@
         color: #333838;
         width: 90%;
     }
+
     .card-text {
         display: inline-block;
         white-space: nowrap;
@@ -62,26 +66,28 @@
         color: #323334;
         width: 100%;
     }
+
     .card-body {
         background-color: rgba(248, 253, 253, 0.98);
     }
 
     /*크루 모집글 박스*/
     .crewBoxParent {
-        width:100%;
-        margin:0px auto;
-        padding:0px;
+        width: 100%;
+        margin: 0px auto;
+        padding: 0px;
         overflow: auto;
 
         /*background-color: #585858;*/
         /*border:3px solid red;*/
 
     }
+
     .crewBox {
         background-color: rgba(248, 253, 253, 0.98);
         border-radius: 20px;
         box-shadow: 0 8px 14px rgba(82, 216, 254, 0.71),
-        0 5px 5px rgba(0,0,0,0.22);
+        0 5px 5px rgba(0, 0, 0, 0.22);
         position: center;
         overflow: auto;
         width: 31.3%;
@@ -89,8 +95,9 @@
         padding: 0.7%;
         margin: 1%;
     }
+
     /*크루 사진*/
-    .img-thumbnail{
+    .img-thumbnail {
         width: 100%;
         height: 225px;
         border-radius: 20px;
@@ -101,6 +108,7 @@
     .btn-jittery {
         animation: jittery 8s infinite;
     }
+
     @keyframes jittery {
         5%,
         50% {
@@ -137,33 +145,42 @@
     }
 
     /*운동선택 효과*/
-    .btn.cyan{
+    .btn.cyan {
         background-color: #7fccde;
-        box-shadow:0px 4px 0px #73B9C9;
+        box-shadow: 0px 4px 0px #73B9C9;
         padding: 8px 18px;
         font-size: 16px;
         color: white;
     }
+
     .btn-gradient.cyan {
-        background: rgba(27,188,194,1);
-        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27,188,194,1)), to(rgba(24,163,168,1)));
-        background: -webkit-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
-        background: -moz-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
-        background: -o-linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
-        background: linear-gradient(rgba(27,188,194,1) 0%, rgba(24,163,168,1) 100%);
+        background: rgba(27, 188, 194, 1);
+        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27, 188, 194, 1)), to(rgba(24, 163, 168, 1)));
+        background: -webkit-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
+        background: -moz-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
+        background: -o-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
+        background: linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1bbcc2', endColorstr='#18a3a8', GradientType=0);
     }
 
     /*모임등록 효과*/
-    .btn.blue{
+    .btn.blue {
         background: #6698cb;
-        box-shadow:0px 4px 0px  #7fb1bf;
+        box-shadow: 0px 4px 0px #7fb1bf;
         padding: 8px 18px;
         font-size: 16px;
         color: white;
     }
-    .btn.blue {box-shadow: 0px 4px #74a3b0;}
-    .btn.blue:active {box-shadow: 0 0 #74a3b0; background-color: #709CA8;}
+
+    .btn.blue {
+        box-shadow: 0px 4px #74a3b0;
+    }
+
+    .btn.blue:active {
+        box-shadow: 0 0 #74a3b0;
+        background-color: #709CA8;
+    }
+
     .btn-gradient.blue {
         background: rgba(102, 152, 203, 1);
         background: -moz-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
@@ -174,70 +191,71 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6698cb', endColorstr='#5c8ab8', GradientType=0);
     }
 
-    .participation{
+    .participation {
         color: black;
     }
 
     /*검색바*/
-    .btnBar{
+    .btnBar {
         width: 100%;
         /*background-color: #585858;*/
         /*border:3px solid red;*/
     }
-    .searchBar{
+
+    .searchBar {
         width: 100%;
         position: center;
     }
-    .searchBar2{
+
+    .searchBar2 {
         width: 80%;
         margin-left: 10%;
         margin-top: 7%;
         position: center;
         border-radius: 5px;
         box-shadow: 0 4px 10px rgba(1, 119, 152, 0.98),
-        0 5px 5px rgba(0,0,0,0.22);
+        0 5px 5px rgba(0, 0, 0, 0.22);
         border: rgba(1, 27, 86, 0.94);
     }
 
-    btn3{
+    btn3 {
         width: 30%;
         background-color: rgb(101, 68, 76);
-        border:3px solid rgba(46, 223, 255, 0.9);
+        border: 3px solid rgba(46, 223, 255, 0.9);
     }
 
     /*체크박스*/
-    .collapse{
-        width:100%;
-        margin:0px auto;
-        padding:0px;
+    .collapse {
+        width: 100%;
+        margin: 0px auto;
+        padding: 0px;
         overflow: auto;
     }
-    .collapse-body{
+
+    .collapse-body {
         width: 98%;
         position: center;
         margin: 2%;
         padding: 2%;
         border-radius: 10px;
     }
+
     .checkBox-sport {
         box-shadow: 0 4px 7px rgba(82, 216, 254, 0.71),
-        0 5px 5px rgba(0,0,0,0.22);
+        0 5px 5px rgba(0, 0, 0, 0.22);
         color: black;
     }
 
     /*체크박스 버튼*/
-    .checkBox-btn{
+    .checkBox-btn {
         margin-top: 2%;
-        width:100%;
-        padding:0px;
+        width: 100%;
+        padding: 0px;
         overflow: auto;
     }
 
 
-
-
 </style>
-
 
 
 <body>
@@ -249,10 +267,10 @@
 <main>
     <!-- 소개-->
     <section class="py-5 text-center container ">
-<!--    <section class="py-5 text-center">-->
+        <!--    <section class="py-5 text-center">-->
         <div class="row py-lg-5">
             <div class="col-lg-6 col-md-8 mx-auto">
-                <div  class="">
+                <div class="">
                     <h1 style="display:inline;">운동</h1>
                     <h1 style="display:inline;" class="typeText"></h1>
                 </div>
@@ -262,7 +280,8 @@
                     동네 이웃과 운동 메이트가 되어 보세요.
                 </p>
                 <div class="searchBar">
-                    <form class="row searchBar2" role="search" action="/view/v1/crews" method="get" name="findAllCrewWithStrict" >
+                    <form class="row searchBar2" role="search" action="/view/v1/crews" method="get"
+                          name="findAllCrewWithStrict">
                         <input type="search" name="strict" class="form-control form-control-dark text-bg-blue"
                                placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
                     </form>
@@ -295,7 +314,8 @@
                     </p>
                 </div>
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-danger" style="display: none" type="button" id="randomMatchCancel_btn" onclick="randomMatchCancel()">
+                    <button class="btn btn-danger" style="display: none" type="button" id="randomMatchCancel_btn"
+                            onclick="randomMatchCancel()">
                         + 랜덤 매칭 취소🌌
                     </button>
                     <button class="btn btn-outline-danger" type="button" id="randomMatch_btn" onclick="randomMatch()">
@@ -310,10 +330,11 @@
             <div class="collapse" id="collapseExample">
                 <div class="card card-body collapse-body">
                     <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
-                        <small class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}"></small>
+                        <small class="text-muted" type="hidden" th:field="*{loginStatus}"
+                               th:value="${sportRequest.loginStatus}"></small>
                         <div class="grid text-center">
                             <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
-                                    <label class="checkBox-sport btn btn-outline-info" th:each="sport : ${sportEnums}">
+                                <label class="checkBox-sport btn btn-outline-info" th:each="sport : ${sportEnums}">
                                     <input type="checkbox"
                                            onclick="count_check(this)"
                                            name="chk"
@@ -323,8 +344,9 @@
                                 </label>
                             </div>
                             <div class="checkBox-btn btn3">
-                                <button class="btn btn-gradient blue" type="submit" ><strong>조회 버튼</strong></button>
-                                <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews'">
+                                <button class="btn btn-gradient blue" type="submit"><strong>조회 버튼</strong></button>
+                                <button class="btn btn-gradient blue" type="button"
+                                        onclick="location.href='/view/v1/crews'">
                                     <strong>My운동종목</strong>
                                 </button>
                             </div>
@@ -343,71 +365,75 @@
                                                                                strict = ${sportRequest.getStrict()},
                                                                                sportsList = ${sportRequest.getSportsList()}
                                                                                )}">
-                    <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
-                    <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
-                    <input type="hidden" name="img-key" th:value="${crew.imagePath}">
-                    <div class="card-body">
-                        <div class="test">
-                            <h3 class="card-tile" th:text="${crew.title}">제목</h3>
-                            <p class="card-text" th:text="${crew.content}">내용</p>
-                        </div>
-                        <div class="d-flex justify-content-between align-items-center">
-                            <small class="text-muted" th:text="${crew.strict}">지역</small>
-                            <div th:id="${crew.id}">
-                                <script th:inline="javascript">
-                                    findPart([[${crew.id}]]);
-                                </script>
+                        <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
+                        <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
+                        <input type="hidden" name="img-key" th:value="${crew.imagePath}">
+                        <div class="card-body">
+                            <div class="test">
+                                <h3 class="card-tile" th:text="${crew.title}">제목</h3>
+                                <p class="card-text" th:text="${crew.content}">내용</p>
                             </div>
-                            <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
-                            <div class="btn-group">
-                                <button type="button" class="btn btn-secondary"><a
-                                        th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
+                            <div class="d-flex justify-content-between align-items-center">
+                                <small class="text-muted" th:text="${crew.strict}">지역</small>
+                                <div th:id="${crew.id}">
+                                    <script th:inline="javascript">
+                                        findPart([[${crew.id}]]);
+                                    </script>
+                                </div>
+                                <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-secondary"><a
+                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
                                                                                page = (${nowPage} - 1) * 9 + ${crewStat.index},
                                                                                loginStatus = ${sportRequest.loginStatus},
                                                                                strict = ${sportRequest.getStrict()},
                                                                                sportsList = ${sportRequest.getSportsList()}
                                                                                )}">상세보기</a>
-                                </button>
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </a>
-                    </div>
-
-
+                </div>
             </div>
-        </div>
 
-            <!-- 하단 페이징-->
-            <div class="py-3 my-4">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                            <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2},
+
+        </div>
+    </div>
+
+    <!-- 하단 페이징-->
+    <div class="py-3 my-4">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-center">
+                <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                    <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2},
                                                                            strict=${sportRequest.getStrict()},
                                                                            loginStatus = ${sportRequest.loginStatus},
                                                                            sportsList=${sportRequest.getSportsList()})}">Previous</a>
-                        </li>
-                        <th:block th:each="page : ${#numbers.sequence(startNumPage, endNumPage)}">
-                            <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
-                                                                                th:href="@{/view/v1/crews(
+                </li>
+                <th:block th:each="page : ${#numbers.sequence(startNumPage, endNumPage)}">
+                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
+                                                                        th:href="@{/view/v1/crews(
                                                                                             page = ${page - 1},
                                                                                             loginStatus = ${sportRequest.loginStatus},
                                                                                             strict=${sportRequest.getStrict()},
                                                                                             sportsList=${sportRequest.getSportsList()}
-                                                                                            )}" th:text="${page}">1</a></li>
+                                                                                            )}" th:text="${page}">1</a>
+                    </li>
 
-                            <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}" style="color: red"></strong></li>
-                        </th:block>
-                        <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
-                            <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
+                    <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
+                                                                             style="color: red"></strong></li>
+                </th:block>
+                <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
+                    <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
                                                                            strict=${sportRequest.getStrict()},
                                                                            loginStatus = ${sportRequest.loginStatus},
                                                                            sportsList=${sportRequest.getSportsList()})}">Next</a>
-                        </li>
-                    </ul>
-                </nav>
-            </div>
-        </div>
+                </li>
+            </ul>
+        </nav>
+    </div>
+    </div>
     </div>
 </main>
 
@@ -446,12 +472,11 @@
 
         var imgKey = $('input[name=img-key]').val();
 
-        if(!imgKey){
+        if (!imgKey) {
             imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
         }
 
         // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
-
 
 
         const params = {
@@ -512,6 +537,7 @@
             playAnim()
         }, isAdding ? 200 : 150)
     }
+
     // start animation
     playAnim()
 
