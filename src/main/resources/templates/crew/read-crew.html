@@ -147,7 +147,7 @@
                 <div class="row justify-content-center">
                     <button type="button" class="btn btn-primary" style="display: none" id="signed" >참여 중</button>
                     <button type="button" class="btn btn-success" style="display: none" id="notallowed" th:onclick="joinCrewAwait()">승인 대기/취소 하기</button>
-                    <a type="button" th:href="@{/view/v1/room(roomId=${details.chatRoomId})}" class="btn btn-primary" style="display: none" id="chatroom">채팅방</a>
+                    <a type="button" th:href="@{/view/v1/room(roomId=${details.chatRoomId},crewId=${details.id})}" class="btn btn-primary" style="display: none" id="chatroom">채팅방</a>
                     <button type="button" id="sendtogle" sec:authorize="isAuthenticated()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">참여하기</button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">

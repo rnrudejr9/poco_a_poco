@@ -6,18 +6,51 @@
 <!-- 네비바-->
 <header th:replace="fragments/fragment :: nav"></header>
 
+<link href="https://webfontworld.github.io/goodchoice/Jalnan.css" rel="stylesheet">
+<link href="/css/room.css" rel="stylesheet">
+<style>
+    * {
+        font-family: 'Jalnan';
+        font-size: medium;
+    }
+</style>
 <th:block>
     <th:block th:fragment="content">
 
-        <div class="container">
-            <div class="col-6">
-                <h1>[[${room.name}]]</h1>
-            </div>
-            <div style="overflow:scroll; height: 535px; display: flex; flex-direction: column-reverse; overflow-y: auto;  background-color: #9bbbd4">
-                <div id="msgArea" style="background-color: #9bbbd4"></div>
+        <input type="hidden" id="roomId" th:value="${room.roomId}">
+        <input type="hidden" id="crewId" th:value="${crewId}">
+        <div class='containerA' ng-cloak ng-app="chatApp">
+            <h1 th:text="${room.name}"></h1>
+            <div class='chatbox' ng-controller="MessageCtrl as chatMessage" >
+                <div class='chatbox__user-list' id="userArea">
+                    <h1>User list</h1>
+                    <div class='chatbox__user--active'>
+                        <p>Jack Thomson</p>
+                    </div>
+                    <div class='chatbox__user--busy'>
+                        <p>Angelina Jolie</p>
+                    </div>
+                    <div class='chatbox__user--active'>
+                        <p>George Clooney</p>
+                    </div>
+                    <div class='chatbox__user--active'>
+                        <p>Seth Rogen</p>
+                    </div>
+                    <div class='chatbox__user--away'>
+                        <p>John Lydon</p>
+                    </div>
+                </div>
+                <div class="chatbox__messages" ng-repeat="message in messages">
+                    <div class="chatbox__messages__user-message scrollBar" id="messagearea">
+
+                    </div>
+<!--                    <div style="overflow:scroll;overflow-x: hidden; height: 550px; width: 450px; display: flex; flex-direction: column; overflow-y: auto;" class="chatbox__messages__user-message">-->
+<!--                    </div>-->
+                </div>
+
             </div>
 
-            <div class="col-5">
+            <div class="containerA">
                 <div class="input-group mb-3">
                     <input type="text" id="msg" class="form-control">
                     <div class="input-group-append">
@@ -25,128 +58,15 @@
                     </div>
                 </div>
             </div>
-            <div class="col-6"></div>
+
+            <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
         </div>
-
-
-        <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
-
     </th:block>
 </th:block>
 
 
-
-<script th:inline="javascript">
-    document.addEventListener("DOMContentLoaded",function(){
-
-        loadFetcher();
-        var roomName = [[${room.name}]];
-        var roomId = [[${room.roomId}]];
-        var username = document.getElementById("myName").innerHTML;
-
-        console.log(roomName + ", " + roomId + ", " + username);
-
-        var sockJs = new SockJS("/stomp/chat", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
-        //1. SockJS를 내부에 들고있는 stomp를 내어줌
-        var stomp = Stomp.over(sockJs);
-
-        //2. connection이 맺어지면 실행
-        stomp.connect({}, function (){
-            console.log("STOMP Connection")
-
-
-            //4. subscribe(path, callback)으로 메세지를 받을 수 있음
-            stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
-
-                var content = JSON.parse(chat.body);
-                var writer = content.writer;
-                var dateTime = new Date().toDateString();
-                var str = '';
-
-                if(writer === username){
-                    str = "<div class='col-6 offset-md-6'>";
-                    str += "<div class='alert alert-warning'>";
-                    str += "<b>" + writer + " : " + content.message + " : " + dateTime + "</b>";
-                    str += "</div></div>";
-                    $("#msgArea").append(str);
-                }
-                else{
-                    str = "<div class='col-6'>";
-                    str += "<div class='alert alert-success'>";
-                    str += "<b>" + writer + " : " + content.message + "</b>";
-                    str += "</div></div>";
-                    $("#msgArea").append(str);
-                }
-            });
-
-
-
-            stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
-            //3. send(path, header, message)로 메세지를 보낼 수 있음
-        });
-
-        $("#button-send").on("click", function(e){
-            var msg = document.getElementById("msg");
-
-            console.log(username + ":" + msg.value);
-            fetcher();
-            stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
-            msg.value = '';
-        });
-    });
-
-    async function loadFetcher(){
-        var roomid = [[${room.roomId}]];
-        let response = await fetch("/api/v1/chat/" + roomid,{
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            credentials: 'include'
-        })
-        if(response.ok){
-            let json = await response.json();
-            console.log(json);
-            for(var i = 0;i<json.result.length;i++){
-                if(json.result[i].writer === document.getElementById("myName").innerHTML ){
-                    str = "<div class='col-6 offset-md-6'>";
-                    str += "<div class='alert alert-warning'>";
-                    str += "<b>" + json.result[i].writer + " : " + json.result[i].message + " : " + json.result[i].createdAt + "</b>";
-                    str += "</div></div>";
-                    $("#msgArea").append(str);
-                }else{
-                    str = "<div class='col-6'>";
-                    str += "<div class='alert alert-success'>";
-                    str += "<b>" + json.result[i].writer + " : " + json.result[i].message + " : " + json.result[i].createdAt + "</b>";
-                    str += "</div></div>";
-                    $("#msgArea").append(str);
-                }
-            }
-        }else{
-            let json = await response.json();
-            console.log(json.result.message);
-        }
-    }
-
-    async function fetcher() {
-        let response = await fetch("/api/v1/chat", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            credentials: "include",
-            body: JSON.stringify({
-                writer: document.getElementById("myName").innerHTML,
-                message: document.getElementById("msg").value,
-                roomId: [[${room.roomId}]]
-            })
-        })
-        console.log("end");
-        console.log(response);
-
-    }
-</script>
+<script type="text/javascript" src="/js/room.js"></script>
 
 
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
