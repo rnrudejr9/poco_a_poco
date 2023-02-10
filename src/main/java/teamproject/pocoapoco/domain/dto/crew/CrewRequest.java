@@ -4,7 +4,6 @@ import lombok.*;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.SportEnum;
 
 @AllArgsConstructor
@@ -30,8 +29,11 @@ public class CrewRequest {
                 .title(this.title)
                 .content(this.content)
                 .crewLimit(this.crewLimit)
+
                 .datepick(this.datepick)
                 .timepick(this.timepick)
+
+                .user(user)
                 .imagePath(this.imagePath)
                 .chatRoom(ChatRoom.builder().name(title).user(user).build())
                 .sportEnum(of(chooseSport))

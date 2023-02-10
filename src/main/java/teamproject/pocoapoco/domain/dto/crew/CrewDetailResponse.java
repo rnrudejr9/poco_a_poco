@@ -5,7 +5,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamproject.pocoapoco.domain.entity.Crew;
-import teamproject.pocoapoco.enums.InterestSport;
 import teamproject.pocoapoco.enums.SportEnum;
 
 import java.time.LocalDateTime;
@@ -24,7 +23,6 @@ public class CrewDetailResponse {
     private String nickName;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
-    private InterestSport interestSport;
     private SportEnum sportEnum;
     private Long chatRoomId;
     private String imagePath;
@@ -42,7 +40,6 @@ public class CrewDetailResponse {
                 .lastModifiedAt(crew.getLastModifiedAt())
                 .imagePath(crew.getImagePath())
                 .chatRoomId(crew.getChatRoom().getRoomId())
-                .interestSport(crew.getInterestSport())
                 .sportEnum(crew.getSportEnum())
                 .build();
     }

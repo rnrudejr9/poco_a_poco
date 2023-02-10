@@ -32,6 +32,9 @@ public class User implements UserDetails {
     private String imagePath;
     private UserRole role = UserRole.ROLE_USER;
 
+    @Builder.Default
+    private Double mannerScore = 36.5;
+
     @OneToOne(cascade = CascadeType.ALL)
     private Sport sport;
     private String provider;
