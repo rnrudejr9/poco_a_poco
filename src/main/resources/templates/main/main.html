@@ -6,9 +6,14 @@
     <meta charset="UTF-8">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
-
 </head>
 <style>
+
+    /*Box 크기 체크용*/
+    /*.crewBoxParent, .collapse, .btnBar, .ttt {*/
+    /*    background-color: #585858;*/
+    /*    border:3px solid red;*/
+    /*}*/
 
     /*타이핑*/
     .typeText::after {
@@ -49,13 +54,15 @@
         width: 30%;
     }
 
-    .card-tile {
+    .card-title {
         display: inline-block;
         white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
         color: #333838;
         width: 90%;
+        margin-top: 1%;
+        margin-bottom: 2%;
     }
 
     .card-text {
@@ -65,6 +72,7 @@
         text-overflow: ellipsis;
         color: #323334;
         width: 100%;
+        margin-bottom: 2%;
     }
 
     .card-body {
@@ -75,18 +83,14 @@
     .crewBoxParent {
         width: 100%;
         margin: 0px auto;
-        padding: 0px;
+        padding-bottom: 1%;
         overflow: auto;
-
-        /*background-color: #585858;*/
-        /*border:3px solid red;*/
-
     }
 
     .crewBox {
         background-color: rgba(248, 253, 253, 0.98);
         border-radius: 20px;
-        box-shadow: 0 8px 14px rgba(82, 216, 254, 0.71),
+        box-shadow: 5px 5px 5px 5px rgba(101, 130, 138, 0.71),
         0 5px 5px rgba(0, 0, 0, 0.22);
         position: center;
         overflow: auto;
@@ -94,6 +98,10 @@
         border: rgba(63, 122, 254, 0.7);
         padding: 0.7%;
         margin: 1%;
+    }
+
+    .participation {
+        color: black;
     }
 
     /*크루 사진*/
@@ -104,7 +112,7 @@
         margin-bottom: 7px;
     }
 
-    /*운동 선택 무빙 효과*/
+    /*운동 버튼 무빙 효과*/
     .btn-jittery {
         animation: jittery 8s infinite;
     }
@@ -144,7 +152,7 @@
         }
     }
 
-    /*운동선택 효과*/
+    /*운동선택 버튼*/
     .btn.cyan {
         background-color: #7fccde;
         box-shadow: 0px 4px 0px #73B9C9;
@@ -163,10 +171,18 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1bbcc2', endColorstr='#18a3a8', GradientType=0);
     }
 
-    /*모임등록 효과*/
+    . btn-outline-danger {
+        height: 70%;
+        width: 100%;
+        padding: 8px 18px;
+    }
+
+    /*모임등록 버튼*/
     .btn.blue {
+        height: 90%;
+        width: 60%;
         background: #6698cb;
-        box-shadow: 0px 4px 0px #7fb1bf;
+        box-shadow: 0px 4px 0px rgba(162, 189, 217, 0.86);
         padding: 8px 18px;
         font-size: 16px;
         color: white;
@@ -191,15 +207,11 @@
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6698cb', endColorstr='#5c8ab8', GradientType=0);
     }
 
-    .participation {
-        color: black;
-    }
-
     /*검색바*/
     .btnBar {
         width: 100%;
-        /*background-color: #585858;*/
-        /*border:3px solid red;*/
+        margin: 0px auto;
+        padding: 0px;
     }
 
     .searchBar {
@@ -224,16 +236,15 @@
         border: 3px solid rgba(46, 223, 255, 0.9);
     }
 
-    /*체크박스*/
+    /*운동 체크박스*/
     .collapse {
         width: 100%;
-        margin: 0px auto;
+        margin: 0px;
         padding: 0px;
-        overflow: auto;
     }
 
     .collapse-body {
-        width: 98%;
+        width: 96%;
         position: center;
         margin: 2%;
         padding: 2%;
@@ -241,327 +252,409 @@
     }
 
     .checkBox-sport {
-        box-shadow: 0 4px 7px rgba(82, 216, 254, 0.71),
+        box-shadow: 0px 5px 5px rgba(101, 130, 138, 0.71),
         0 5px 5px rgba(0, 0, 0, 0.22);
-        color: black;
+        color: rgba(0, 30, 30, 0.76);
+        font-size: 1.1em;
     }
 
-    /*체크박스 버튼*/
-    .checkBox-btn {
-        margin-top: 2%;
-        width: 100%;
-        padding: 0px;
-        overflow: auto;
+    /*체크박스 사이즈 조절*/
+    input[type=checkbox] {
+        -ms-transform: scale(1.5); /* IE */
+        -moz-transform: scale(1.5); /* FF */
+        -webkit-transform: scale(1.5); /* Safari and Chrome */
+        -o-transform: scale(1.5); /* Opera */
+        margin-right: 4px;
+        padding: 10px;
     }
+
+
+    .w-btn {
+        position: relative;
+        border: none;
+        display: inline-block;
+        padding: 10px 20px;
+        border-radius: 15px;
+        font-family: "paybooc-Light", sans-serif;
+        box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
+        text-decoration: none;
+        font-weight: 600;
+        font-size: 1em;
+        transition: 0.25s;
+    }
+
+    /*운동 체크박스 체크 후 조회 버튼*/
+    .w-btn-indigo {
+        background-color: rgba(216, 239, 250, 0.71);
+        color: #1e6b7b;
+    }
+
+    /*MySport 버튼*/
+    .w-btn:hover {
+        letter-spacing: 2px;
+        transform: scale(1.2);
+        cursor: pointer;
+    }
+
+    .w-btn:active {
+        transform: scale(1.5);
+    }
+
+    .w-btn-gra1 {
+        background: linear-gradient(-45deg, #33ccff 0%, #ff99cc 100%);
+        color: white;
+    }
+
+    .w-btn-gra-anim {
+        background-size: 400% 400%;
+        animation: gradient1 5s ease infinite;
+    }
+
+    @keyframes gradient1 {
+        0% {
+            background-position: 0% 50%;
+        }
+        50% {
+            background-position: 100% 50%;
+        }
+        100% {
+            background-position: 0% 50%;
+        }
+    }
+
+    @keyframes gradient2 {
+        0% {
+            background-position: 100% 50%;
+        }
+        50% {
+            background-position: 0% 50%;
+        }
+        100% {
+            background-position: 100% 50%;
+        }
+    }
+
+    @keyframes ring {
+        0% {
+            width: 30px;
+            height: 30px;
+            opacity: 1;
+        }
+        100% {
+            width: 300px;
+            height: 300px;
+            opacity: 0;
+        }
+    }
+
+
+
+
 
 
 </style>
 
 
 <body>
-<!-- 네비바-->
-<header th:replace="fragments/fragment :: nav"></header>
+    <!-- 네비바-->
+    <header th:replace="fragments/fragment :: nav"></header>
+    <script th:inline="javascript" type="text/javascript" src="/js/main.js"></script>
 
-<script th:inline="javascript" type="text/javascript" src="/js/main.js"></script>
-
-<main>
-    <!-- 소개-->
-    <section class="py-5 text-center container ">
-        <!--    <section class="py-5 text-center">-->
-        <div class="row py-lg-5">
-            <div class="col-lg-6 col-md-8 mx-auto">
-                <div class="">
-                    <h1 style="display:inline;">운동</h1>
-                    <h1 style="display:inline;" class="typeText"></h1>
-                </div>
-                <p class="lead text-muted">
-                    <br>
-                    운동 메이트로 함께 운동하고, <br>
-                    동네 이웃과 운동 메이트가 되어 보세요.
-                </p>
-                <div class="searchBar">
-                    <form class="row searchBar2" role="search" action="/view/v1/crews" method="get"
-                          name="findAllCrewWithStrict">
-                        <input type="search" name="strict" class="form-control form-control-dark text-bg-blue"
-                               placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
-                    </form>
-                </div>
-
-            </div>
-        </div>
-    </section>
-
-    <div class="album py-5 bg-light">
-        <div class="container">
-
-            <!-- 운동 종목 데이터 확인-->
-            <!--            <label th:text="|userSportsList : ${userSportsList}|"></label><br>-->
-            <!--            <label th:text="|sportRequest.getSportsList() : ${sportRequest.getSportsList()}|"></label>-->
-
-            <!-- 운동 체크-->
-            <div class="btnBar row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
-                <div class="btn3 d-grid gap-2 d-md-block">
-                    <button class="btn btn-gradient cyan btn-jittery" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
-                        <strong>Like 운동</strong>
-                    </button>
-                </div>
-                <div></div>
-                <div></div>
-                <div>
-                    <p>
-                    <div id="randomCnt" th:text="${randomCnt}"></div>
+    <main>
+        <!-- 소개-->
+        <section class="py-5 text-center container ">
+            <!--    <section class="py-5 text-center">-->
+            <div class="row py-lg-5">
+                <div class="col-lg-6 col-md-8 mx-auto">
+                    <div class="">
+                        <h1 style="display:inline;">운동</h1>
+                        <h1 style="display:inline;" class="typeText"></h1>
+                    </div>
+                    <p class="lead text-muted">
+                        <br>
+                        운동 메이트로 함께 운동하고, <br>
+                        동네 이웃과 운동 메이트가 되어 보세요.
                     </p>
-                </div>
-                <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                    <button class="btn btn-danger" style="display: none" type="button" id="randomMatchCancel_btn"
-                            onclick="randomMatchCancel()">
-                        + 랜덤 매칭 취소🌌
-                    </button>
-                    <button class="btn btn-outline-danger" type="button" id="randomMatch_btn" onclick="randomMatch()">
-                        + 랜덤 매칭🔥
-                    </button>
-                    <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews/write'">
-                        <strong>+ 모임 등록</strong>
-                    </button>
-                </div>
-            </div>
-
-            <div class="collapse" id="collapseExample">
-                <div class="card card-body collapse-body">
-                    <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
-                        <small class="text-muted" type="hidden" th:field="*{loginStatus}"
-                               th:value="${sportRequest.loginStatus}"></small>
-                        <div class="grid text-center">
-                            <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
-                                <label class="checkBox-sport btn btn-outline-info" th:each="sport : ${sportEnums}">
-                                    <input type="checkbox"
-                                           onclick="count_check(this)"
-                                           name="chk"
-                                           th:field="*{sportsList}"
-                                           th:value="${sport}"
-                                           th:text="${sport.getValue()}">
-                                </label>
-                            </div>
-                            <div class="checkBox-btn btn3">
-                                <button class="btn btn-gradient blue" type="submit"><strong>조회 버튼</strong></button>
-                                <button class="btn btn-gradient blue" type="button"
-                                        onclick="location.href='/view/v1/crews'">
-                                    <strong>My운동종목</strong>
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+                    <div class="searchBar">
+                        <form class="row searchBar2" role="search" action="/view/v1/crews" method="get"
+                              name="findAllCrewWithStrict">
+                            <input type="search" name="strict" class="form-control form-control-dark text-bg-blue"
+                                   placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
+                        </form>
+                    </div>
 
                 </div>
             </div>
+        </section>
 
-            <!-- 앨범-->
-            <div class="crewBoxParent row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 ">
-                <div class="col crewBox" th:each="crew : ${crewList}">
-                    <a class="link-light" th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
-                                                                               page = (${nowPage} - 1) * 9 + ${crewStat.index},
-                                                                               loginStatus = ${sportRequest.loginStatus},
-                                                                               strict = ${sportRequest.getStrict()},
-                                                                               sportsList = ${sportRequest.getSportsList()}
-                                                                               )}">
-                        <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
-                        <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
-                        <input type="hidden" name="img-key" th:value="${crew.imagePath}">
-                        <div class="card-body">
-                            <div class="test">
-                                <h3 class="card-tile" th:text="${crew.title}">제목</h3>
-                                <p class="card-text" th:text="${crew.content}">내용</p>
-                            </div>
-                            <div class="d-flex justify-content-between align-items-center">
-                                <small class="text-muted" th:text="${crew.strict}">지역</small>
-                                <div th:id="${crew.id}">
-                                    <script th:inline="javascript">
-                                        findPart([[${crew.id}]]);
-                                    </script>
+        <div class="album py-5 bg-light">
+            <div class="container">
+                <!-- 운동 종목 데이터 확인-->
+                <!--            <label th:text="|userSportsList : ${userSportsList}|"></label><br>-->
+                <!--            <label th:text="|sportRequest.getSportsList() : ${sportRequest.getSportsList()}|"></label>-->
+
+                <!-- 운동종목&랜덤매칭&모임등록 버튼-->
+                <div class="btnBar row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
+                    <div class="btn3 d-grid gap-2 d-md-block">
+                        <button class="btn btn-gradient cyan btn-jittery" type="button" data-bs-toggle="collapse"
+                                data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+                            <strong>Like 운동</strong>
+                        </button>
+                    </div>
+                    <div></div>
+                    <div></div>
+                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                        <p>
+                        <div id="randomCnt" th:text="${randomCnt}"></div>
+                        </p>
+                        <button class="btn btn-danger" style="display: none" type="button" id="randomMatchCancel_btn"
+                                onclick="randomMatchCancel()">
+                            + 랜덤 매칭 취소🌌
+                        </button>
+                        <button class="btn btn-outline-danger" type="button" id="randomMatch_btn" onclick="randomMatch()">
+                            + 랜덤 매칭🔥
+                        </button>
+                    </div>
+                    <div class="d-grid gap-1 d-md-flex justify-content-md-end">
+                        <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews/write'">
+                            <strong>+ 모임 등록</strong>
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <!-- 운동종목 체크박스-->
+                <div class="collapse" id="collapseExample">
+                    <div class="card card-body collapse-body">
+                        <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
+                            <small class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}"></small>
+                                <div class="grid text-center">
+                                    <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
+                                        <label class="checkBox-sport btn btn-outline-info" th:each="sport : ${sportEnums}">
+                                            <input type="checkbox"
+                                                   onclick="count_check(this)"
+                                                   th:field="*{sportsList}"
+                                                   th:value="${sport}"
+                                                   th:text="${sport.getValue()}">
+                                        </label>
+                                        <label th:each="sport : ${sportEnums}">
+
+                                        </label>
+                                    </div>
+                                    <div class="row justify-content-end">
+                                        <div class="col-8">
+                                            <button class="w-btn w-btn-indigo" type="submit">
+                                                운동 조회
+                                            </button>
+                                        </div>
+                                        <div class="col-2">
+                                                <button class="w-btn w-btn-gra1 w-btn-gra-anim" type="button"  onclick="location.href='/view/v1/crews'">
+                                                    My운동종목
+                                                </button>
+                                        </div>
+                                    </div>
                                 </div>
-                                <small class="text-muted" th:text="${crew.crewLimit} + 명">인원</small>
-                                <div class="btn-group">
-                                    <button type="button" class="btn btn-secondary"><a
-                                            th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
-                                                                               page = (${nowPage} - 1) * 9 + ${crewStat.index},
-                                                                               loginStatus = ${sportRequest.loginStatus},
-                                                                               strict = ${sportRequest.getStrict()},
-                                                                               sportsList = ${sportRequest.getSportsList()}
-                                                                               )}">상세보기</a>
-                                    </button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 앨범-->
+                <div class="crewBoxParent row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3 ">
+                    <div class="col crewBox" th:each="crew : ${crewList}">
+                        <a class="link-light" th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id},
+                                                                                   page = (${nowPage} - 1) * 9 + ${crewStat.index},
+                                                                                   loginStatus = ${sportRequest.loginStatus},
+                                                                                   strict = ${sportRequest.getStrict()},
+                                                                                   sportsList = ${sportRequest.getSportsList()}
+                                                                                   )}">
+                            <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
+                            <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
+                            <input type="hidden" name="img-key" th:value="${crew.imagePath}">
+                            <div class="card-body">
+                                <div class="">
+                                    <h3 class="card-title" th:text="${crew.title}">제목</h3>
+                                    <p class="card-text" th:text="${crew.content}">내용</p>
+                                </div>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted text-strict" th:text="${crew.strict}">지역</small>
+                                    <small class="text-muted text-strict2" ></small>
+                                    <small class="participation text-muted" th:id="${crew.id}">
+                                        <script th:inline="javascript">
+                                            findPart([[${crew.id}]]);
+                                        </script>
+                                    </small>
+                                    <small class="text-muted"> / [(${crew.crewLimit})] 명</small>
                                 </div>
                             </div>
-                        </div>
-                    </a>
+                        </a>
+                    </div>
                 </div>
+
+
             </div>
-
-
         </div>
-    </div>
 
-    <!-- 하단 페이징-->
-    <div class="py-3 my-4">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-center">
-                <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
-                    <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2},
-                                                                           strict=${sportRequest.getStrict()},
-                                                                           loginStatus = ${sportRequest.loginStatus},
-                                                                           sportsList=${sportRequest.getSportsList()})}">Previous</a>
-                </li>
-                <th:block th:each="page : ${#numbers.sequence(startNumPage, endNumPage)}">
-                    <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
-                                                                        th:href="@{/view/v1/crews(
-                                                                                            page = ${page - 1},
-                                                                                            loginStatus = ${sportRequest.loginStatus},
-                                                                                            strict=${sportRequest.getStrict()},
-                                                                                            sportsList=${sportRequest.getSportsList()}
-                                                                                            )}" th:text="${page}">1</a>
+        <!-- 하단 페이징-->
+        <div class="py-3 my-4">
+            <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">
+                    <li class="page-item" th:classappend="${1 == nowPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage - 2},
+                                                                               strict=${sportRequest.getStrict()},
+                                                                               loginStatus = ${sportRequest.loginStatus},
+                                                                               sportsList=${sportRequest.getSportsList()})}">Previous</a>
                     </li>
+                    <th:block th:each="page : ${#numbers.sequence(startNumPage, endNumPage)}">
+                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
+                                                                            th:href="@{/view/v1/crews(
+                                                                                                page = ${page - 1},
+                                                                                                loginStatus = ${sportRequest.loginStatus},
+                                                                                                strict=${sportRequest.getStrict()},
+                                                                                                sportsList=${sportRequest.getSportsList()}
+                                                                                                )}" th:text="${page}">1</a>
+                        </li>
 
-                    <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
-                                                                             style="color: red"></strong></li>
-                </th:block>
-                <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
-                    <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
-                                                                           strict=${sportRequest.getStrict()},
-                                                                           loginStatus = ${sportRequest.loginStatus},
-                                                                           sportsList=${sportRequest.getSportsList()})}">Next</a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-    </div>
-    </div>
-</main>
+                        <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
+                                                                                 style="color: red"></strong></li>
+                    </th:block>
+                    <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
+                        <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
+                                                                               strict=${sportRequest.getStrict()},
+                                                                               loginStatus = ${sportRequest.loginStatus},
+                                                                               sportsList=${sportRequest.getSportsList()})}">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </main>
 
-<footer th:replace="fragments/fragment :: footer"></footer>
+    <footer th:replace="fragments/fragment :: footer"></footer>
 
-<!-- JavaScript Bundle with Popper -->
-<script type="text/javascript" src="/js/random.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
-        integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
-        crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/js/random.js"></script>
 
 
-<script type="text/javascript" th:inline="javascript">
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"-->
+<!--            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"-->
+<!--            crossorigin="anonymous"></script>-->
 
-    window.onload = async function profileGet() {
 
-        let uuidString = self.crypto.randomUUID();
+    <script type="text/javascript" th:inline="javascript">
 
-        const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
-        const SECRET_ACCESS_KEY = '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';
-        const REGION = 'ap-northeast-2';
-        const BUCKET_NAME = 'poco-bucket-2';
-        const BUCKET_DIRECTORY = '/crewimages';
-        const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+        window.onload = async function profileGet() {
 
-        // AWS ACCESS KEY를 세팅합니다.
+            let uuidString = self.crypto.randomUUID();
 
-        AWS.config.update({
-            accessKeyId: ACCESS_KEY,
-            secretAccessKey: SECRET_ACCESS_KEY
-        });
+            const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
+            const SECRET_ACCESS_KEY = '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';
+            const REGION = 'ap-northeast-2';
+            const BUCKET_NAME = 'poco-bucket-2';
+            const BUCKET_DIRECTORY = '/crewimages';
+            const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
 
-        var s3 = new AWS.S3({
-            region: REGION
-        });
+            // AWS ACCESS KEY를 세팅합니다.
 
-        var imgKey = $('input[name=img-key]').val();
+            AWS.config.update({
+                accessKeyId: ACCESS_KEY,
+                secretAccessKey: SECRET_ACCESS_KEY
+            });
 
-        if (!imgKey) {
-            imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+            var s3 = new AWS.S3({
+                region: REGION
+            });
+
+            var imgKey = $('input[name=img-key]').val();
+
+            if (!imgKey) {
+                imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+            }
+
+            // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+
+
+            const params = {
+                Bucket: S3_BUCKET,
+                Key: imgKey
+            };
+
+            var url = s3.getSignedUrl(
+                "getObject", params
+            );
+
+            // const img1 = document.getElementById('left-image');
+            // img1.src = url;
+
+            const img2 = document.getElementById('main-image');
+            img2.src = url;
+
+            console.log(url);
         }
 
-        // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+        // 타이핑 효과
+        var typeText = document.querySelector(".typeText")
+        var textToBeTyped = "운동 메이트"
+        var textToBeTypedArr = ["메", "\0메이트!"]
+        var index = 0, isAdding = true, textToBeTypedIndex = 0
 
-
-        const params = {
-            Bucket: S3_BUCKET,
-            Key: imgKey
-        };
-
-        var url = s3.getSignedUrl(
-            "getObject", params
-        );
-
-        // const img1 = document.getElementById('left-image');
-        // img1.src = url;
-
-        const img2 = document.getElementById('main-image');
-        img2.src = url;
-
-        console.log(url);
-    }
-
-    // 타이핑 효과
-    var typeText = document.querySelector(".typeText")
-    var textToBeTyped = "운동 메이트"
-    var textToBeTypedArr = ["메", "\0메이트!"]
-    var index = 0, isAdding = true, textToBeTypedIndex = 0
-
-    function playAnim() {
-        setTimeout(function () {
-            // set the text of typeText to a substring of the text to be typed using index.
-            typeText.innerText = textToBeTypedArr[textToBeTypedIndex].slice(0, index)
-            if (isAdding) {
-                // adding text
-                if (index > textToBeTypedArr[textToBeTypedIndex].length) {
-                    // no more text to add
-                    isAdding = false
-                    //break: wait 2s before playing again
-                    setTimeout(function () {
-                        playAnim()
-                    }, 2500)
-                    return
+        function playAnim() {
+            setTimeout(function () {
+                // set the text of typeText to a substring of the text to be typed using index.
+                typeText.innerText = textToBeTypedArr[textToBeTypedIndex].slice(0, index)
+                if (isAdding) {
+                    // adding text
+                    if (index > textToBeTypedArr[textToBeTypedIndex].length) {
+                        // no more text to add
+                        isAdding = false
+                        //break: wait 2s before playing again
+                        setTimeout(function () {
+                            playAnim()
+                        }, 2500)
+                        return
+                    } else {
+                        // increment index by 1
+                        index++
+                    }
                 } else {
-                    // increment index by 1
-                    index++
+                    // removing text
+                    if (index === 0) {
+                        // no more text to remove
+                        isAdding = true
+                        //switch to next text in text array
+                        textToBeTypedIndex = (textToBeTypedIndex + 1) % textToBeTypedArr.length
+                    } else {
+                        // decrement index by 1
+                        index--
+                    }
                 }
-            } else {
-                // removing text
-                if (index === 0) {
-                    // no more text to remove
-                    isAdding = true
-                    //switch to next text in text array
-                    textToBeTypedIndex = (textToBeTypedIndex + 1) % textToBeTypedArr.length
-                } else {
-                    // decrement index by 1
-                    index--
+                // call itself
+                playAnim()
+            }, isAdding ? 200 : 150)
+        }
+
+        // start animation
+        playAnim()
+
+        // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
+        history.replaceState({}, null, location.pathname);
+
+        // 운동 종목 체크박스 3개 초과 시 알람
+        function count_check(obj) {
+
+            var chkBox = document.getElementById("btn-sports");
+            var chkCnt = 0;
+
+            for (var i = 0; i < chkBox.length; i++) {
+                if (chkBox[i].checked) {
+                    chkCnt++;
                 }
             }
-            // call itself
-            playAnim()
-        }, isAdding ? 200 : 150)
-    }
-
-    // start animation
-    playAnim()
-
-    // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
-    history.replaceState({}, null, location.pathname);
-
-    // 운동 종목 체크박스 3개 초과 시 알람
-    function count_check(obj) {
-
-        var chkBox = document.getElementById("btn-sports");
-        var chkCnt = 0;
-
-        for (var i = 0; i < chkBox.length; i++) {
-            if (chkBox[i].checked) {
-                chkCnt++;
+            if (chkCnt > 3) {
+                alert("최대 3개 체크 가능합니다.");
+                obj.checked = false;
+                return false;
             }
         }
-        if (chkCnt > 3) {
-            alert("최대 3개 체크 가능합니다.");
-            obj.checked = false;
-            return false;
-        }
-    }
-</script>
+    </script>
 
 </body>
 </html>
