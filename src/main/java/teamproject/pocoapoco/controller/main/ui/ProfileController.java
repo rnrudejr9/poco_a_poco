@@ -10,6 +10,7 @@ import teamproject.pocoapoco.controller.main.api.UserController;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -22,6 +23,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -194,6 +196,13 @@ public class ProfileController {
 
 
         return "/profile/upload-form";
+    }
+
+
+    @ModelAttribute("sportEnums")
+    private List<SportEnum> sportEnums() {
+        List<SportEnum> sportEnums = List.of(SportEnum.values());
+        return sportEnums;
     }
 
 

@@ -39,6 +39,7 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.POST, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
+                .antMatchers(HttpMethod.GET, "/view/v1/dashboard").permitAll()
                 .and()
                 .oauth2Login()
                 .loginPage("/view/v1/start")

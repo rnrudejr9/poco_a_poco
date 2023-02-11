@@ -16,6 +16,7 @@ import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
+import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
@@ -62,6 +63,7 @@ public class CrewService {
     }
 
     // 크루 게시글 삭제
+    @Transactional
     public CrewResponse deleteCrew(Long crewId, String userName) {
 
         User user = findByUserName(userName);
@@ -74,6 +76,9 @@ public class CrewService {
         return new CrewResponse("Crew 삭제 완료", crewId);
     }
 
+
+
+
     // 크루 게시물 상세 조회
     public CrewDetailResponse detailCrew(Long crewId) {
 
@@ -84,6 +89,7 @@ public class CrewService {
     }
 
     // 크루 게시물 전체조회, 지역조회, 운동종목 조회
+    @Transactional
     public Page<CrewDetailResponse> findAllCrewsByStrictAndSportEnum(CrewSportRequest crewSportRequest, boolean sportsListIsEmpty, Pageable pageable) {
 
         if (crewSportRequest.getStrict() == null && CollectionUtils.isEmpty(crewSportRequest.getSportsList()) && sportsListIsEmpty) {
@@ -129,7 +135,7 @@ public class CrewService {
             SportEnum[] sports = new SportEnum[3];
 
             for (int i = 0; i < sportsList.size(); i++) {
-                sports[i] = SportEnum.valueOf(sportsList.get(i));
+                sports[i] = SportEnum.valueOf(sportsList.get(i)); // null
                 log.info("Service sports List : {}", sports[i]);
             }
 
@@ -151,10 +157,16 @@ public class CrewService {
     }
 
     // 해당 게시글 작성자 확인
+    @Transactional
     public void findByUserAndCrewContaining(User user, Crew crew) {
-        if (!user.getCrews().contains(crew)) {
-            throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 게시글에 접근 권한이 없습니다.");
+
+        if(!user.getRole().equals(UserRole.ROLE_ADMIN)){
+            if (!user.getCrews().contains(crew)) {
+                throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 게시글에 접근 권한이 없습니다.");
+            }
+
         }
+
     }
 
     public List<String> getUserSports(Authentication authentication, Boolean sportsListIsEmpty) {
@@ -165,15 +177,17 @@ public class CrewService {
 
             User user = findByUserName(authentication.getName());
 
-            if (user.getSport().isSoccer()) {
-                userSportsList.add("SOCCER");
+            if(user.getSport().getSport1()!=null){
+                userSportsList.add(String.valueOf(user.getSport().getSport1()));
             }
-            if (user.getSport().isJogging()) {
-                userSportsList.add("JOGGING");
+            if(user.getSport().getSport2()!=null){
+                userSportsList.add(String.valueOf(user.getSport().getSport2()));
             }
-            if (user.getSport().isTennis()) {
-                userSportsList.add("TENNIS");
+            if(user.getSport().getSport3()!=null){
+                userSportsList.add(String.valueOf(user.getSport().getSport3()));
             }
+
+
         }
         return userSportsList;
     }
