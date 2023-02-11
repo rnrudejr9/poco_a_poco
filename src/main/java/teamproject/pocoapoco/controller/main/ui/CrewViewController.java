@@ -267,4 +267,11 @@ public class CrewViewController {
         return sportEnums;
     }
 
+    @GetMapping("/test")
+    private String test() {
+
+        return "main/main2";
+    }
+
+
 }
