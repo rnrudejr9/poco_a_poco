@@ -1,12 +1,10 @@
-package teamproject.pocoapoco.controller.main.api.sse;
+package teamproject.pocoapoco.service.livematch;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
@@ -16,7 +14,6 @@ import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.repository.part.ParticipationRepository;
-import teamproject.pocoapoco.service.livematch.LiveMatchService;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
@@ -27,13 +24,11 @@ import java.util.Set;
 
 import static teamproject.pocoapoco.controller.main.api.sse.SseController.randomMatchListCnt;
 
-@RestController
-@RequestMapping("/api/v1/match")
+@Service
 @RequiredArgsConstructor
 @Slf4j
-public class RandomMatchController {
+public class LiveMatchService {
     //랜던매치 누르면 작동
-    private final LiveMatchService liveMatchService;
     private final UserRepository userRepository;
     private final CrewRepository crewRepository;
     private final ParticipationRepository participationRepository;
@@ -41,7 +36,6 @@ public class RandomMatchController {
     private final String randomComment = "랜덤매칭입니다. 채팅방에서 협의 후 결정해 주세요";
     private final String randomKey = "randomMatching";
 
-    @PostMapping("/random")
     @Transactional
     public int randomMatch(@RequestParam String username, @RequestParam String sport) {
 
@@ -52,7 +46,7 @@ public class RandomMatchController {
         // redis에 대기열 순서대로 삽입, 현재 시간을 score로 잡음
         redisTemplate.opsForZSet().add(randomKey, username, System.currentTimeMillis());
         // 삭제를 위해 set에 sport 저장 -> 자바스크립트에서 sport 매개변수로 줄 수는 없을까?
-//        redisTemplate.opsForSet().add(username,sport);
+        redisTemplate.opsForSet().add(username,sport);
 
         // 현재 대기열의 총 숫자 확인
         Long randomMatchListInRedis = redisTemplate.opsForZSet().zCard(randomKey);
@@ -160,10 +154,18 @@ public class RandomMatchController {
         return 1;
     }
 
-    @PostMapping("/random/cancel")
     @Transactional
     public int randomMatchCancel(@RequestParam String username) {
-        return liveMatchService.randomMatchCancel(username);
+        // redis에 있는 userName을 삭제
+        redisTemplate.opsForZSet().remove(randomKey, username);
+//        redisTemplate.opsForSet().remove(username);
+
+        Long randomMatchListInRedisCnt = redisTemplate.opsForZSet().zCard(randomKey);
+        log.info("현재 redis의 대기열의 숫자는 : {} 입니다", randomMatchListInRedisCnt);
+
+        //sse에 대기인원 표시
+        randomMatchListCnt = randomMatchListInRedisCnt;
+        return 1;
     }
 
     private User findUserFromRedis(String matchListInRedis) {
