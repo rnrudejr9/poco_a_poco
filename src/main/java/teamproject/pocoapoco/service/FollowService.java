@@ -21,7 +21,7 @@ import java.util.Optional;
 public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
-    public String follow(String followingUserId, Long userId){
+    public FollowingResponse follow(String followingUserId, Long userId){
 
         User followingUser = userRepository.findByUserName(followingUserId).orElseThrow(()->
         {
@@ -41,10 +41,12 @@ public class FollowService {
 
         if(followRepository.findByFollowingUserIdAndFollowedUserId(followingUser.getId(),user.getId()).isPresent()){
             followRepository.delete(follow.get());
-            return user.getUsername()+"님을 팔로우 취소 합니다.";
+            //팔로우 취소
+            return new FollowingResponse(user.getUsername(),user.getNickName(),false);
         }else
+            //팔로우
             followRepository.save(new Follow(followingUser,user));
-        return user.getUsername()+"님을 팔로우 합니다.";
+        return new FollowingResponse(user.getUsername(),user.getNickName(),true);
 
     }
 //    public String unFollow(String unFollowingUserId, Long userId){

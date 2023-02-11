@@ -14,7 +14,7 @@ public class Follow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    private Boolean status;
     @ManyToOne(fetch=FetchType.LAZY)
     @JoinColumn(name = "followingUserId")
     private User followingUser;  //팔로잉 한 유저(로그인 한 유저)
