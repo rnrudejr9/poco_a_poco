@@ -1,0 +1,93 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/fragment :: head"></head>
+
+
+
+<body>
+<!-- 네비바-->
+<header th:replace="fragments/fragment :: nav"></header>
+
+
+
+<main sec:authorize ="hasRole('ROLE_ADMIN')">
+
+    <div class="d-flex flex-nowrap">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 200px;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-4">Sidebar</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="/view/v1/crews" class="nav-link text-white" aria-current="page">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/crews"></use></svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="/view/v1/manage/crews" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/manage/crews"></use></svg>
+                        모임 관리
+                    </a>
+                </li>
+                <li>
+                    <a href="/view/v1/manage/users" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/manage/users"></use></svg>
+                        이용자 관리
+                    </a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+
+
+
+        <div class="mt-5 pt-5" id="user-table" style="text-align: center;">
+            <div class="card">
+                <div class="card-body">
+                    <a>현재 접속자는 <a th:text="${currentUser}" style="color: #007bff"></a> 명 입니다.</a>
+                </div>
+            </div>
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>회원 번호</th>
+                    <th>아이디</th>
+                    <th>닉네임</th>
+                    <th>가입 이메일</th>
+                    <th>매너 점수</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="user: ${userManageResponsePage}">
+                    <td th:text="${user.id}"></td>
+                    <td><a th:href="@{/view/v1/users/profile/{userName}(userName = ${user.userName})}" th:text="${user.userName}"></a></td>
+                    <td th:text="${user.nickName}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td th:text="${user.mannerScore}"></td>
+                </tr>
+
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+</main>
+
+<footer th:replace="fragments/fragment :: footer"></footer>
+
+
+</body>
+</html>

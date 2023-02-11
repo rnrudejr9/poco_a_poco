@@ -39,6 +39,7 @@
             -moz-user-select: none;
             user-select: none;
         }
+
     </style>
 
 
@@ -71,6 +72,10 @@
                 </a></li>
                 <li><a href="/view/v1/users/profile/my" sec:authorize="isAuthenticated()" th:href="@{/view/v1/users/profile/my}"
                        class="nav-link px-2 text-white"><h5>My프로필&emsp;&emsp;</h5></a></li>
+                <li><a href="/view/v1/users/profile/my" sec:authorize ="hasRole('ROLE_ADMIN')" th:href="@{/view/v1/manage/users}"
+                       class="nav-link px-2 text-white"><h5>관리자 페이지&emsp;&emsp;</h5></a></li>
+
+
             </ul>
             <body>
             <div id="messages"></div>

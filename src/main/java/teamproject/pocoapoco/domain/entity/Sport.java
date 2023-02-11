@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import teamproject.pocoapoco.enums.SportEnum;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,15 +21,15 @@ public class Sport {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private boolean soccer;
-    private boolean jogging;
-    private boolean tennis;
+    private SportEnum sport1;
+    private SportEnum sport2;
+    private SportEnum sport3;
 
-    public static Sport setSport(boolean likeSoccer, boolean likeJogging, boolean likeTennis){
+    public static Sport setSport(SportEnum sport1, SportEnum sport2, SportEnum sport3 ){
         return Sport.builder()
-                .soccer(likeSoccer)
-                .jogging(likeJogging)
-                .tennis(likeTennis)
+                .sport1(sport1)
+                .sport2(sport2)
+                .sport3(sport3)
                 .build();
 
     }

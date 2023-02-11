@@ -1,0 +1,235 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/fragment :: head"></head>
+
+<body>
+<!-- 네비바-->
+<header th:replace="fragments/fragment :: nav"> </header>
+<main>
+
+    <div class="d-flex flex-nowrap">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 200px;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-4">관리자 페이지</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="/view/v1/crews" class="nav-link text-white" aria-current="page">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="/view/v1/dashboard" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+                        모임 현황
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#table"></use></svg>
+                        게시글 관리
+                    </a>
+                </li>
+                <li>
+                    <a href="#" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+                        이용자 관리
+                    </a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+
+        <div style="width: 900px;">
+
+
+<!--            <div class="accordion" id="accordionExample">-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header" id="headingOne">-->
+<!--                        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">-->
+<!--                            Accordion Item #1-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">-->
+<!--                        <div class="accordion-body">-->
+<!--                            <strong>This is the first item's accordion body.</strong> It is shown by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header" id="headingTwo">-->
+<!--                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">-->
+<!--                            Accordion Item #2-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="collapseTwo" class="accordion-collapse collapse" aria-labelledby="headingTwo" data-bs-parent="#accordionExample">-->
+<!--                        <div class="accordion-body">-->
+<!--                            <strong>This is the second item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--                <div class="accordion-item">-->
+<!--                    <h2 class="accordion-header" id="headingThree">-->
+<!--                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseThree" aria-expanded="false" aria-controls="collapseThree">-->
+<!--                            Accordion Item #3-->
+<!--                        </button>-->
+<!--                    </h2>-->
+<!--                    <div id="collapseThree" class="accordion-collapse collapse" aria-labelledby="headingThree" data-bs-parent="#accordionExample">-->
+<!--                        <div class="accordion-body">-->
+<!--                            <strong>This is the third item's accordion body.</strong> It is hidden by default, until the collapse plugin adds the appropriate classes that we use to style each element. These classes control the overall appearance, as well as the showing and hiding via CSS transitions. You can modify any of this with custom CSS or overriding our default variables. It's also worth noting that just about any HTML can go within the <code>.accordion-body</code>, though the transition does limit overflow.-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+
+
+            <div class="container px-4 py-5" id="featured-3">
+                <h2 class="pb-2 border-bottom">모임 수</h2>
+                <div class="row g-4 py-5 row-cols-1 row-cols-lg-3 text-center">
+                    <div class="feature col">
+                        <h3 class="fs-2">현재 접속자 수</h3>
+
+                        <article th:text="${userCount}" id="userCount"></article>
+
+                    </div>
+                    <div class="feature col">
+
+                        <h3 class="fs-2">전체 모임 수</h3>
+                        <article th:text = "${crewCount}" id="totalCount"></article>
+                    </div>
+                </div>
+            </div>
+
+
+            <div>
+
+                <div class="px-4 py-5" style="width: 900px;">
+                    <h3>종목별 모임 수</h3>
+                    <br>
+                    <div th:each="sport : ${sportEnums}" style="width: 900px;" id="sport-buttons">
+                        <input hidden id="sport">
+                        <button class="btn btn-primary" id="selectSport" name="selectSport" type="button" th:value="${sport}" th:text="${sport.getValue()}" onclick="location.href='/view/v1/dashboard?sport='+this.value+'&strict=';"></button>
+
+                    </div>
+                    <article th:text="${crewCountBySportEnum}" id="sportCount"></article>
+                </div>
+
+
+            </div>
+
+
+            <div>
+
+                <div class="px-4 py-5" style="width: 900px;">
+                    <h3>지역별 모임 수</h3>
+                    <br>
+                    <div th:each="strict : ${strictEnums}" style="width: 900px;">
+                        <input hidden id="strict">
+                        <input class="btn btn-primary" id="selectStrict" name="selectStrict" type="button" th:value="${strict}" th:text="${strict.getValue()}" onclick="location.href='/view/v1/dashboard?sport=&strict='+this.value;"></input>
+
+                    </div>
+                    <article th:text = "${crewCountByStrict}" id="strictCount"></article>
+                </div>
+
+            </div>
+
+        </div>
+
+
+
+    </div>
+
+
+
+</main>
+
+<footer th:replace="fragments/fragment :: footer"></footer>
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+
+<script script type="text/javascript">
+
+    // $(document).ready(function(){
+    //     setInterval(function (){
+    //         var strictData = $("#strict").val();
+    //         var sportData = $("#sport").val();
+    //         $.ajax({
+    //             type: 'get',
+    //             url: '/view/v1/dashboard',
+    //             data: {strict: strictData , sport: sportData },
+    //             async: false,
+    //             success: function (result){
+    //                 // $("#totalCount").innerText = result.;
+    //                 console.log(result);
+    //
+    //             }
+    //         })
+    //
+    //     }, 10000); // 1초에 한 번씩 업데이트
+    //
+    // });
+
+
+</script>
+
+<script script type="text/javascript">
+
+
+    async function showDashboard(){
+
+        console.log('strict: ', document.getElementById('strict').value);
+        console.log('sport: ', document.getElementById('sport').value);
+
+        let url = "/view/v1/dashboard(" + "strict=" + document.getElementById('strict').value + ", sport=" + document.getElementById('sport').value + ")";
+        let response = await fetch(url, {
+            method: "Get"
+        })
+        console.log(response);
+        if(response.ok){
+            let json = await response.json()
+            console.log(json);
+        }else{
+            let json = await response.text();
+            console.log(json);
+        }
+
+
+    }
+
+    function insertSports(sport){
+
+        var strictData = $("#strict").val();
+        var sportData = $("#sport").val();
+        $.ajax({
+            type: 'get',
+            url: '/view/v1/dashboard',
+            data: {strict: strictData , sport: sportData },
+            async: false,
+            success: function (result){
+                // $("#totalCount").innerText = result.;
+                console.log(result);
+
+            }
+        })
+
+
+        document.getElementById('sport').value = sport;
+
+
+
+    }
+
+
+    function insertStrict(strict) {
+
+        document.getElementById('strict').value = strict;
+        alert(document.getElementById('strict').value);
+    }
+
+
+</script>
+
+</body>
+</html>

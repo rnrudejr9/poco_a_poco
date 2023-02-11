@@ -1,0 +1,140 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/fragment :: head"></head>
+
+<body>
+<!-- 네비바-->
+<header th:replace="fragments/fragment :: nav"></header>
+
+
+<main sec:authorize ="hasRole('ROLE_ADMIN')">
+
+    <div class="d-flex flex-nowrap">
+        <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 200px;">
+            <a href="/" class="d-flex align-items-center mb-3 mb-md-0 me-md-auto text-white text-decoration-none">
+                <svg class="bi pe-none me-2" width="40" height="32"><use xlink:href="#bootstrap"></use></svg>
+                <span class="fs-4">Sidebar</span>
+            </a>
+            <hr>
+            <ul class="nav nav-pills flex-column mb-auto">
+                <li class="nav-item">
+                    <a href="/view/v1/crews" class="nav-link text-white" aria-current="page">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/crews"></use></svg>
+                        Home
+                    </a>
+                </li>
+                <li>
+                    <a href="/view/v1/manage/crews" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/manage/crews"></use></svg>
+                        모임 관리
+                    </a>
+                </li>
+                <li>
+                    <a href="/view/v1/manage/users" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/manage/users"></use></svg>
+                        이용자 관리
+                    </a>
+                </li>
+            </ul>
+            <hr>
+        </div>
+
+
+
+        <div class="mt-5 pt-5" id="user-table" style="text-align: center;">
+
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>모임 번호</th>
+                    <th>모임 이름</th>
+                    <th>작성자</th>
+                    <th>참여자 수</th>
+                    <th>최대 인원</th>
+                    <th>모임 상태</th>
+                    <th>모임삭제하기</th>
+                </tr>
+                </thead>
+
+                <tbody id="crewList">
+                <tr th:each="crew: ${crewManageResponsePage}">
+                    <td th:text="${crew.id}" id="crewId"></td>
+                    <td><a href="#" th:text="${crew.title}"></a></td>
+                    <td th:text="${crew.title}"></td>
+                    <td th:text="${crew.currentParticipants}"></td>
+                    <td th:text="${crew.crewLimit}"></td>
+                    <th th:text="${crew.status}"></th>
+                    <td><button type="button"class="btn btn-danger" id="" onclick="deleteCrewManager()" >삭제</button></td>
+
+                </tr>
+
+                </tbody>
+            </table>
+
+
+
+
+        </div>
+
+
+
+
+    </div>
+
+
+</main>
+
+
+
+<main class="mt-5 pt-5">
+
+
+
+
+</main>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+
+
+    async function deleteCrewManager() {
+
+        let userList = document.getElementById('crewList');
+
+        for (let i = 0; i < userList.rows.length; i++) {
+            userList.rows[i].cells[6].onclick = async function () {
+                let crewId = userList.rows[i].cells[0].innerText;
+                alert(crewId + "을 선택하셨습니다.");
+
+                let response = await fetch("/api/v1/crews/" + crewId, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+
+                })
+                if (response.ok) {
+                    let json = await response.json();
+
+                    confirm("모임이 삭제 되었습니다.");
+                    window.location.href = '/view/v1/manage/crews';
+                } else {
+                    let json = await response.text();
+                    alert(json);
+                }
+
+
+            }
+        }
+
+
+
+    }
+
+
+</script>
+
+</body>
+
+</html>

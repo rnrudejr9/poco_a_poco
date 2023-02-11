@@ -104,6 +104,7 @@ public class ParticipationService {
 
 
    //현재 크루 참여자 수 확인
+   @Transactional
    public PartResponse findCrewInfo(Long crewId){
        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
        int size = 0;
@@ -117,6 +118,7 @@ public class ParticipationService {
 
 
    //미승인된 멤버 조회
+   @Transactional
    public List<PartJoinResponse> notAllowedMember(String userName){
        User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
        List<PartJoinResponse> participations = new ArrayList<>();

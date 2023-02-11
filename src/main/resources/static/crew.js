@@ -49,6 +49,28 @@ async function deleteCrew() {
     }
 }
 
+async function deleteCrewManager() {
+    let response = await fetch("/api/v1/crews/" + +document.getElementById("crewId").value, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": localStorage.getItem('jwt'),
+            "Authentication": localStorage.getItem('jwt')
+        },
+        body: JSON.stringify({
+        })
+    })
+    if(response.ok){
+        let json = await response.json();
+
+        confirm("모임이 삭제 되었습니다.");
+        window.location.href = '/view/v1/manage/crews';
+    }else{
+        let json = await response.text();
+        alert(json);
+    }
+}
+
 async function modifyCrew() {
     let response = await fetch("/api/v1/crews/" + +document.getElementById("crewId").value, {
         method: "POST",
@@ -120,8 +142,6 @@ async function detailCrew() {
         method: "GET",
         headers: {
             "Content-Type": "application/json",
-            "Authorization": localStorage.getItem('jwt'),
-            "Authentication": localStorage.getItem('jwt')
         },
     })
     if(response.ok){
