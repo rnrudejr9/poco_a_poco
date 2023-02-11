@@ -8,7 +8,9 @@
 <!-- 네비바-->
 <header th:replace="fragments/fragment :: nav"></header>
 
-<main>
+
+
+<main sec:authorize ="hasRole('ROLE_ADMIN')">
 
     <div class="d-flex flex-nowrap">
         <div class="d-flex flex-column flex-shrink-0 p-3 text-bg-dark" style="width: 200px;">
@@ -19,20 +21,20 @@
             <hr>
             <ul class="nav nav-pills flex-column mb-auto">
                 <li class="nav-item">
-                    <a href="/view/v1/" class="nav-link text-white" aria-current="page">
-                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#home"></use></svg>
+                    <a href="/view/v1/crews" class="nav-link text-white" aria-current="page">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/crews"></use></svg>
                         Home
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link text-white">
-                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#speedometer2"></use></svg>
+                    <a href="/view/v1/manage/crews" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/manage/crews"></use></svg>
                         모임 관리
                     </a>
                 </li>
                 <li>
-                    <a href="#" class="nav-link text-white">
-                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="#grid"></use></svg>
+                    <a href="/view/v1/manage/users" class="nav-link text-white">
+                        <svg class="bi pe-none me-2" width="16" height="16"><use xlink:href="/view/v1/manage/users"></use></svg>
                         이용자 관리
                     </a>
                 </li>
@@ -48,7 +50,7 @@
                     <a>현재 접속자는 <a th:text="${currentUser}" style="color: #007bff"></a> 명 입니다.</a>
                 </div>
             </div>
-            <table class="table table-striped table-hover">
+            <table class="table table-hover">
                 <thead>
                 <tr>
                     <th>회원 번호</th>

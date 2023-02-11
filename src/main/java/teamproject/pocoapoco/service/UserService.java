@@ -66,6 +66,8 @@ public class UserService {
 
         log.info("redis 저장함:{}", userTrackingRedisTemplate.opsForValue().get(user.getUsername() + "_dashboard"));
 
+        log.info("권한 조회: {}",user.getRole());
+
         //token 발행
         return new UserLoginResponse(refreshToken, new JwtProvider().generateAccessToken(user));
     }

@@ -37,6 +37,10 @@ public class DashboardService {
 
         Set<String> keys = userTrackingRedisTemplate.keys("*"); //key를 하면 시간이 오래 소요됨
         log.info("key가 몇개 존재하는지 확인: {}",keys.size());
+        for (String key:keys) {
+            log.info("key 정보 모두 조회: {}", key);
+
+        }
 
 
         return Long.valueOf(keys.size());
