@@ -22,6 +22,14 @@ public class CrewRequest {
     private String chooseSport;
     private String imagePath;
 
+    public CrewRequest(String strict, String title, String content, Integer crewLimit){
+        this.strict = strict;
+        this.title = title;
+        this.content = content;
+        this.crewLimit = crewLimit;
+
+    }
+
 
     public Crew toEntity(User user) {
         return Crew.builder()

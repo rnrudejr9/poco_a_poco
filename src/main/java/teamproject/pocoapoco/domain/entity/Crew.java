@@ -6,9 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Where;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.enums.SportEnum;
-import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
 import javax.persistence.*;
 import java.util.ArrayList;

@@ -19,10 +19,10 @@
                 <input type="text" class="form-control" placeholder="인증번호를 입력해주세요" id="memailconfirm">
                 <button style="margin-left: 10px" type="button"  id="check">인증번호 확인</button>
             </div>
-            <input type="text" placeholder="Id" th:field="*{userName}" />
-            <input type="password" placeholder="Password" th:field="*{password}"/>
-            <input type="password" placeholder="PasswordCheck" th:field="*{passwordConfirm}" />
-            <input type="text" placeholder="NickName"th:field="*{nickName}" />
+            <input type="text" placeholder="Id" th:field="*{userName}" required />
+            <input type="password" placeholder="Password" th:field="*{password}" required/>
+            <input type="password" placeholder="PasswordCheck" th:field="*{passwordConfirm}" required />
+            <input type="text" placeholder="NickName"th:field="*{nickName}"required />
             <input type="text" id="sample4_postcode" placeholder="우편번호">
             <input type="button" onclick="sample4_execDaumPostcode()" value="우편번호 찾기">
             <input type="text" id="sample4_roadAddress" placeholder="도로명주소" th:field="*{address}">
@@ -38,8 +38,8 @@
                 <a href="#" th:href="@{/oauth2/authorization/naver}" class="social">네이버<i class="fab fa-linkedin-in"></i></a>
             </div>
             <span>or use your account</span>
-            <input type="text" placeholder="Id" th:field="*{userName}" />
-            <input type="password" placeholder="Password"th:field="*{password}" />
+            <input type="text" placeholder="Id" th:field="*{userName}" required />
+            <input type="password" placeholder="Password"th:field="*{password}" required/>
 
             <span><a href="javascript:openPop()">아이디 찾기</a> / <a href="javascript:openPopPass()">비밀번호 찾기</a> </span>
             <button type="submit">로그인</button>
@@ -68,7 +68,7 @@
             <h3> 아이디 찾기</h3>
             <form>
                 <label>회원가입시 등록한 이메일을 입력해주세요.</label>
-                <input type="text" placeholder="email" id="nickNameForFindId" />
+                <input type="text" placeholder="email" id="nickNameForFindId" required />
                 <button style="margin-left: 10px" type="button" id="findId">아이디 찾기</button>
             </form>
         </div>
@@ -87,14 +87,14 @@
             <form>
 
                 <label>비밀번호를 찾고싶은 Id를 입력해 주세요</label>
-                <input type="text" placeholder="Id" id="idForFindPass" />
+                <input type="text" placeholder="Id" id="idForFindPass" required />
                 <button style="margin-left: 10px" type="button" id="checkIdForFindPass" >인증코드 전송</button>
                 <div id="findPass" style="display: none">
-                    <input type="text" class="form-control" placeholder="인증코드" id="codeForPass">
+                    <input type="text" class="form-control" placeholder="인증코드" id="codeForPass" required>
                     <button style="margin-left: 10px" type="button" id="btnForFindPass"  >인증번호 확인</button>
                 </div>
                 <div id="findPass2" style="display: none">
-                    <input type="text" class="form-control" placeholder="새 비밀번호" id="newPass">
+                    <input type="text" class="form-control" placeholder="새 비밀번호" id="newPass" required>
                     <button style="margin-left: 10px" type="button" id="resetPass"  >비밀번호 재설정</button>
                 </div>
 

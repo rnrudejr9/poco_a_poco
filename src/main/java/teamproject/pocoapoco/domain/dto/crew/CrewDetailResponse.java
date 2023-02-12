@@ -19,6 +19,7 @@ public class CrewDetailResponse {
     private String title;
     private String content;
     private Integer crewLimit;
+    private Long userId;
     private String userName;
     private String nickName;
     private LocalDateTime createdAt;
@@ -34,6 +35,7 @@ public class CrewDetailResponse {
                 .title(crew.getTitle())
                 .content(crew.getContent())
                 .crewLimit(crew.getCrewLimit())
+                .userId(crew.getUser().getId())
                 .nickName(crew.getUser().getNickName())
                 .userName(crew.getUser().getUsername())
                 .createdAt(crew.getCreatedAt())

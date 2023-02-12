@@ -1,26 +1,41 @@
-/* 타이핑 효과*/
+/*Box 크기 체크용*/
+/*.crewBoxParent, .collapse, .btnBar, .ttt {*/
+/*    background-color: #585858;*/
+/*    border:3px solid red;*/
+/*}*/
+
+/*타이핑*/
 .typeText::after {
     content: "|";
-    animation:  blink 1s step-end infinite;
+    animation: blink 1s step-end infinite;
 }
 
 @keyframes blink {
     0% {
-        opacity:1;
+        opacity: 1;
     }
     49% {
-        opacity:1;
+        opacity: 1;
     }
     50% {
-        opacity:0;
+        opacity: 0;
     }
     100% {
-        opacity:0;
+        opacity: 0;
     }
 }
 
-/*모집글 지역*/
+
+/*긴 문자 처리*/
 .text-strict {
+    display: inline-block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 50%;
+}
+
+.text-strict2 {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
@@ -28,305 +43,289 @@
     width: 30%;
 }
 
-/*모집글 제목*/
-.card-tile {
+.card-title {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #333838;
     width: 90%;
+    margin-top: 1%;
+    margin-bottom: 2%;
 }
 
-/*모집글 내용*/
 .card-text {
     display: inline-block;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    color: #323334;
     width: 100%;
+    margin-bottom: 2%;
 }
 
 .card-body {
-    background-color: #f0faff;
+    background-color: rgba(248, 253, 253, 0.98);
 }
 
-
-* {
-    box-sizing: border-box;
+/*검색바*/
+.btnBar {
+    width: 100%;
+    margin: 0px auto;
+    padding: 0px;
 }
 
-.container {
-    background-color: #fff;
+.searchBar {
+    width: 100%;
+    position: center;
+}
+
+.searchBar2 {
+    width: 80%;
+    margin-left: 10%;
+    margin-top: 7%;
+    position: center;
+    border-radius: 5px;
+    box-shadow: 0 4px 10px rgb(39, 172, 255),
+    0 5px 5px rgba(0, 0, 0, 0.22);
+    border: rgba(1, 27, 86, 0.94);
+}
+
+/*운동선책 버튼 무빙 효과*/
+.btn-jittery {
+    animation: jittery 8s infinite;
+}
+
+@keyframes jittery {
+    5%,
+    50% {
+        transform: scale(1);
+    }
+
+    10% {
+        transform: scale(0.9);
+    }
+
+    15% {
+        transform: scale(1.15);
+    }
+
+    20% {
+        transform: scale(1.15) rotate(-5deg);
+    }
+
+    25% {
+        transform: scale(1.15) rotate(5deg);
+    }
+
+    30% {
+        transform: scale(1.15) rotate(-3deg);
+    }
+
+    35% {
+        transform: scale(1.15) rotate(2deg);
+    }
+
+    40% {
+        transform: scale(1.15) rotate(0);
+    }
+}
+
+/*운동선택 버튼*/
+.btn3 {
+    width: 27%;
+}
+
+.btn.cyan {
+    height: 90%;
+    width: 40%;
+    background-color: #147fd3;
+    box-shadow: 0px 4px 3px #093ed2;
+    padding: 8px 18px;
+    font-size: 16px;
+    color: white;
+}
+
+.btn-gradient.cyan {
+    background: rgb(52, 151, 218);
+    background: -webkit-linear-gradient(to right, #27d7ff, #4176fc);
+    background: linear-gradient(to right, #27d7ff, #4176fc);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1bbcc2', endColorstr='#18a3a8', GradientType=0);
+}
+
+. btn-outline-danger {
+    height: 70%;
+    width: 100%;
+    padding: 8px 18px;
+}
+
+/*모임등록 버튼*/
+.btn-crewAdd {
+    width: 13%;
+}
+
+.btn.blue {
+    height: 90%;
+    width: 100%;
+    background-color: #147fd3;
+    box-shadow: 0px 4px 3px #093ed2;
+    padding: 8px 18px;
+    font-size: 16px;
+    color: white;
+}
+
+.btn.blue:active {
+    box-shadow: 0 0 #74a3b0;
+    background-color: #709CA8;
+}
+
+.btn-gradient.blue {
+    background: rgb(24, 71, 119);
+    background: -webkit-linear-gradient(to right, #27d7ff, #4176fc);
+    background: linear-gradient(to right, #27d7ff, #4176fc);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6698cb', endColorstr='#5c8ab8', GradientType=0);
+}
+
+/*운동 체크박스*/
+.collapse {
+    width: 100%;
+    margin: 0px;
+    padding: 0px;
+}
+
+.collapse-body {
+    width: 96%;
+    position: center;
+    margin: 2%;
+    padding: 2%;
     border-radius: 10px;
-    box-shadow: 0 14px 28px rgba(0,0,0,0.25),
-    0 10px 10px rgba(0,0,0,0.22);
+}
+
+.checkBox-sport {
+    box-shadow: 0px 5px 5px rgba(101, 130, 138, 0.71),
+    0 5px 5px rgba(0, 0, 0, 0.22);
+    color: rgba(0, 30, 30, 0.76);
+    font-size: 1.1em;
+}
+
+/*체크박스 사이즈 조절*/
+input[type=checkbox] {
+    -ms-transform: scale(1.5); /* IE */
+    -moz-transform: scale(1.5); /* FF */
+    -webkit-transform: scale(1.5); /* Safari and Chrome */
+    -o-transform: scale(1.5); /* Opera */
+    margin-right: 4px;
+    padding: 10px;
+}
+
+
+.w-btn {
     position: relative;
-    overflow: hidden;
-    width: 968px;
-    max-width: 100%;
-    min-height: 700px;
-    margin: 50px;
-}
-
-
-body {
-    background: #f6f5f7;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
-    font-family: 'Montserrat', sans-serif;
-    height: 100vh;
-    margin: -20px 0 50px;
-}
-
-h1 {
-    font-weight: bold;
-    margin: 0;
-}
-
-h2 {
-    text-align: center;
-}
-
-p {
-    font-size: 14px;
-    font-weight: 100;
-    line-height: 20px;
-    letter-spacing: 0.5px;
-    margin: 20px 0 30px;
-}
-
-span {
-    font-size: 12px;
-}
-
-a {
-    color: #333;
-    font-size: 14px;
-    text-decoration: none;
-    margin: 15px 0;
-}
-
-button {
-    border-radius: 20px;
-    border: 1px solid #FF4B2B;
-    background-color: #FF4B2B;
-    color: #FFFFFF;
-    font-size: 12px;
-    font-weight: bold;
-    margin-top: 8px;
-    margin-bottom:8px;
-    padding: 8px 20px;
-    letter-spacing: 1px;
-    text-transform: uppercase;
-    transition: transform 80ms ease-in;
-}
-
-button:active {
-    transform: scale(0.95);
-}
-
-button:focus {
-    outline: none;
-}
-
-button.ghost {
-    background-color: transparent;
-    border-color: #FFFFFF;
-}
-
-form {
-    background-color: #FFFFFF;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 0 50px;
-    height: 100%;
-    text-align: center;
-}
-
-input {
-    background-color: #eee;
     border: none;
-    padding: 12px 15px;
-    margin: 8px 0;
-    width: 100%;
-}
-
-
-.form-container {
-    position: absolute;
-    top: 0;
-    height: 100%;
-    transition: all 0.6s ease-in-out;
-}
-
-.sign-in-container {
-    left: 0;
-    width: 50%;
-    z-index: 2;
-}
-
-.container.right-panel-active .sign-in-container {
-    transform: translateX(100%);
-}
-
-.sign-up-container {
-    left: 0;
-    width: 50%;
-    opacity: 0;
-    z-index: 1;
-}
-
-.container.right-panel-active .sign-up-container {
-    transform: translateX(100%);
-    opacity: 1;
-    z-index: 5;
-    animation: show 0.6s;
-}
-
-@keyframes show {
-    0%, 49.99% {
-        opacity: 0;
-        z-index: 1;
-    }
-
-    50%, 100% {
-        opacity: 1;
-        z-index: 5;
-    }
-}
-
-.overlay-container {
-    position: absolute;
-    top: 0;
-    left: 50%;
-    width: 50%;
-    height: 100%;
-    overflow: hidden;
-    transition: transform 0.6s ease-in-out;
-    z-index: 100;
-}
-
-.container.right-panel-active .overlay-container{
-    transform: translateX(-100%);
-}
-
-.overlay {
-    background: #FF416C;
-    background: -webkit-linear-gradient(to right, #FF4B2B, #FF416C);
-    background: linear-gradient(to right, #FF4B2B, #FF416C);
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: 0 0;
-    color: #FFFFFF;
-    position: relative;
-    left: -100%;
-    height: 100%;
-    width: 200%;
-    transform: translateX(0);
-    transition: transform 0.6s ease-in-out;
-}
-
-.container.right-panel-active .overlay {
-    transform: translateX(50%);
-}
-
-.overlay-panel {
-    position: absolute;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    padding: 0 40px;
-    text-align: center;
-    top: 0;
-    height: 100%;
-    width: 50%;
-    transform: translateX(0);
-    transition: transform 0.6s ease-in-out;
-}
-
-.overlay-left {
-    transform: translateX(-20%);
-}
-
-.container.right-panel-active .overlay-left {
-    transform: translateX(0);
-}
-
-.overlay-right {
-    right: 0;
-    transform: translateX(0);
-}
-
-.container.right-panel-active .overlay-right {
-    transform: translateX(20%);
-}
-
-.social-container {
-    margin: 20px 0;
-}
-
-.social-container a {
-    border: 1px solid #DDDDDD;
-    border-radius: 50%;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0 5px;
-    height: 40px;
-    width: 40px;
-}
-
-footer {
-    background-color: #222;
-    color: #fff;
-    font-size: 14px;
-    bottom: 0;
-    position: fixed;
-    left: 0;
-    right: 0;
-    text-align: center;
-    z-index: 999;
-}
-
-footer p {
-    margin: 10px 0;
-}
-
-footer i {
-    color: red;
-}
-
-footer a {
-    color: #3c97bf;
+    display: inline-block;
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-family: "paybooc-Light", sans-serif;
+    box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
     text-decoration: none;
+    font-weight: 600;
+    font-size: 1em;
+    transition: 0.25s;
 }
-.merge {
-    margin: 0;
-    display: flex;
-    flex-direction: row;
-    align-content: space-between;
+
+/*운동체크박스 체크 후 조회 버튼*/
+.w-btn-indigo {
+    background-color: rgba(216, 239, 250, 0.71);
+    color: #1e6b7b;
+}
+
+/*MySport 버튼*/
+.w-btn:hover {
+    letter-spacing: 2px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+.w-btn:active {
+    transform: scale(1.5);
+}
+
+.w-btn-gra1 {
+    background: linear-gradient(-45deg, #33ccff 0%, #ff99cc 100%);
+    color: white;
+}
+
+.w-btn-gra-anim {
+    background-size: 400% 400%;
+    animation: gradient1 5s ease infinite;
+}
+
+@keyframes gradient1 {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+@keyframes gradient2 {
+    0% {
+        background-position: 100% 50%;
+    }
+    50% {
+        background-position: 0% 50%;
+    }
+    100% {
+        background-position: 100% 50%;
+    }
+}
+
+@keyframes ring {
+    0% {
+        width: 30px;
+        height: 30px;
+        opacity: 1;
+    }
+    100% {
+        width: 300px;
+        height: 300px;
+        opacity: 0;
+    }
+}
+
+/*크루 모집글 박스*/
+.crewBoxParent {
     width: 100%;
+    margin: 0px auto;
+    padding-bottom: 1%;
+    overflow: auto;
 }
-/*popup*/
-.popup_layer {position:fixed;top:0;left:0;z-index: 10000; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.4); }
-/*팝업 박스*/
-.popup_box{position: relative;top:50%;left:50%; overflow: auto; height: 600px; width:375px;transform:translate(-50%, -50%);z-index:1002;box-sizing:border-box;background:#fff;box-shadow: 2px 5px 10px 0px rgba(0,0,0,0.35);-webkit-box-shadow: 2px 5px 10px 0px rgba(0,0,0,0.35);-moz-box-shadow: 2px 5px 10px 0px rgba(0,0,0,0.35);}
-/*컨텐츠 영역*/
-.popup_box .popup_cont {padding:50px;line-height:1.4rem;font-size:14px; }
-.popup_box .popup_cont h2 {padding:15px 0;color:#333;margin:0;}
-.popup_box .popup_cont p{ border-top: 1px solid #666;padding-top: 30px;}
-/*버튼영역*/
-.popup_box .popup_btn {display:table;table-layout: fixed;width:100%;height:70px;background:#ECECEC;word-break: break-word;}
-.popup_box .popup_btn a {position: relative; display: table-cell; height:70px;  font-size:17px;text-align:center;vertical-align:middle;text-decoration:none; background:#ECECEC;}
-.popup_box .popup_btn a:before{content:'';display:block;position:absolute;top:26px;right:29px;width:1px;height:21px;background:#fff;-moz-transform: rotate(-45deg); -webkit-transform: rotate(-45deg); -ms-transform: rotate(-45deg); -o-transform: rotate(-45deg); transform: rotate(-45deg);}
-.popup_box .popup_btn a:after{content:'';display:block;position:absolute;top:26px;right:29px;width:1px;height:21px;background:#fff;-moz-transform: rotate(45deg); -webkit-transform: rotate(45deg); -ms-transform: rotate(45deg); -o-transform: rotate(45deg); transform: rotate(45deg);}
-.popup_box .popup_btn a.close_day {background:#5d5d5d;}
-.popup_box .popup_btn a.close_day:before, .popup_box .popup_btn a.close_day:after{display:none;}
-/*오버레이 뒷배경*/
-.popup_overlay{position:fixed;top:0px;right:0;left:0;bottom:0;z-index:1001;;background:rgba(0,0,0,0.5);}
-/*popup*
+
+.crewBox {
+    background-color: rgba(248, 253, 253, 0.98);
+    border-radius: 20px;
+    box-shadow: 5px 5px 5px 5px rgba(101, 130, 138, 0.71),
+    0 5px 5px rgba(0, 0, 0, 0.22);
+    position: center;
+    overflow: auto;
+    width: 31.3%;
+    border: rgba(63, 122, 254, 0.7);
+    padding: 0.7%;
+    margin: 1%;
+}
+
+.participation {
+    color: black;
+}
+
+/*크루 사진*/
+.img-thumbnail {
+    width: 100%;
+    height: 225px;
+    border-radius: 20px;
+    margin-bottom: 7px;
+}

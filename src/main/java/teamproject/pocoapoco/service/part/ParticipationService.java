@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import teamproject.pocoapoco.domain.dto.Review.ReviewResponse;
 import teamproject.pocoapoco.domain.dto.error.ErrorResponse;
 import teamproject.pocoapoco.domain.dto.part.PartDto;
 import teamproject.pocoapoco.domain.dto.part.PartJoinDto;
@@ -61,7 +62,8 @@ public class ParticipationService {
         User user = userRepository.findByUserName(partJoinDto.getUserName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
 
         Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
-        participation.setStatus(0);
+        participationRepository.delete(participation);
+        //hard Delete
         return Response.success("신청이 취소됨");
     }
 
@@ -72,14 +74,8 @@ public class ParticipationService {
 
         if(participationRepository.existsByCrewAndAndUser(crew,user)){
             Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
-            if(participation.getStatus() == 1){
-                participation.setStatus(0);
-                return Response.success("참여하기 취소");
-            }
-            if(participation.getStatus() == 0){
-                participation.setStatus(1);
-                return Response.success("참여 신청완료");
-            }
+            participationRepository.delete(participation);
+            return Response.success("이미 존재하는 참여 엔티티 취소됨");
         }
         Participation savedParticipation = Participation.builder().crew(crew).title(crew.getTitle()).body(partDto.getBody()).user(user).status(1).build();
         for(Crew c : user.getCrews()) {
@@ -92,6 +88,7 @@ public class ParticipationService {
     }
 
     //참여유무확인
+    @Transactional
     public PartResponse findParticipate(Long crewId, String userName){
         User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
         Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
@@ -104,6 +101,7 @@ public class ParticipationService {
 
 
    //현재 크루 참여자 수 확인
+   @Transactional
    public PartResponse findCrewInfo(Long crewId){
        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
        int size = 0;
@@ -117,6 +115,7 @@ public class ParticipationService {
 
 
    //미승인된 멤버 조회
+   @Transactional
    public List<PartJoinResponse> notAllowedMember(String userName){
        User user = userRepository.findByUserName(userName).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
        List<PartJoinResponse> participations = new ArrayList<>();
@@ -138,6 +137,7 @@ public class ParticipationService {
    }
 
    //승인된 멤버 조회
+   @Transactional
    public List<PartJoinResponse> AllowedMember(long crewId){
        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
        List<PartJoinResponse> list = new ArrayList<>();
@@ -157,5 +157,22 @@ public class ParticipationService {
        return list;
    }
 
+    //승인된 멤버 조회 return List<ReviewResponse>
+    public List<ReviewResponse> findAllPartMember(long crewId){
+        Crew crew = crewRepository.findById(crewId).orElseThrow(()->new AppException(ErrorCode.CREW_NOT_FOUND,ErrorCode.CREW_NOT_FOUND.getMessage()));
+        List<ReviewResponse> list = new ArrayList<>();
+        for(Participation p : crew.getParticipations()){
+            if(p.getStatus() == 2){
+                ReviewResponse reviewResponse = ReviewResponse.builder()
+                        .crewId(crewId)
+                        .joinUserId(p.getUser().getId())
+                        .joinUserNickName(p.getUser().getNickName())
+                        .userMannerScore(p.getUser().getMannerScore())
+                        .build();
+                list.add(reviewResponse);
+            }
+        }
+        return list;
+    }
 
 }

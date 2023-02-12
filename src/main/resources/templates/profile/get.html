@@ -67,6 +67,12 @@
 
 <body>
 
+<input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+<input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+<input hidden th:value="${AWS_REGION}" id="awsRegion">
+<input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+<input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
 
 <ul id="left-box">
     <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100px; height:100px;">
@@ -94,21 +100,40 @@
             <div class="col-md-7">
                 <div class="container-profile" style="padding:20px;">
                     <h4 th:text = "${userProfileResponse.nickName}"></h4>
-                    <input class="form-check-input" type="checkbox" id="likeSoccer" th:checked= "${userProfileResponse.likeSoccer}">축구</input>
-                    <input class="form-check-input" type="checkbox" id="likeJogging" th:checked= "${userProfileResponse.likeJogging}">조깅</input>
-                    <input class="form-check-input" type="checkbox" id="likeTennis" th:checked= "${userProfileResponse.likeTennis}">테니스</input>
+                    <label class="col-sm-3 col-form-label">선호 종목</label>
+                    <text th:text="${userProfileResponse.getSportValue1()}"></text>
+                    <text th:text="${userProfileResponse.getSportValue2()}"></text>
+                    <text th:text="${userProfileResponse.getSportValue3()}"></text>
 
                 </div>
-
             </div>
+            <button id="follow">follow</button>
+            <input type="hidden" id="userId" th:value="${userProfileResponse.userId}">
         </div>
     </div>
+
 </div>
-
-
-
 </body>
+<script>
+    document.getElementById('follow').addEventListener('click',follow);
+    console.log(document.getElementById('userId').value);
+    async function follow(){
+        let userId = document.getElementById('userId').value;
+        let response = await fetch(`/api/v1/social/${userId}/follow`,{
+            method :"POST",
+            headers : {
+                "Content-Type": "application/json",
+            }
+        })
+        let data = await response.json()
 
-
-
-
+        if(data.result.status===false){
+            alert("팔로우를 취소합니다.")
+            document.getElementById('follow').innerText='follow';
+        }else {
+            alert("팔로우 합니다.")
+            document.getElementById('follow').innerText='unfollow';
+            //unfollow
+        }
+    }
+</script>

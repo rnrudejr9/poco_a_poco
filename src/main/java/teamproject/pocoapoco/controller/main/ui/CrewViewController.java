@@ -3,6 +3,7 @@ package teamproject.pocoapoco.controller.main.ui;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,11 +18,12 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
+import teamproject.pocoapoco.domain.dto.Review.ReviewResponse;
 import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberDeleteResponse;
 import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
-import teamproject.pocoapoco.domain.dto.part.PartJoinResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
@@ -48,6 +50,21 @@ public class CrewViewController {
     private final CrewReviewService crewReviewService;
 
     private final ParticipationService participationService;
+
+
+    @Value("${aws.access.key}")
+    String AWS_ACCESS_KEY;
+
+    @Value("${aws.secret.access.key}")
+    String AWS_SECRET_ACCESS_KEY;
+
+    @Value("${aws.region}")
+    String AWS_REGION;
+
+    @Value("${aws.bucket.name}")
+    String AWS_BUCKET_NAME;
+
+    String AWS_BUCKET_DIRECTORY = "/crewimages";
 
     // 크루 게시물 상세 페이지
     @GetMapping("/{crewId}")
@@ -160,6 +177,14 @@ public class CrewViewController {
                               @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
                               @PageableDefault(page = 0, size = 9, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
+
+
         // 유저 로그인 확인 후 운동 종목 데이터 확인
         List<String> userSportsList = crewService.getUserSports(authentication, CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
 
@@ -187,6 +212,10 @@ public class CrewViewController {
         model.addAttribute("endNumPage", endNumPage);
         model.addAttribute("lastPage", lastPage);
 
+        // 운동 종목 Enum리스트
+        List<SportEnum> sportEnums = List.of(SportEnum.values());
+        model.addAttribute("sportEnums", sportEnums);
+
         return "main/main";
     }
 
@@ -194,77 +223,29 @@ public class CrewViewController {
     @GetMapping("/review/{crewId}")
     public String reviewCrew(@PathVariable Long crewId, Authentication authentication, Model model) {
 
-        //현재 유저
+        //현재 유저 정보
         User nowUser = crewService.findByUserName(authentication.getName());
         model.addAttribute("nowUser", nowUser.getId());
 
-        // 크루 id, title. userId
+        // 크루 게시글 정보
         Crew crew = crewService.findByCrewId(crewId);
-        model.addAttribute("crew", crew);
+        model.addAttribute("crew", CrewDetailResponse.of(crew));
 
-
-        List<CrewMemberResponse> crewMemberResponseList= crewMemberService.getJoinMemberList(crewId);
-        Deque<User> members = new ArrayDeque<>();
-        User u;
-        for(CrewMemberResponse s : crewMemberResponseList){
-            log.info("CrewId(): {}, UserName(): {}, JoinCheck(): {}", s.getCrewId(), s.getUserName(), s.getJoinCheck());
-            u =crewService.findByUserName(s.getUserName());
-            if(crew.getUser().getId() == u.getId())
-                members.addFirst(u);
-            else
-                members.add(u);
-        }
-
-
-        List<PartJoinResponse> partJoinResponses = participationService.AllowedMember(crewId);
-
-        for (PartJoinResponse p : partJoinResponses){
-
-            log.info("!!p.getCrewId() : {}, p.getNow() : {}, p.getJoinUserName() : {}, p.getWriterUserName() : {}", p.getCrewId(), p.getNow(), p.getJoinUserName(), p.getWriterUserName());
-        }
-
-
-        // 유저 id, nicname, mannaerScore
+        // 참여자 인원 정보
+        List<ReviewResponse> members = participationService.findAllPartMember(crewId);
         model.addAttribute("members", members);
 
-
-        CrewReviewRequest crewReviewRequest = new CrewReviewRequest();
+        ReviewRequest crewReviewRequest = new ReviewRequest();
         model.addAttribute("reviewRequest", crewReviewRequest);
 
         return "crew/review-crew";
     }
 
-
-    // 크루 리뷰 완료
+    // 크루 리뷰 저장
     @PostMapping("/review")
-    public String reviewCrew(Model model,
-                             @ModelAttribute("reviewRequest") CrewReviewRequest crewReviewRequest) {
-        log.info("post review");
-
-        log.info("CrewId().size() : {}", crewReviewRequest.getCrewId().size());
-        log.info("CrewId() : {}", crewReviewRequest.getCrewId());
-
-        log.info("FromUserId().size() : {}", crewReviewRequest.getFromUserId().size());
-        log.info("FromUserId() : {}", crewReviewRequest.getFromUserId());
-
-        log.info("ToUserId().size() : {}", crewReviewRequest.getToUserId().size());
-        log.info("ToUserId().get(0) : {}\n", crewReviewRequest.getToUserId());
-
-        log.info("MannerScore().size() : {}", crewReviewRequest.getMannerScore().size());
-        log.info("MannerScore().get(0) : {}\n", crewReviewRequest.getMannerScore());
-
-        log.info("UserReview().size() : {}", crewReviewRequest.getUserReview().size());
-        log.info("UserReview().get() : {}\n", crewReviewRequest.getUserReview());
-
+    public String reviewCrew(Model model, @ModelAttribute("reviewRequest") ReviewRequest crewReviewRequest) {
         crewReviewService.addReview(crewReviewRequest);
-
         return "redirect:/";
-    }
-
-    @ModelAttribute("sportEnums")
-    private List<SportEnum> sportEnums() {
-        List<SportEnum> sportEnums = List.of(SportEnum.values());
-        return sportEnums;
     }
 
 }

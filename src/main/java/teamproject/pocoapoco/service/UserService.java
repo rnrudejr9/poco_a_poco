@@ -1,6 +1,7 @@
 package teamproject.pocoapoco.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -8,6 +9,7 @@ import org.springframework.util.ObjectUtils;
 import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
 import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -20,11 +22,15 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class UserService {
 
     private final UserRepository userRepository;
     private final EncrypterConfig encrypterConfig;
     private final RedisTemplate<String, String> redisTemplate;
+
+    private final RedisTemplate<String, String> userTrackingRedisTemplate;
+
     private final JwtProvider jwtProvider;
     private final MailService mailService;
 
@@ -40,6 +46,8 @@ public class UserService {
         }
         // refresh token 생성
         String refreshToken = jwtProvider.generateRefreshToken(user);
+
+
         // Redis에 저장 - 만료 시간 설정을 통해 자동 삭제 처리
         redisTemplate.opsForValue().set(
                 user.getUsername(),
@@ -47,6 +55,17 @@ public class UserService {
                 jwtProvider.REFRESH_EXPIRATION,
                 TimeUnit.MILLISECONDS
         );
+
+        userTrackingRedisTemplate.opsForValue().set(
+                user.getUsername() + "_dashboard",
+                refreshToken,
+                jwtProvider.REFRESH_EXPIRATION,
+                TimeUnit.MILLISECONDS
+        );
+
+        log.info("redis 저장함:{}", userTrackingRedisTemplate.opsForValue().get(user.getUsername() + "_dashboard"));
+
+        log.info("권한 조회: {}",user.getRole());
 
         //token 발행
         return new UserLoginResponse(refreshToken, new JwtProvider().generateAccessToken(user));
@@ -74,8 +93,8 @@ public class UserService {
 
 
         User user = User.toEntity(userJoinRequest.getUserName(), userJoinRequest.getNickName(), userJoinRequest.getAddress(),
-                encrypterConfig.encoder().encode(userJoinRequest.getPassword()), userJoinRequest.getLikeSoccer(),
-                userJoinRequest.getLikeJogging(), userJoinRequest.getLikeTennis(),userJoinRequest.getEmail());
+                encrypterConfig.encoder().encode(userJoinRequest.getPassword()), userJoinRequest.getSport1(),
+                userJoinRequest.getSport2(), userJoinRequest.getSport3(),userJoinRequest.getEmail());
 
         User saved = userRepository.save(user);
 
@@ -135,6 +154,11 @@ public class UserService {
         if(redisTemplate.opsForValue().get(authentication.getName())!= null) {
             redisTemplate.delete(authentication.getName());
         }
+
+        if(userTrackingRedisTemplate.opsForValue().get(authentication.getName())!= null){
+            userTrackingRedisTemplate.delete(authentication.getName());
+        }
+
         // 해당 refeshtoken의 accesstoken의 유효시간을 가져와 key에 저장
         Long expiredTime = jwtProvider.getCurrentExpiration(userLogoutRequest.getAccessToken());
         redisTemplate.opsForValue()
@@ -142,6 +166,8 @@ public class UserService {
 
         return new UserLogoutResponse(String.format("%s 님이 logout에 성공했습니다", authentication.getName()));
     }
+
+
 
 
     @Transactional(rollbackOn = AppException.class)
@@ -163,14 +189,38 @@ public class UserService {
         // request에서 수정된 정보만 반영하기
 
         String revisedNickName = (userProfileRequest.getNickName().isBlank())? beforeMyUser.getNickName(): userProfileRequest.getNickName();
-        String revisedAddress = (userProfileRequest.getAddress().isBlank())? beforeMyUser.getAddress(): encrypterConfig.encoder().encode(userProfileRequest.getAddress());
-        String revisedPassword = (userProfileRequest.getPassword().isBlank())? beforeMyUser.getPassword(): userProfileRequest.getPassword();
-        Boolean revisedLikeSoccer = (userProfileRequest.getLikeSoccer().equals(beforeMyUser.getSport().isSoccer()))? beforeMyUser.getSport().isSoccer(): userProfileRequest.getLikeSoccer();
-        Boolean revisedLikeJogging = (userProfileRequest.getLikeJogging().equals(beforeMyUser.getSport().isJogging()))? beforeMyUser.getSport().isJogging(): userProfileRequest.getLikeJogging();
-        Boolean revisedLikeTennis = (userProfileRequest.getLikeTennis().equals(beforeMyUser.getSport().isTennis()))? beforeMyUser.getSport().isTennis(): userProfileRequest.getLikeTennis();
+        String revisedAddress = (userProfileRequest.getAddress().isBlank())? beforeMyUser.getAddress(): userProfileRequest.getAddress();
+        String revisedPassword = (userProfileRequest.getPassword().isBlank())? beforeMyUser.getPassword(): encrypterConfig.encoder().encode(userProfileRequest.getPassword());
+        SportEnum sport1 = null;
+        SportEnum sport2 = null;
+        SportEnum sport3 = null;
+
+        if(userProfileRequest.getSportListChange()){
+
+            if(userProfileRequest.getSportList().size()==0){
+
+            } else if(userProfileRequest.getSportList().size()==1){
+                sport1 = SportEnum.valueOf(userProfileRequest.getSportList().get(0));
+
+            }else if(userProfileRequest.getSportList().size()==2){
+                sport1 = SportEnum.valueOf(userProfileRequest.getSportList().get(0));
+                sport2 = SportEnum.valueOf(userProfileRequest.getSportList().get(1));
+
+            }else{
+                sport1 = SportEnum.valueOf(userProfileRequest.getSportList().get(0));
+                sport2 = SportEnum.valueOf(userProfileRequest.getSportList().get(1));
+                sport3 = SportEnum.valueOf(userProfileRequest.getSportList().get(2));
+
+            }
+
+        } else{
+            sport1 = beforeMyUser.getSport().getSport1();
+            sport2 = beforeMyUser.getSport().getSport2();
+            sport3 = beforeMyUser.getSport().getSport3();
+        }
 
 
-        User revisedMyUser = User.toEntityWithImage(beforeMyUser.getId(), beforeMyUser.getUsername(), revisedNickName, revisedAddress, revisedPassword, revisedLikeSoccer, revisedLikeJogging, revisedLikeTennis, beforeMyUser.getImagePath(), beforeMyUser.getEmail());
+        User revisedMyUser = User.toEntityWithImage(beforeMyUser.getId(), beforeMyUser.getUsername(), revisedNickName, revisedAddress, revisedPassword, sport1, sport2, sport3, beforeMyUser.getImagePath(), beforeMyUser.getEmail());
 
         userRepository.save(revisedMyUser);
 
