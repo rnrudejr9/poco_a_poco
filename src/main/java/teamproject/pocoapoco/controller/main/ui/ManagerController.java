@@ -15,13 +15,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
-import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberDeleteResponse;
 import teamproject.pocoapoco.domain.dto.manage.CrewManageResponse;
 import teamproject.pocoapoco.domain.dto.manage.UserManageResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.exception.AppException;
-import teamproject.pocoapoco.service.CrewMemberService;
 import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.UserService;
 import teamproject.pocoapoco.service.manage.DashboardService;
@@ -41,9 +39,6 @@ public class ManagerController {
     private final DashboardService dashboardService;
 
     private final CrewService crewService;
-
-    private final CrewMemberService crewMemberService;
-
 
     @GetMapping("/manage/users")
     public String manageUsers(Model model){
@@ -105,8 +100,6 @@ public class ManagerController {
     public String deleteUserFromCrew(@PathVariable Long crewId, @PathVariable String userName,Authentication authentication, Model model, HttpServletResponse response) throws IOException {
 
         try{
-
-            CrewMemberDeleteResponse crewMemberDeleteResponse = crewMemberService.leaveCrew(crewId, userName);
             model.addAttribute("message", userName+"님을 " + crewId + "번 모임에서 강제 퇴장했습니다.");
             return "redirect:/view/v1/manage/crews";
 
