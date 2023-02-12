@@ -188,6 +188,10 @@ public class CrewViewController {
         model.addAttribute("endNumPage", endNumPage);
         model.addAttribute("lastPage", lastPage);
 
+        // 운동 종목 Enum리스트
+        List<SportEnum> sportEnums = List.of(SportEnum.values());
+        model.addAttribute("sportEnums", sportEnums);
+
         return "main/main";
     }
 
@@ -210,7 +214,6 @@ public class CrewViewController {
         ReviewRequest crewReviewRequest = new ReviewRequest();
         model.addAttribute("reviewRequest", crewReviewRequest);
 
-
         return "crew/review-crew";
     }
 
@@ -221,18 +224,5 @@ public class CrewViewController {
         crewReviewService.addReview(crewReviewRequest);
         return "redirect:/";
     }
-
-    @ModelAttribute("sportEnums")
-    private List<SportEnum> sportEnums() {
-        List<SportEnum> sportEnums = List.of(SportEnum.values());
-        return sportEnums;
-    }
-
-    @GetMapping("/test")
-    private String test() {
-
-        return "main/main2";
-    }
-
 
 }
