@@ -2,7 +2,6 @@ package teamproject.pocoapoco.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -18,8 +17,6 @@ import teamproject.pocoapoco.security.config.EncrypterConfig;
 import teamproject.pocoapoco.security.provider.JwtProvider;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -200,7 +197,9 @@ public class UserService {
 
         if(userProfileRequest.getSportListChange()){
 
-            if(userProfileRequest.getSportList().size()==1){
+            if(userProfileRequest.getSportList().size()==0){
+
+            } else if(userProfileRequest.getSportList().size()==1){
                 sport1 = SportEnum.valueOf(userProfileRequest.getSportList().get(0));
 
             }else if(userProfileRequest.getSportList().size()==2){
