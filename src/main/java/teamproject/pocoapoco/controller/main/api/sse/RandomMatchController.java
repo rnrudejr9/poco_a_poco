@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Set;
 
 import static teamproject.pocoapoco.controller.main.api.sse.SseController.randomMatchListCnt;
+import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmitters;
 
 @RestController
 @RequestMapping("/api/v1/match")
@@ -87,19 +89,21 @@ public class RandomMatchController {
 
             // 방을 만들고 채팅방을 생성
             Crew crew = Crew.builder()
-                    .strict(randomComment)
-                    .roadName(randomComment)
-                    .title(randomComment)
-                    .content(randomComment)
+                    .strict("청진동 246 D1동 16층, 17층 ")
+                    .roadName("서울 종로구 종로3길 17 D1동 16층, 17층")
+                    .title(sport + "실시간 매칭🔥")
+                    .content(fistUser.getUsername() + "님, " + secondUser.getUsername() + "님, "
+                            + thirdUser.getUsername()  + "님\n"
+                            + "실시간 매칭이 성사되었습니다 \n" +
+                            "채팅방에서 시간 장소를 조율해주세요")
                     .crewLimit(3)
                     .datepick(LocalDateTime.now().toString())
                     .timepick(LocalDateTime.now().toString())
                     .chatRoom(ChatRoom.builder()
-                            .name(randomComment)
+                            .name(sport + "실시간 매칭")
                             .user(fistUser)
                             .build()) //user에 참여자중 한명 넣으면 된다.. name = 타이틀이름
                     .user(fistUser)  // crew 만든사람
-//                    .participations() //참여자 정보 = crew ID가 있어야 한다.
                     .build();
             Crew saveRandomMatchCrew = crewRepository.save(crew);
 
@@ -110,21 +114,21 @@ public class RandomMatchController {
                     .status(2)
                     .user(fistUser)
                     .crew(saveRandomMatchCrew)
-                    .title(randomComment)
+                    .title(sport + "실시간 매칭🔥")
                     .build();
 
             Participation secParticipation = Participation.builder()
                     .status(2)
                     .user(secondUser)
                     .crew(saveRandomMatchCrew)
-                    .title(randomComment)
+                    .title(sport + "실시간 매칭🔥")
                     .build();
 
             Participation thirdParticipation = Participation.builder()
                     .status(2)
                     .user(thirdUser)
                     .crew(saveRandomMatchCrew)
-                    .title(randomComment)
+                    .title(sport + "실시간 매칭🔥")
                     .build();
 
             // participation 저장
@@ -137,20 +141,52 @@ public class RandomMatchController {
             participationList.add(secParticipation);
             participationList.add(thirdParticipation);
 
-
-
             //저장된 크루에 participations 저장
             saveRandomMatchCrew.setParticipations(participationList);
-
 
             // 랜덤매칭이 이루어진 3명을 대기리스트에서 삭제
             redisTemplate.opsForZSet().remove(randomKey, matchListInRedis[0]);
             redisTemplate.opsForZSet().remove(randomKey, matchListInRedis[1]);
             redisTemplate.opsForZSet().remove(randomKey, matchListInRedis[2]);
 
+            //sse 로직
+            if (sseEmitters.containsKey(fistUser.getUsername())) {
+                log.info("실시간매칭 후 sse firstUser 작동");
+                SseEmitter sseEmitter = sseEmitters.get(crew.getUser().getUsername());
+                try {
+                    sseEmitter.send(SseEmitter.event().name("liveMatch").data(
+                           crew.getChatRoom().getRoomId()));
+                } catch (Exception e) {
+                    sseEmitters.remove(crew.getUser().getUsername());
+                }
+            }
+
+            //sse 로직
+            if (sseEmitters.containsKey(secondUser.getUsername())) {
+                log.info("실시간매칭 후 sse secondUser 작동");
+                SseEmitter sseEmitter = sseEmitters.get(crew.getUser().getUsername());
+                try {
+                    sseEmitter.send(SseEmitter.event().name("liveMatch").data(
+                            crew.getChatRoom().getRoomId()));
+                } catch (Exception e) {
+                    sseEmitters.remove(crew.getUser().getUsername());
+                }
+            }
+
+            //sse 로직
+            if (sseEmitters.containsKey(thirdUser.getUsername())) {
+                log.info("실시간매칭 후 sse thirdUser 작동");
+                SseEmitter sseEmitter = sseEmitters.get(crew.getUser().getUsername());
+                try {
+                    sseEmitter.send(SseEmitter.event().name("liveMatch").data(
+                            crew.getChatRoom().getRoomId() + " " + crew.getId()));
+                } catch (Exception e) {
+                    sseEmitters.remove(crew.getUser().getUsername());
+                }
+            }
+
             // 대기리스트 확인
             log.info("삭제된 후 redis 대기열 : {}",redisTemplate.opsForZSet().zCard(randomKey));
-
         }
 
         //sse에 대기인원 표시
