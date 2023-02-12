@@ -14,4 +14,5 @@ public interface ParticipationRepository extends JpaRepository<Participation,Lon
     List<Participation> findByUser(User user);
     Optional<Participation> findByCrewAndUser(Crew crew,User user);
     List<Participation> findByCrew(Crew crew);
+    List<Participation> findByStatusAndUser(Integer status, User user);
 }

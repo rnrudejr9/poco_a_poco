@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
 import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.enums.StrictEnum;
 
@@ -47,4 +48,8 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
 
 
     List<Crew> findByDeletedAtAndStrictContaining(@Nullable LocalDateTime deletedAt, String strict , Pageable pageable);
+
+    // 참여 중인 모임
+    List<Crew> findByParticipationsIn(List<Participation> participation);
+    long countByParticipationsIn(List<Participation> participation);
 }

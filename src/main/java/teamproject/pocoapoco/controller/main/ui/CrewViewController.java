@@ -25,6 +25,7 @@ import teamproject.pocoapoco.domain.dto.part.PartJoinResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
+import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.*;
@@ -202,25 +203,17 @@ public class CrewViewController {
         Crew crew = crewService.findByCrewId(crewId);
         model.addAttribute("crew", crew);
 
-
-        List<CrewMemberResponse> crewMemberResponseList= crewMemberService.getJoinMemberList(crewId);
+        List<PartJoinResponse> partJoinResponses = participationService.AllowedMember(crewId);
         Deque<User> members = new ArrayDeque<>();
         User u;
-        for(CrewMemberResponse s : crewMemberResponseList){
-            log.info("CrewId(): {}, UserName(): {}, JoinCheck(): {}", s.getCrewId(), s.getUserName(), s.getJoinCheck());
-            u =crewService.findByUserName(s.getUserName());
+        for (PartJoinResponse p : partJoinResponses){
+
+            log.info("!!p.getCrewId() : {}, p.getNow() : {}, p.getJoinUserName() : {}, p.getWriterUserName() : {}", p.getCrewId(), p.getNow(), p.getJoinUserName(), p.getWriterUserName());
+            u =crewService.findByUserName(p.getJoinUserName());
             if(crew.getUser().getId() == u.getId())
                 members.addFirst(u);
             else
                 members.add(u);
-        }
-
-
-        List<PartJoinResponse> partJoinResponses = participationService.AllowedMember(crewId);
-
-        for (PartJoinResponse p : partJoinResponses){
-
-            log.info("!!p.getCrewId() : {}, p.getNow() : {}, p.getJoinUserName() : {}, p.getWriterUserName() : {}", p.getCrewId(), p.getNow(), p.getJoinUserName(), p.getWriterUserName());
         }
 
 
@@ -272,6 +265,51 @@ public class CrewViewController {
 
         return "main/main2";
     }
+
+    // 내가 참여중인 모임 리스트
+    @GetMapping("/users/activeCrew")
+    public String getActiveCrewList(Authentication authentication, Model model) {
+
+        try{
+            String userName = authentication.getName();
+            // list
+            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(2,authentication.getName()); // 2: 참여 완료
+            model.addAttribute("crewList",crewList);
+
+            // count
+            putCategorizeCrewCount(userName,model);
+            return "part/get-current-crew";
+        } catch (AppException e){
+            return "redirect:/view/v1/start";
+        }
+    }
+    // 내가 참여했고 종료된 모임 리스트
+    @GetMapping("/users/endCrew")
+    public String getEndCrewList(Authentication authentication, Model model) {
+
+        try{
+            String userName = authentication.getName();
+            // list
+            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(3,authentication.getName()); // 3: 모집 종료
+            model.addAttribute("crewList",crewList);
+
+            // count
+            putCategorizeCrewCount(userName,model);
+
+            return "part/get-end-crew";
+        } catch (AppException e){
+            return "redirect:/view/v1/start";
+        }
+    }
+
+    private void putCategorizeCrewCount(String userName, Model model) {
+        long activeCrewCount = crewService.getCrewByUserAndStatus(2,userName);
+        long endCrewCount = crewService.getCrewByUserAndStatus(3,userName);
+        model.addAttribute("activeCrewCount", activeCrewCount);
+        model.addAttribute("endCrewCount", endCrewCount);
+
+    }
+
 
 
 }
