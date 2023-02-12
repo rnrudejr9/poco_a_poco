@@ -470,6 +470,12 @@
                                                                                    )}">
                             <small class="text-muted" type="hidden" th:value="${crewStat.index}"></small>
                             <img src="" class="img-thumbnail" style="width:100%; height:225px;" id="main-image">
+                            <input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+                            <input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+                            <input hidden th:value="${AWS_REGION}" id="awsRegion">
+                            <input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+                            <input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
                             <input type="hidden" name="img-key" th:value="${crew.imagePath}">
                             <div class="card-body">
                                 <div class="">
@@ -545,12 +551,13 @@
 
             let uuidString = self.crypto.randomUUID();
 
-            const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
-            const SECRET_ACCESS_KEY = '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';
-            const REGION = 'ap-northeast-2';
-            const BUCKET_NAME = 'poco-bucket-2';
-            const BUCKET_DIRECTORY = '/crewimages';
+            const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+            const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+            const REGION = document.getElementById("awsRegion").value;
+            const BUCKET_NAME = document.getElementById("awsBucketName").value;
+            const BUCKET_DIRECTORY = document.getElementById("awsBucketDirectory").value;
             const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
 
             // AWS ACCESS KEY를 세팅합니다.
 

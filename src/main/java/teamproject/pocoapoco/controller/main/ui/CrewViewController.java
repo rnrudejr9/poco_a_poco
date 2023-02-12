@@ -3,6 +3,7 @@ package teamproject.pocoapoco.controller.main.ui;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -48,6 +49,21 @@ public class CrewViewController {
     private final CrewReviewService crewReviewService;
 
     private final ParticipationService participationService;
+
+
+    @Value("${aws.access.key}")
+    String AWS_ACCESS_KEY;
+
+    @Value("${aws.secret.access.key}")
+    String AWS_SECRET_ACCESS_KEY;
+
+    @Value("${aws.region}")
+    String AWS_REGION;
+
+    @Value("${aws.bucket.name}")
+    String AWS_BUCKET_NAME;
+
+    String AWS_BUCKET_DIRECTORY = "/crewimages";
 
     // 크루 게시물 상세 페이지
     @GetMapping("/{crewId}")
@@ -160,6 +176,14 @@ public class CrewViewController {
                               @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
                               @PageableDefault(page = 0, size = 9, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable) {
 
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
+
+
         // 유저 로그인 확인 후 운동 종목 데이터 확인
         List<String> userSportsList = crewService.getUserSports(authentication, CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
 
@@ -186,6 +210,7 @@ public class CrewViewController {
         model.addAttribute("startNumPage", startNumPage);
         model.addAttribute("endNumPage", endNumPage);
         model.addAttribute("lastPage", lastPage);
+
 
         return "main/main";
     }

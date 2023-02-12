@@ -21,12 +21,41 @@ async function findMember(){
             str += "참여자 : " + json.result[i].joinUserName;
             str += "</span>"
             str += "</li>"
+            str += "<button id=deleteCrew"+ json.result[i].crewId + " onclick='deleteUserFromCrew(json.result[i].crewId, json.result[i].joinUserName)' sec:authorize =\"hasRole('ROLE_ADMIN')\">참여자 강퇴</button><br/>";
+
+
         }
         str += "</ul>"
 
+
+
         document.getElementById("members").innerHTML = str;
+
     }
 }
+
+async function deleteUserFromCrew(crewId, userName){
+    let response = await fetch("/view/v1/manage/crews/"+crewId + "/" + userName, {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include"
+    })
+    if(response.ok) {
+        var json = await response.json();
+        console.log(json.result);
+    } else {
+        let json = await response.text();
+        alert(json);
+    }
+
+
+
+
+
+}
+
 async function enterCheck(){
     var crewId = document.getElementById('crewIdJoin').value;
     console.log(crewId);
