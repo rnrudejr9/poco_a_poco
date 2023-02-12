@@ -429,7 +429,7 @@
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body collapse-body">
                         <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
-                            <small class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}"></small>
+                            <input class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}">
                                 <div class="grid text-center">
                                     <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
                                         <label class="checkBox-sport btn btn-outline-info" th:each="sport : ${sportEnums}">
