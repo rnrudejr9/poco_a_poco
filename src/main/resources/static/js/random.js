@@ -106,8 +106,8 @@ function startMatching(level, sport) {
             if (listCnt > 0) {
                 Swal.fire({
                     icon: 'success',
-                    title: '랜덤매칭이 시작되었습니다🔥\n\n Level : '+ level,
-                    html:  '매칭이 될때까지 대기해 주세요👍<br> 3명이 대기열에 들어오면 매칭됩니다',
+                    title: '실시간 매칭이 시작되었습니다🔥\n\n Level : '+ level,
+                    html:  '매칭이 성사될때까지 대기해 주세요👍<br> 3명이 대기열에 들어오면 매칭됩니다',
                 });
                 let randomMatchCancelBtn = document.getElementById("randomMatchCancel_btn");
                 let randomMatchBtn = document.getElementById("randomMatch_btn");
@@ -154,7 +154,7 @@ function randomMatchCancel() {
             if (listCnt > 0) {
                 Swal.fire({
                     icon: 'success',
-                    title: '랜덤매칭이 취소되었습니다✔\n',
+                    title: '실시간 매칭이 취소되었습니다✔\n',
                 });
                 let randomMatchCancelBtn = document.getElementById("randomMatchCancel_btn");
                 let randomMatchBtn = document.getElementById("randomMatch_btn");
