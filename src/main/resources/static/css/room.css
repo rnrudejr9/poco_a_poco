@@ -71,8 +71,8 @@ body {
     width: 65%;
     border-radius: 5px;
     margin: 0.5em 1em;
-    overflow: auto;
-
+    /*줄바꿈*/
+    word-break: break-all;
 }
 .chatbox__user-list {
     background: rgba(255, 255, 255, 0.1);

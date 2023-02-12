@@ -5,6 +5,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
+import teamproject.pocoapoco.domain.entity.check.ChatConfigEntity;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.enums.UserRole;
 
@@ -60,6 +61,9 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "user")
     private List<CrewMembers> members = new ArrayList<>();
+
+    @OneToMany(mappedBy = "user")
+    private List<ChatConfigEntity> chatConfigEntities = new ArrayList<>();
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return new ArrayList<GrantedAuthority>(List.of(new SimpleGrantedAuthority(role.name())));

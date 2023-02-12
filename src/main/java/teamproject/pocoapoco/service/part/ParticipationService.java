@@ -62,7 +62,8 @@ public class ParticipationService {
         User user = userRepository.findByUserName(partJoinDto.getUserName()).orElseThrow(()->new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage()));
 
         Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
-        participation.setStatus(0);
+        participationRepository.delete(participation);
+        //hard Delete
         return Response.success("신청이 취소됨");
     }
 
@@ -73,14 +74,8 @@ public class ParticipationService {
 
         if(participationRepository.existsByCrewAndAndUser(crew,user)){
             Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
-            if(participation.getStatus() == 1){
-                participation.setStatus(0);
-                return Response.success("참여하기 취소");
-            }
-            if(participation.getStatus() == 0){
-                participation.setStatus(1);
-                return Response.success("참여 신청완료");
-            }
+            participationRepository.delete(participation);
+            return Response.success("이미 존재하는 참여 엔티티 취소됨");
         }
         Participation savedParticipation = Participation.builder().crew(crew).title(crew.getTitle()).body(partDto.getBody()).user(user).status(1).build();
         for(Crew c : user.getCrews()) {

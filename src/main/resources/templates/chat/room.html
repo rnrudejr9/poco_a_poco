@@ -44,6 +44,8 @@
                     <div class="chatbox__messages__user-message scrollBar" id="messagearea">
 
                     </div>
+
+
 <!--                    <div style="overflow:scroll;overflow-x: hidden; height: 550px; width: 450px; display: flex; flex-direction: column; overflow-y: auto;" class="chatbox__messages__user-message">-->
 <!--                    </div>-->
                 </div>
@@ -57,7 +59,9 @@
                         <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
                     </div>
                 </div>
+                <button class="w-100 btn btn-primary btn-lg mb3" id="backBtn">메인으로 가기</button>
             </div>
+
 
             <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
             <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
@@ -72,6 +76,15 @@
 <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+<script>
+    document.getElementById('backBtn').addEventListener('click', back);
+
+    function back() {
+        location.href = "/view/v1/crews";
+    }
+</script>
 </body>
 
 </html>
