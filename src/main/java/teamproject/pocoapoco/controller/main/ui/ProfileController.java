@@ -8,28 +8,23 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import teamproject.pocoapoco.controller.main.api.UserController;
+import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
 import teamproject.pocoapoco.domain.dto.follow.FollowingResponse;
-import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.*;
-import teamproject.pocoapoco.domain.entity.Follow;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
-import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.config.EncrypterConfig;
+import teamproject.pocoapoco.service.CrewReviewService;
 import teamproject.pocoapoco.service.FollowService;
 import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
 import org.springframework.data.domain.Pageable;
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
-import java.util.Optional;
 
 @Controller
 @RequestMapping("/view/v1")
@@ -42,6 +37,7 @@ public class ProfileController {
     private final FollowService followService;
     private final UserPhotoService userPhotoService;
     private final EncrypterConfig encrypterConfig;
+    private final CrewReviewService crewReviewService;
 
 
     @Value("${aws.access.key}")
@@ -167,6 +163,14 @@ public class ProfileController {
         try{
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
             model.addAttribute("userProfileResponse", userProfileResponse);
+            //
+
+            // 후기 리스트
+            List<CrewReviewResponse> reviewList = crewReviewService.inquireAllReviewList(userName);
+            model.addAttribute("reviewList", reviewList);
+
+            long reviewAllCount = crewReviewService.getReviewAllCount(userName);
+            model.addAttribute("reviewAllCount", reviewAllCount);
             return "profile/get";
         } catch (AppException e){
             response.setContentType("text/html; charset=UTF-8");

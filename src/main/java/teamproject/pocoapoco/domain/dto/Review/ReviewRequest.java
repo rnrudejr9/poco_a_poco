@@ -1,4 +1,4 @@
-package teamproject.pocoapoco.domain.dto.Review;
+package teamproject.pocoapoco.domain.dto.crew;
 
 import lombok.Getter;
 import lombok.Setter;

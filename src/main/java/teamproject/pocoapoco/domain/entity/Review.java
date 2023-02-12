@@ -1,9 +1,6 @@
 package teamproject.pocoapoco.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -30,13 +27,15 @@ public class Review{
     @JoinColumn(name = "toUser_id")
     private User toUser;
 
+//    private String reviews;
     private Double reviewScore;
     private String reviewContext;
 
-    public void of(Crew crew, User fromUser, User toUser, Double reviewScore, String review) {
+    public void of(Crew crew, User fromUser, User toUser, /*String reviews,*/ Double reviewScore, String review) {
         this.crew = crew;
         this.fromUser = fromUser;
         this.toUser = toUser;
+//        this.reviews = reviews;
         this.reviewScore= reviewScore;
         this.reviewContext = review;
     }

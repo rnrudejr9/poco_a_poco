@@ -18,15 +18,16 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
 import teamproject.pocoapoco.domain.dto.Review.ReviewResponse;
 import teamproject.pocoapoco.domain.dto.crew.*;
-import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberDeleteResponse;
-import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberResponse;
+import teamproject.pocoapoco.domain.dto.crew.ReviewRequest;
+import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
+import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
+import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.*;
@@ -44,12 +45,19 @@ public class CrewViewController {
 
     private final CrewService crewService;
     private final LikeViewService likeViewService;
-    private final CrewMemberService crewMemberService;
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
     private final CrewReviewService crewReviewService;
 
     private final ParticipationService participationService;
+    /*@ModelAttribute("reviews")
+    public Map<String, String> reviews() {
+        Map<String, String> reviews = new LinkedHashMap<>();
+        reviews.put("01", "시간을 잘 지켜요.");
+        reviews.put("02", "다음 모임에서도 함께하고 싶어요.");
+        return reviews;
+    }*/
+
 
 
     @Value("${aws.access.key}")
@@ -148,28 +156,6 @@ public class CrewViewController {
         return new ResponseEntity<>(likeViewResponse, HttpStatus.OK);
     }
 
-    // 크루 참여한 MemberList 출력
-    @GetMapping("/{crewId}/joinCrew")
-    public ResponseEntity getJoinList(@PathVariable Long crewId) {
-        List<CrewMemberResponse> list = crewMemberService.getJoinMemberList(crewId);
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-
-    // 크루 참여하기
-    @PostMapping("/{crewId}/joinCrew")
-    public ResponseEntity joinCrew(@PathVariable Long crewId, Authentication authentication) {
-        CrewMemberResponse joinMemberResponse = crewMemberService.joinCrew(crewId, authentication.getName());
-        return new ResponseEntity<>(joinMemberResponse, HttpStatus.OK);
-    }
-
-    // 크루 나가기
-    @DeleteMapping("/{crewId}/leaveCrew")
-    public ResponseEntity leaveCrew(@PathVariable Long crewId, Authentication authentication) {
-        CrewMemberDeleteResponse crewMemberDeleteResponse = crewMemberService.leaveCrew(crewId, authentication.getName());
-        return new ResponseEntity<>(crewMemberDeleteResponse, HttpStatus.OK);
-    }
-
-
     // 크루 게시물 전체 조회, 검색 조회, 운동 종목 조회
     @GetMapping()
     @ApiOperation(value = "크루 게시글 전체조회", notes = "")
@@ -247,5 +233,81 @@ public class CrewViewController {
         crewReviewService.addReview(crewReviewRequest);
         return "redirect:/";
     }
+
+    @GetMapping("/reviewList")
+    public String inquireReviewList(Authentication authentication, Model model) {
+        String userName = authentication.getName();
+
+        List<CrewReviewResponse> reviewList = crewReviewService.inquireAllReviewList(userName);
+        model.addAttribute("reviewList", reviewList);
+
+        long reviewAllCount = crewReviewService.getReviewAllCount(userName);
+        model.addAttribute("reviewAllCount", reviewAllCount);
+
+//        model.addAttribute("certifyYn", receiver.getCertifyYn());
+//        model.addAttribute("nickname", receiver.getNickname());
+
+        return "review/review-list";
+    }
+    @GetMapping("/reviewList/{reviewId}")
+    public String inquireReview(@PathVariable Long reviewId, Model model) {
+
+        CrewReviewDetailResponse review = crewReviewService.inquireReview(reviewId);
+        model.addAttribute("review", review);
+
+        return "review/review-content";
+    }
+
+    @ModelAttribute("sportEnums")
+    private List<SportEnum> sportEnums() {
+        List<SportEnum> sportEnums = List.of(SportEnum.values());
+        return sportEnums;
+    }
+
+
+    // 내가 참여중인 모임 리스트
+    @GetMapping("/users/activeCrew")
+    public String getActiveCrewList(Authentication authentication, Model model) {
+
+        try{
+            String userName = authentication.getName();
+            // list
+            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(2,authentication.getName()); // 2: 참여 완료
+            model.addAttribute("crewList",crewList);
+
+            // count
+            putCategorizeCrewCount(userName,model);
+            return "part/get-current-crew";
+        } catch (AppException e){
+            return "redirect:/view/v1/start";
+        }
+    }
+    // 내가 참여했고 종료된 모임 리스트
+    @GetMapping("/users/endCrew")
+    public String getEndCrewList(Authentication authentication, Model model) {
+
+        try{
+            String userName = authentication.getName();
+            // list
+            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(3,authentication.getName()); // 3: 모집 종료
+            model.addAttribute("crewList",crewList);
+
+            // count
+            putCategorizeCrewCount(userName,model);
+
+            return "part/get-end-crew";
+        } catch (AppException e){
+            return "redirect:/view/v1/start";
+        }
+    }
+
+    private void putCategorizeCrewCount(String userName, Model model) {
+        long activeCrewCount = crewService.getCrewByUserAndStatus(2,userName);
+        long endCrewCount = crewService.getCrewByUserAndStatus(3,userName);
+        model.addAttribute("activeCrewCount", activeCrewCount);
+        model.addAttribute("endCrewCount", endCrewCount);
+
+    }
+
 
 }

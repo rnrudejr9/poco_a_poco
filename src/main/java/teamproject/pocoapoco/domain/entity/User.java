@@ -60,9 +60,6 @@ public class User implements UserDetails {
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
     @OneToMany(mappedBy = "user")
-    private List<CrewMembers> members = new ArrayList<>();
-
-    @OneToMany(mappedBy = "user")
     private List<ChatConfigEntity> chatConfigEntities = new ArrayList<>();
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
