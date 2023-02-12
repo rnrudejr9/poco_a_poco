@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://sdk.amazonaws.com/js/aws-sdk-2.891.0.min.js"></script>
+    <title>프로필 사진 업로드</title>
+</head>
+
+<body style="text-align: center;">
+
+<input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+<input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+<input hidden th:value="${AWS_REGION}" id="awsRegion">
+<input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+<input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
+<h3> 프로필 사진을 업로드해 주세요</h3>
+
+<input type="file" accept="image/*" id="imageFile"/>
+<button type="button" onclick="profileUpload()"> 업로드 </button>
+<br /> <br />
+<div id="profileImage"></div>
+<form method="post" action="/view/v1/users/profile/image/edit" >
+    <input type="hidden" value="" name="imagePath" id="imagePath"/>
+    <button type="submit"> 프로필 사진 수정 완료하기 </button>
+
+</form>
+
+<script src="http://code.jquery.com/jquery-latest.js"></script>
+<script type="text/javascript">
+
+    function profileUpload() {
+
+        let uuidString = self.crypto.randomUUID();
+
+        const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+        const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+        const REGION = document.getElementById("awsRegion").value;
+        const BUCKET_NAME = document.getElementById("awsBucketName").value;
+        const BUCKET_DIRECTORY = document.getElementById("awsBucketDirectory").value;
+        const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+        // AWS ACCESS KEY를 세팅합니다.
+        AWS.config.update({
+            accessKeyId: ACCESS_KEY,
+            secretAccessKey: SECRET_ACCESS_KEY
+        });
+
+        // 버킷에 맞는 이름과 리전을 설정합니다.
+        const myBucket = new AWS.S3({
+            params: { Bucket: S3_BUCKET},
+            region: REGION,
+        });
+
+
+
+        let files = document.getElementById('imageFile').files;
+        let file = files[0];
+
+        let fileName = uuidString + '-' + file.name.replace(' ', '');
+
+
+        const params = {
+            ACL: 'public-read',
+            Body: file,
+            Bucket: S3_BUCKET,
+            Key: fileName
+        };
+
+
+        myBucket.putObject(params)
+            .on('httpUploadProgress', (evt) => {
+                alert("SUCCESS");
+                console.log(fileName);
+                $('#imagePath').val(fileName);
+            })
+            .send((err) => {
+                if (err) console.log(err)
+            })
+
+    }
+
+</script>
+<script type="text/javascript" src="/js/sse.js"></script>
+
+
+</body>
+
+
+
+</html>

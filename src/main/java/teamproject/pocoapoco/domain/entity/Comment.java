@@ -1,14 +1,13 @@
 package teamproject.pocoapoco.domain.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.hibernate.annotations.Where;
+import teamproject.pocoapoco.domain.dto.comment.ui.CommentViewResponse;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Entity
 @NoArgsConstructor
@@ -30,14 +29,21 @@ public class Comment extends BaseEntity{
     @JoinColumn(name = "crew_id")
     Crew crew;
 
+    @Setter
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "parent_id")
     private Comment parent;
 
+    @Setter
     @OneToMany(mappedBy = "parent", orphanRemoval = true)
     private List<Comment> children = new ArrayList<>();
 
     public void setComment(String comment) {
         this.comment = comment;
+    }
+    public static List<CommentViewResponse> from(List<Comment> comments) {
+        return comments.stream()
+                .map(CommentViewResponse::of)
+                .collect(Collectors.toList());
     }
 }

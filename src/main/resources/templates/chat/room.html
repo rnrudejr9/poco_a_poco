@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head th:replace="fragments/fragment :: head"></head>
+<body>
+<!-- 네비바-->
+<header th:replace="fragments/fragment :: nav"></header>
+
+<link href="https://webfontworld.github.io/goodchoice/Jalnan.css" rel="stylesheet">
+<link href="/css/room.css" rel="stylesheet">
+<style>
+    * {
+        font-family: 'Jalnan';
+        font-size: medium;
+    }
+</style>
+<th:block>
+    <th:block th:fragment="content">
+
+        <input type="hidden" id="roomId" th:value="${room.roomId}">
+        <input type="hidden" id="crewId" th:value="${crewId}">
+        <div class='containerA' ng-cloak ng-app="chatApp">
+            <h1 th:text="${room.name}"></h1>
+            <div class='chatbox' ng-controller="MessageCtrl as chatMessage" >
+                <div class='chatbox__user-list' id="userArea">
+                    <h1>User list</h1>
+                    <div class='chatbox__user--active'>
+                        <p>Jack Thomson</p>
+                    </div>
+                    <div class='chatbox__user--busy'>
+                        <p>Angelina Jolie</p>
+                    </div>
+                    <div class='chatbox__user--active'>
+                        <p>George Clooney</p>
+                    </div>
+                    <div class='chatbox__user--active'>
+                        <p>Seth Rogen</p>
+                    </div>
+                    <div class='chatbox__user--away'>
+                        <p>John Lydon</p>
+                    </div>
+                </div>
+                <div class="chatbox__messages" ng-repeat="message in messages">
+                    <div class="chatbox__messages__user-message scrollBar" id="messagearea">
+
+                    </div>
+
+
+<!--                    <div style="overflow:scroll;overflow-x: hidden; height: 550px; width: 450px; display: flex; flex-direction: column; overflow-y: auto;" class="chatbox__messages__user-message">-->
+<!--                    </div>-->
+                </div>
+
+            </div>
+
+            <div class="containerA">
+                <div class="input-group mb-3">
+                    <input type="text" id="msg" class="form-control">
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="button" id="button-send">전송</button>
+                    </div>
+                </div>
+                <button class="w-100 btn btn-primary btn-lg mb3" id="backBtn">메인으로 가기</button>
+            </div>
+
+
+            <script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+        </div>
+    </th:block>
+</th:block>
+
+
+<script type="text/javascript" src="/js/room.js"></script>
+
+
+<script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sockjs-client@1/dist/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+
+
+<script>
+    document.getElementById('backBtn').addEventListener('click', back);
+
+    function back() {
+        location.href = "/view/v1/crews";
+    }
+</script>
+</body>
+
+</html>

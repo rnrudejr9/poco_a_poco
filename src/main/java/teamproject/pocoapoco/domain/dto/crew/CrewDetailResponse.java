@@ -1,11 +1,11 @@
 package teamproject.pocoapoco.domain.dto.crew;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.enums.SportEnum;
 
 import java.time.LocalDateTime;
 
@@ -19,11 +19,14 @@ public class CrewDetailResponse {
     private String title;
     private String content;
     private Integer crewLimit;
-    private String userId;
+    private Long userId;
     private String userName;
+    private String nickName;
     private LocalDateTime createdAt;
     private LocalDateTime lastModifiedAt;
-//    private String sport;
+    private SportEnum sportEnum;
+    private Long chatRoomId;
+    private String imagePath;
 
     public static CrewDetailResponse of(Crew crew) {
         return CrewDetailResponse.builder()
@@ -32,11 +35,14 @@ public class CrewDetailResponse {
                 .title(crew.getTitle())
                 .content(crew.getContent())
                 .crewLimit(crew.getCrewLimit())
-                .userId(crew.getUser().getUserId())
+                .userId(crew.getUser().getId())
+                .nickName(crew.getUser().getNickName())
                 .userName(crew.getUser().getUsername())
                 .createdAt(crew.getCreatedAt())
                 .lastModifiedAt(crew.getLastModifiedAt())
-//                .sport(crew.getSport().getName())
+                .imagePath(crew.getImagePath())
+                .chatRoomId(crew.getChatRoom().getRoomId())
+                .sportEnum(crew.getSportEnum())
                 .build();
     }
 

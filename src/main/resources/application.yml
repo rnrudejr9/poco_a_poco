@@ -6,34 +6,51 @@ server:
 spring:
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: create-drop
     show-sql: true
+    username : root
     format_sql: true
     use_sql_comments: true
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  profiles:
+    include: oauth
+
   redis:
     host: localhost
     port: 6379
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
+    stock:
+      prefix: stocks
+
+
   mvc:
     pathmatch:
       matching-strategy: ant_path_matcher
-  servlet:
-    multipart:
-      enabled: true
-      max-file-size: 100MB
-      max-request-size: 300MB
-  config:
-    activate:
-      on-profile: "common"
-    servelet:
-      multipart:
-        max-request-size: 400MB
-        max-file-size: 400MB
-  cloud:
-    aws:
-      region:
-        static: ap-northeast-2
+    hiddenmethod:
+      filter:
+        enabled: true   # put/delete httpMethod 적용
+
+  mail:
+    username:
+    password:
+#  servlet:
+#    multipart:
+#      enabled: true
+#      max-file-size: 100MB
+#      max-request-size: 300MB
+#  config:
+#    activate:
+#      on-profile: "common"
+#    servelet:
+#      multipart:
+#        max-request-size: 400MB
+#        max-file-size: 400MB
+#  cloud:
+#    aws:
+#      region:
+#        static: ap-northeast-2
   main.allow-bean-definition-overriding: true # jpaAuditingHandler 에러 해결
 jwt:
   token:

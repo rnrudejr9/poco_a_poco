@@ -1,23 +1,23 @@
 package teamproject.pocoapoco.domain.dto.user;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import teamproject.pocoapoco.enums.SportEnum;
+
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Setter
 public class UserProfileRequest {
 
-    private String userName;
+    private String nickName;
     private String password;
     private String passwordConfirm;
     private String address;
-    private Boolean likeSoccer;
-    private Boolean likeJogging;
-    private Boolean likeTennis;
+    private List<String> sportList;
+    private Boolean sportListChange = false;
 
 
 }

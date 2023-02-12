@@ -3,6 +3,7 @@ package teamproject.pocoapoco.domain.dto.user;
 
 import lombok.*;
 import org.springframework.context.annotation.Bean;
+import teamproject.pocoapoco.enums.SportEnum;
 
 @Getter
 @NoArgsConstructor
@@ -11,16 +12,14 @@ import org.springframework.context.annotation.Bean;
 @Setter
 public class UserJoinRequest {
 
-    private String userId;
     private String userName;
+    private String nickName;
     private String password;
     private String passwordConfirm;
     private String address;
-    @Builder.Default
-    private Boolean likeSoccer = false;
-    @Builder.Default
-    private Boolean likeJogging = false;
-    @Builder.Default
-    private Boolean likeTennis = false;
+    private String email;
+    private SportEnum sport1;
+    private SportEnum sport2;
+    private SportEnum sport3;
 
 }
