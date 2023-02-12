@@ -31,8 +31,8 @@ public class UserPhotoService {
         User selectedUser = selectedUserOptional.get();
 
         User revisedUser = User.toEntityWithImage(selectedUser.getId(), selectedUser.getUsername(), selectedUser.getNickName(),
-                selectedUser.getAddress(), selectedUser.getPassword(), selectedUser.getSport().isSoccer(),
-                selectedUser.getSport().isJogging(), selectedUser.getSport().isTennis(), imagePath, selectedUser.getEmail());
+                selectedUser.getAddress(), selectedUser.getPassword(), selectedUser.getSport().getSport1(),
+                selectedUser.getSport().getSport2(), selectedUser.getSport().getSport3(), imagePath, selectedUser.getEmail());
 
         userRepository.save(revisedUser);
 

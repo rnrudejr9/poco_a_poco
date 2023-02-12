@@ -66,6 +66,8 @@
             font-size: 1em;
         }
 
+    </style>
+
         /*유저 이름*/
         .userName {
             color: #042441;
@@ -103,7 +105,11 @@
                 <li><a href="/view/v1/alarm/" sec:authorize="isAuthenticated()" th:href="@{/view/v1/alarm}" class="textSize nav-link px-2 text-white">알림&emsp;&emsp;
                 </a></li>
                 <li><a href="/view/v1/users/profile/my" sec:authorize="isAuthenticated()" th:href="@{/view/v1/users/profile/my}"
-                       class="textSize nav-link px-2 text-white">My프로필&emsp;&emsp;</h5></a></li>
+                       class="nav-link px-2 text-white"><h5>My프로필&emsp;&emsp;</h5></a></li>
+                <li><a href="/view/v1/users/profile/my" sec:authorize ="hasRole('ROLE_ADMIN')" th:href="@{/view/v1/manage/users}"
+                       class="nav-link px-2 text-white"><h5>관리자 페이지&emsp;&emsp;</h5></a></li>
+
+
             </ul>
             <body>
             <div id="messages"></div>

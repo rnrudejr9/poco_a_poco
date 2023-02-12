@@ -2,26 +2,33 @@ package teamproject.pocoapoco.controller.main.ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.controller.main.api.UserController;
+import teamproject.pocoapoco.domain.dto.follow.FollowingResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.*;
+import teamproject.pocoapoco.domain.entity.Follow;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.config.EncrypterConfig;
+import teamproject.pocoapoco.service.FollowService;
 import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
-
+import org.springframework.data.domain.Pageable;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -32,12 +39,35 @@ public class ProfileController {
 
     private final UserService userService;
     private final UserRepository userRepository;
+    private final FollowService followService;
     private final UserPhotoService userPhotoService;
     private final EncrypterConfig encrypterConfig;
 
 
+    @Value("${aws.access.key}")
+    String AWS_ACCESS_KEY;
+
+    @Value("${aws.secret.access.key}")
+    String AWS_SECRET_ACCESS_KEY;
+
+    @Value("${aws.region}")
+    String AWS_REGION;
+
+    @Value("${aws.bucket.name}")
+    String AWS_BUCKET_NAME;
+
+    String AWS_BUCKET_DIRECTORY = "/profileimages";
+
+
     @PostMapping("/users/profile/edit")
     public String editUser(@ModelAttribute UserProfileRequest userProfileRequest, Model model, Authentication authentication, HttpServletResponse response){
+
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         log.info("닉네임: {}", userProfileRequest.getNickName());
         log.info("주소: {}", userProfileRequest.getAddress());
@@ -76,6 +106,12 @@ public class ProfileController {
     @GetMapping("/users/profile/edit")
     public String editUserPage(Model model, Authentication authentication){
 
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
         String userName = authentication.getName();
 
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
@@ -91,17 +127,27 @@ public class ProfileController {
     }
 
     @GetMapping("/users/profile/my")
-    public String getMyProfile(Model model, Authentication authentication){
+    public String getMyProfile(Model model, Authentication authentication,Pageable pageable){
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         String userName = authentication.getName();
-
+        User user = userRepository.findByUserName(userName).get();
         String userProfileImagePath = userService.getProfilePathByUserName(userName);
 
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
 
+        Page<FollowingResponse> followingList = followService.getFollowingList(pageable,user.getId());
+        Page<FollowingResponse> followedList = followService.getFollowedList(pageable,user.getId());
         model.addAttribute("userProfileResponse", userProfileResponse);
 
         model.addAttribute("userProfileImagePath", userProfileImagePath);
+        model.addAttribute("followingResponse", followingList);
+        model.addAttribute("followedResponse", followedList);
 
 
         return "profile/get-my-profile";
@@ -111,6 +157,12 @@ public class ProfileController {
 
     @GetMapping("/users/profile/{userName}")
     public String getUserProfile(@PathVariable String userName, Model model, HttpServletResponse response) throws IOException {
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         try{
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
@@ -172,6 +224,12 @@ public class ProfileController {
     @PostMapping("/users/profile/image/edit")
     public String uploadImage(String imagePath, Authentication authentication, Model model){
 
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
         log.info(imagePath);
 
         String userName = authentication.getName();
@@ -194,6 +252,13 @@ public class ProfileController {
 
 
         return "/profile/upload-form";
+    }
+
+
+    @ModelAttribute("sportEnums")
+    private List<SportEnum> sportEnums() {
+        List<SportEnum> sportEnums = List.of(SportEnum.values());
+        return sportEnums;
     }
 
 

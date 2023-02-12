@@ -29,6 +29,8 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-web'
 
+
+
     testImplementation 'org.projectlombok:lombok:1.18.22'
     compileOnly 'org.projectlombok:lombok'
     runtimeOnly 'com.mysql:mysql-connector-j'
@@ -66,6 +68,10 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 //    implementation 'org.springframework.session:spring-session-data-redis'
 
+
+
+
+
     //타임리프 권한처리 라이브러리
     implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
     implementation group: 'org.springframework.boot', name: 'spring-boot-starter-thymeleaf'
@@ -80,11 +86,14 @@ dependencies {
     //웹소켓
     implementation 'org.springframework.boot:spring-boot-starter-web'
     implementation 'org.springframework.boot:spring-boot-starter-websocket'
+    implementation 'javax.websocket:javax.websocket-all:1.1'
 
 
     //s3 설정
     implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.1000')
     implementation 'com.amazonaws:aws-java-sdk-s3'
+
+
 
 
 }

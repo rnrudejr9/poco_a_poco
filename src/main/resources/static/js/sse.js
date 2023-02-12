@@ -16,6 +16,22 @@ if (userId.length > 0) {
         });
 
     });
+
+
+    eventSource.addEventListener("liveMatch", function (event) {
+        let message = event.data;
+        let split = message.split(" ");
+        Swal.fire({
+            icon: 'success',
+            title: "실시간 매칭이 성사되었습니다! 채팅방으로 이동해주세요^^",
+            showConfirmButton: false,
+        })
+            .then(function (){
+                //date 채팅ID " " 크루ID
+                location.href="http://localhost:8080/view/v1/room?roomId="+split[0]+"&crewId=" + split[1];
+            });
+
+    });
 }
 
 if (userId.length > 0) {

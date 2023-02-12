@@ -57,52 +57,45 @@
             font-weight: bold;
         }
 
-
+        .layer{position: relative;top:50%;left:40%; overflow: auto; height: 600px; width:375px; margin-top: auto}
+        .merge {
+            margin: 0;
+            display: flex;
+            flex-direction: row;
+            align-content: space-between;
+            width: 100%;
+        }
     </style>
-
-
 </head>
-
 <header th:replace="fragments/fragment :: nav"></header>
-
 <body>
-
-
-
-
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 
+
+<input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+<input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+<input hidden th:value="${AWS_REGION}" id="awsRegion">
+<input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+<input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
 <ul id="left-box">
     <img src = "" class="img-thumbnail" style="width:100px; height:100px;" id="left-image">
-
     <p style="position: relative; top:10px;">소개말말말</p>
-
     <div class="container-navbar">
-
         <li><a class="home" href="/view/v1/crews/">홈화면</a></li>
         <li><a href="/view/v1/users/profile/my">프로필 수정</a></li>
+        <li id="sns"><a href="#">친구목록</a></li>
         <li><a href="#">참여중인 모임</a></li>
-        <li><a href="#">333444</a></li>
     </div>
-
 </ul>
-
 <div sec:authorize="isAuthenticated()">
-
-
     <input type="hidden" name="img-key" th:value="${userProfileImagePath}">
-
     <div class="container" style="padding:20px;" id="container-profile">
-
-
         <span class="placeholder col-12 bg-light placeholder-lg"></span>
         <span class="placeholder col-12 bg-light placeholder-lg"></span>
         <span class="placeholder col-12 bg-light placeholder-lg"></span>
-
         <img src="" class="rounded mx-auto d-block" style="height: 200px; width: 200px;" id="main-image">
-
-
         <div class="mb-3 row">
             <label for="nickName" class="col-sm-3 col-form-label">닉네임</label>
             <div class="col-sm-10">
@@ -117,34 +110,65 @@
         </div>
         <div class="container-sport">
             <label class="col-sm-3 col-form-label">선호 종목</label>
-            <div class="form-check-inline">
-                <input class="form-check-input" type="checkbox" id="likeSoccer" th:checked="${userProfileResponse.likeSoccer}">
-                <label class="form-check-label" for="likeSoccer">
-                    축구
-                </label>
-            </div>
-            <div class="form-check-inline">
-                <input class="form-check-input" type="checkbox" id="likeJogging" th:checked="${userProfileResponse.likeJogging}">
-                <label class="form-check-label" for="likeJogging">
-                    조깅
-                </label>
-            </div>
-            <div class="form-check-inline">
-                <input class="form-check-input" type="checkbox" value="" id="likeTennis" th:checked="${userProfileResponse.likeTennis}">
-                <label class="form-check-label" for="likeTennis">
-                    테니스
-                </label>
+
+            <div>
+                <text th:text="${userProfileResponse.getSportValue1()}"></text>
             </div>
 
+            <div>
+                <text th:text="${userProfileResponse.getSportValue2()}"></text>
+            </div>
+
+            <div>
+                <text th:text="${userProfileResponse.getSportValue3()}"></text>
+            </div>
             <span class="placeholder col-12 bg-light placeholder-lg"></span>
         </div>
-
         <button class="btn btn-primary" type="button" onclick="location.href = '/view/v1/users/profile/edit';" >프로필 수정하기</button>
-
-
     </div>
+    <div id="snsList" style="margin-top: 20px; display: none" class="layer">
+        <div class="merge" >
+            <div style="margin-right: auto">
+                <h2>
+                    팔로윙
+                </h2>
+                <div>
+                    <div  class="d-flex text-muted  pt-3" th:each="followingList : ${followingResponse}">
+                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
+                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#007bff"/>
+                            <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
+                        </svg>
 
-
+                        <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
+                        <p  class="pb-3 mb-0 small lh-sm border-bottom" >
+                            <strong class="d-block text-gray-dark" th:text="|${followingList.nickName}|"></strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div >
+                <h2>
+                    팔로워
+                </h2>
+                <div>
+                    <div  class="d-flex text-muted  pt-3" th:each="followedList : ${followedResponse}">
+                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
+                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                            <rect width="100%" height="100%" fill="#007bff"/>
+                            <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
+                        </svg>
+                        <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
+                        <p  class="pb-3 mb-0 small lh-sm border-bottom" >
+                            <strong class="d-block text-gray-dark" th:text="|${followedList.nickName}|"></strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
@@ -158,34 +182,27 @@
 
         let uuidString = self.crypto.randomUUID();
 
-        const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
-        const SECRET_ACCESS_KEY = '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';
-        const REGION = 'ap-northeast-2';
-        const BUCKET_NAME = 'poco-bucket-2';
-        const BUCKET_DIRECTORY = '/profileimages';
+        const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+        const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+        const REGION = document.getElementById("awsRegion").value;
+        const BUCKET_NAME = document.getElementById("awsBucketName").value;
+        const BUCKET_DIRECTORY = document.getElementById("awsBucketDirectory").value;
         const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
 
-        // AWS ACCESS KEY를 세팅합니다.
 
+        // AWS ACCESS KEY를 세팅합니다.
         AWS.config.update({
             accessKeyId: ACCESS_KEY,
             secretAccessKey: SECRET_ACCESS_KEY
         });
-
         var s3 = new AWS.S3({
             region: REGION
         });
-
         var imgKey = $('input[name=img-key]').val();
-
         if(!imgKey){
             imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
         }
-
         // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
-
-
-
         const params = {
             Bucket: S3_BUCKET,
             Key: imgKey
@@ -202,15 +219,14 @@
         img2.src = url;
 
         console.log(url);
-
-
-
+        const showSns = document.getElementById('sns');
+        const content = document.getElementById('container-profile')
+        const snsContent = document.getElementById('snsList')
+        showSns.addEventListener('click',()=>{
+            content.style.display='none';
+            snsContent.style.display='block';
+        })
     }
-
-
 </script>
-
-
-
 </body>
 

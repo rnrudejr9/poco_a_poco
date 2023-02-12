@@ -2,6 +2,8 @@ package teamproject.pocoapoco.controller.main.ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,6 +21,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.UnsupportedEncodingException;
+import java.util.concurrent.TimeUnit;
 
 @Controller
 @Slf4j
@@ -27,6 +30,8 @@ public class ViewController {
 
     private final UserService userService;
     private final MailService mailService;
+
+    private final RedisTemplate<String, String> userTrackingRedisTemplate;
 
     @PostMapping("/view/v1/signup")
     public String signup(UserJoinRequest userJoinRequest) {
@@ -39,6 +44,8 @@ public class ViewController {
     public String login(UserLoginRequest userLoginRequest, HttpServletResponse response) throws UnsupportedEncodingException {
 
         UserLoginResponse tokens = userService.login(userLoginRequest);
+
+
 
         //cookie 설정은 스페이스가 안되기 때문에 Bearer 앞에 +를 붙인다. Security Filter에서 + -> " " 로 치환할 것이다.
         Cookie cookie = new Cookie("jwt", "Bearer+" + tokens.getAccessToken());
@@ -72,7 +79,20 @@ public class ViewController {
     }
 
     @GetMapping("/view/v1/logout")
-    public String logout(HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+    public String logout(Authentication authentication, HttpServletRequest request, HttpServletResponse response, HttpSession session) {
+        String redisKey = authentication.getName() + "_dashboard";
+//
+//        log.info("redis 값 존재 확인: {}", userTrackingRedisTemplate.opsForValue().get(redisKey));
+//
+//
+        if(userTrackingRedisTemplate.opsForValue().get(redisKey)!= null){
+            userTrackingRedisTemplate.delete(redisKey);
+        }
+//
+//        log.info("redis 값 삭제 확인:{}", userTrackingRedisTemplate.opsForValue().get(redisKey));
+
+
+        //UserLogoutResponse userLogoutResponse = userService.logout();
         Cookie cookie = new Cookie("jwt", null);
         cookie.setMaxAge(0);
         cookie.setPath("/");

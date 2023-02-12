@@ -21,6 +21,9 @@ spring:
   redis:
     host: localhost
     port: 6379
+    stock:
+      prefix: stocks
+
 
   mvc:
     pathmatch:
