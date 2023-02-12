@@ -15,6 +15,7 @@ public class CrewReviewRequest {
     private List<Long> crewId;
     private List<Long> fromUserId;
     private List<Long> toUserId;
+//    private List<String> reviews;
     private List<Double> mannerScore;
     private List<String> userReview;
 

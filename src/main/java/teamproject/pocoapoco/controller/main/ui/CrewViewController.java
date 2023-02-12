@@ -18,6 +18,8 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import teamproject.pocoapoco.domain.dto.crew.*;
+import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
+import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
 import teamproject.pocoapoco.domain.dto.part.PartJoinResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
@@ -46,6 +48,14 @@ public class CrewViewController {
     private final CrewReviewService crewReviewService;
 
     private final ParticipationService participationService;
+    /*@ModelAttribute("reviews")
+    public Map<String, String> reviews() {
+        Map<String, String> reviews = new LinkedHashMap<>();
+        reviews.put("01", "시간을 잘 지켜요.");
+        reviews.put("02", "다음 모임에서도 함께하고 싶어요.");
+        return reviews;
+    }*/
+
 
     // 크루 게시물 상세 페이지
     @GetMapping("/{crewId}")
@@ -229,17 +239,36 @@ public class CrewViewController {
         return "redirect:/";
     }
 
+    @GetMapping("/reviewList")
+    public String inquireReviewList(Authentication authentication, Model model) {
+        String userName = authentication.getName();
+
+        List<CrewReviewResponse> reviewList = crewReviewService.inquireAllReviewList(userName);
+        model.addAttribute("reviewList", reviewList);
+
+        long reviewAllCount = crewReviewService.getReviewAllCount(userName);
+        model.addAttribute("reviewAllCount", reviewAllCount);
+
+//        model.addAttribute("certifyYn", receiver.getCertifyYn());
+//        model.addAttribute("nickname", receiver.getNickname());
+
+        return "review/review-list";
+    }
+    @GetMapping("/reviewList/{reviewId}")
+    public String inquireReview(@PathVariable Long reviewId, Model model) {
+
+        CrewReviewDetailResponse review = crewReviewService.inquireReview(reviewId);
+        model.addAttribute("review", review);
+
+        return "review/review-content";
+    }
+
     @ModelAttribute("sportEnums")
     private List<SportEnum> sportEnums() {
         List<SportEnum> sportEnums = List.of(SportEnum.values());
         return sportEnums;
     }
 
-    @GetMapping("/test")
-    private String test() {
-
-        return "main/main2";
-    }
 
     // 내가 참여중인 모임 리스트
     @GetMapping("/users/activeCrew")
@@ -284,7 +313,6 @@ public class CrewViewController {
         model.addAttribute("endCrewCount", endCrewCount);
 
     }
-
 
 
 }
