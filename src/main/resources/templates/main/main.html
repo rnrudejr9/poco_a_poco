@@ -8,7 +8,6 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <style>
-
     /*Box 크기 체크용*/
     /*.crewBoxParent, .collapse, .btnBar, .ttt {*/
     /*    background-color: #585858;*/
@@ -154,20 +153,19 @@
 
     /*운동선택 버튼*/
     .btn.cyan {
-        background-color: #7fccde;
-        box-shadow: 0px 4px 0px #73B9C9;
+        height: 90%;
+        width: 40%;
+        background-color: #147fd3;
+        box-shadow: 0px 4px 3px #093ed2;
         padding: 8px 18px;
         font-size: 16px;
         color: white;
     }
 
     .btn-gradient.cyan {
-        background: rgba(27, 188, 194, 1);
-        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27, 188, 194, 1)), to(rgba(24, 163, 168, 1)));
-        background: -webkit-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
-        background: -moz-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
-        background: -o-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
-        background: linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
+        background: rgb(52, 151, 218);
+        background: -webkit-linear-gradient(to right, #27d7ff, #4176fc);
+        background: linear-gradient(to right, #27d7ff, #4176fc);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1bbcc2', endColorstr='#18a3a8', GradientType=0);
     }
 
@@ -180,16 +178,12 @@
     /*모임등록 버튼*/
     .btn.blue {
         height: 90%;
-        width: 60%;
-        background: #6698cb;
-        box-shadow: 0px 4px 0px rgba(162, 189, 217, 0.86);
+        width: 100%;
+        background-color: #147fd3;
+        box-shadow: 0px 4px 3px #093ed2;
         padding: 8px 18px;
         font-size: 16px;
         color: white;
-    }
-
-    .btn.blue {
-        box-shadow: 0px 4px #74a3b0;
     }
 
     .btn.blue:active {
@@ -198,12 +192,9 @@
     }
 
     .btn-gradient.blue {
-        background: rgba(102, 152, 203, 1);
-        background: -moz-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
-        background: -webkit-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
-        background: -o-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
-        background: -ms-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
-        background: linear-gradient(to bottom, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
+        background: rgb(24, 71, 119);
+        background: -webkit-linear-gradient(to right, #27d7ff, #4176fc);
+        background: linear-gradient(to right, #27d7ff, #4176fc);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6698cb', endColorstr='#5c8ab8', GradientType=0);
     }
 
@@ -225,15 +216,13 @@
         margin-top: 7%;
         position: center;
         border-radius: 5px;
-        box-shadow: 0 4px 10px rgba(1, 119, 152, 0.98),
+        box-shadow: 0 4px 10px rgb(39, 172, 255),
         0 5px 5px rgba(0, 0, 0, 0.22);
         border: rgba(1, 27, 86, 0.94);
     }
 
-    btn3 {
-        width: 30%;
-        background-color: rgb(101, 68, 76);
-        border: 3px solid rgba(46, 223, 255, 0.9);
+    .btn3 {
+        width: 27%;
     }
 
     /*운동 체크박스*/
@@ -347,6 +336,11 @@
         }
     }
 
+    .test {
+        width: 13%;
+    }
+
+
 
 
 
@@ -395,7 +389,7 @@
 
                 <!-- 운동종목&랜덤매칭&모임등록 버튼-->
                 <div class="btnBar row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
-                    <div class="btn3 d-grid gap-2 d-md-block">
+                    <div class="btn3 ttt">
                         <button class="btn btn-gradient cyan btn-jittery" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                             <strong>Like 운동</strong>
@@ -404,9 +398,7 @@
                     <div></div>
                     <div></div>
                     <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <p>
-                        <div id="randomCnt" th:text="${randomCnt}"></div>
-                        </p>
+                        <p><div id="randomCnt" th:text="${randomCnt}"></div></p>
                         <button class="btn btn-danger" style="display: none" type="button" id="randomMatchCancel_btn"
                                 onclick="randomMatchCancel()">
                             + 랜덤 매칭 취소🌌
@@ -415,14 +407,12 @@
                             + 랜덤 매칭🔥
                         </button>
                     </div>
-                    <div class="d-grid gap-1 d-md-flex justify-content-md-end">
+                    <div class="ttt test">
                         <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews/write'">
                             <strong>+ 모임 등록</strong>
                         </button>
                     </div>
-
                 </div>
-
 
                 <!-- 운동종목 체크박스-->
                 <div class="collapse" id="collapseExample">
@@ -435,6 +425,8 @@
                                             <input type="checkbox"
                                                    onclick="count_check(this)"
                                                    th:field="*{sportsList}"
+
+
                                                    th:value="${sport}"
                                                    th:text="${sport.getValue()}">
                                         </label>
