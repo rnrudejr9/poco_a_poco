@@ -1,5 +1,24 @@
 var roomId = document.getElementById("roomId").value;
 var crewId = document.getElementById("crewId").value;
+var sockJs;
+var stomp;
+var line;
+
+window.addEventListener('beforeunload', (event) => {
+    // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
+    event.preventDefault();
+    event.returnValue = '';
+});
+//나가기 전 알림박스
+
+window.addEventListener('unload',()=>{
+    var username = document.getElementById("myName").innerHTML;
+    readSave();
+    stomp.send('/pub/chat/out', {}, JSON.stringify({roomId: roomId, writer: username}));
+    stomp.disconnect();
+})
+//나갔을때 이벤트 발생
+
 
 document.addEventListener("DOMContentLoaded",function(){
 
@@ -7,9 +26,12 @@ document.addEventListener("DOMContentLoaded",function(){
     loadFetcher();
     var username = document.getElementById("myName").innerHTML;
 
-    var sockJs = new SockJS("/stomp/chat", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
+    sockJs = new SockJS("/stomp/chat", null, {transports: ["websocket", "xhr-streaming", "xhr-polling"]});
     //1. SockJS를 내부에 들고있는 stomp를 내어줌
-    var stomp = Stomp.over(sockJs);
+    stomp = Stomp.over(sockJs);
+
+    stomp.heartbeat.outgoing = 1000;
+    stomp.heartbeat.incoming = 1000;
 
     //2. connection이 맺어지면 실행
     stomp.connect({}, function (){
@@ -59,8 +81,57 @@ document.addEventListener("DOMContentLoaded",function(){
         fetcher();
         stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
         msg.value = '';
-    });
+    })
 });
+
+
+async function readFetch(){
+    var userName = document.getElementById("myName").innerHTML;
+    let response = await fetch("/api/v1/chat/check/"+roomId+ "/" + userName,{
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+    })
+    if(response.ok){
+        let json = await response.json();
+
+        var index= json.result.index;
+        if(index === 0){
+            document.getElementsByClassName("chatbox__messages__user-message--ind-message").item(index).innerHTML =
+                "처음이시군요!" + document.getElementsByClassName("chatbox__messages__user-message--ind-message").item(index).innerHTML;
+        }else{
+            index = index - 1;
+        document.getElementsByClassName("chatbox__messages__user-message--ind-message").item(index).innerHTML =
+            "<span id='thisisfo' style='color: #09f3a7;  size: 3em' > 여기까지 읽었어요! </span>" + document.getElementsByClassName("chatbox__messages__user-message--ind-message").item(index).innerHTML;
+
+            line = index;
+        }
+
+
+    }
+}
+
+
+async function readSave(){
+    let response = await fetch("/api/v1/chat/check",{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            userName: document.getElementById("myName").innerHTML,
+            roomId: roomId
+        })
+    })
+    if(response.ok){
+        let json = await response.json();
+        console.log(json);
+    }
+}
+
 
 async function loadFetcher(){
     let response = await fetch("/api/v1/chat/" + roomId,{
@@ -96,6 +167,7 @@ async function loadFetcher(){
                 $('#messagearea').scrollTop($('#messagearea')[0].scrollHeight);
             }
         }
+        readFetch();
     }else{
         let json = await response.json();
         console.log(json.result.message);
@@ -118,7 +190,6 @@ async function fetcher() {
     console.log("end");
     console.log(response);
     $('#messagearea').scrollTop($('#messagearea')[0].scrollHeight);
-
 }
 
 async function findMember(){
@@ -147,3 +218,6 @@ async function findMember(){
         document.getElementById("userArea").innerHTML = str;
     }
 }
+
+
+// document.getElementById('messagearea').scrollBy(0,document.getElementById("thisisfo").getBoundingClientRect().top);
