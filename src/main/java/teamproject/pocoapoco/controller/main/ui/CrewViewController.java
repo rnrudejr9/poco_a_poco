@@ -18,8 +18,6 @@ import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import teamproject.pocoapoco.domain.dto.crew.*;
-import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberDeleteResponse;
-import teamproject.pocoapoco.domain.dto.crew.members.CrewMemberResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
 import teamproject.pocoapoco.domain.dto.part.PartJoinResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
@@ -43,7 +41,6 @@ public class CrewViewController {
 
     private final CrewService crewService;
     private final LikeViewService likeViewService;
-    private final CrewMemberService crewMemberService;
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
     private final CrewReviewService crewReviewService;
@@ -131,28 +128,6 @@ public class CrewViewController {
         LikeViewResponse likeViewResponse = likeViewService.pressLike(crewId, authentication.getName());
         return new ResponseEntity<>(likeViewResponse, HttpStatus.OK);
     }
-
-    // 크루 참여한 MemberList 출력
-    @GetMapping("/{crewId}/joinCrew")
-    public ResponseEntity getJoinList(@PathVariable Long crewId) {
-        List<CrewMemberResponse> list = crewMemberService.getJoinMemberList(crewId);
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-
-    // 크루 참여하기
-    @PostMapping("/{crewId}/joinCrew")
-    public ResponseEntity joinCrew(@PathVariable Long crewId, Authentication authentication) {
-        CrewMemberResponse joinMemberResponse = crewMemberService.joinCrew(crewId, authentication.getName());
-        return new ResponseEntity<>(joinMemberResponse, HttpStatus.OK);
-    }
-
-    // 크루 나가기
-    @DeleteMapping("/{crewId}/leaveCrew")
-    public ResponseEntity leaveCrew(@PathVariable Long crewId, Authentication authentication) {
-        CrewMemberDeleteResponse crewMemberDeleteResponse = crewMemberService.leaveCrew(crewId, authentication.getName());
-        return new ResponseEntity<>(crewMemberDeleteResponse, HttpStatus.OK);
-    }
-
 
     // 크루 게시물 전체 조회, 검색 조회, 운동 종목 조회
     @GetMapping()

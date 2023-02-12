@@ -56,8 +56,6 @@ public class Crew extends BaseEntity{
     @OneToMany(mappedBy = "crew")
     private List<Participation> participations = new ArrayList<>();
 
-    @OneToOne
-    private CrewMembers members;
 
     public void setChatRoom(ChatRoom chatRoom){
         this.chatRoom = chatRoom;
