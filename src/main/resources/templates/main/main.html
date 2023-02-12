@@ -510,7 +510,7 @@
                                                                                sportsList=${sportRequest.getSportsList()})}">Previous</a>
                     </li>
                     <th:block th:each="page : ${#numbers.sequence(startNumPage, endNumPage)}">
-                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
+                        <li class="page-item" th:if="${page != nowPage && page != 0}"><a class="page-link"
                                                                             th:href="@{/view/v1/crews(
                                                                                                 page = ${page - 1},
                                                                                                 loginStatus = ${sportRequest.loginStatus},
@@ -518,11 +518,10 @@
                                                                                                 sportsList=${sportRequest.getSportsList()}
                                                                                                 )}" th:text="${page}">1</a>
                         </li>
-
                         <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
                                                                                  style="color: red"></strong></li>
                     </th:block>
-                    <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
+                    <li class="page-item" th:classappend="${lastPage == nowPage || lastPage == 0} ? 'disabled'">
                         <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
                                                                                strict=${sportRequest.getStrict()},
                                                                                loginStatus = ${sportRequest.loginStatus},
