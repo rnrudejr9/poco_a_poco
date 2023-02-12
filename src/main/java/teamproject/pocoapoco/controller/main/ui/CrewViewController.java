@@ -217,7 +217,6 @@ public class CrewViewController {
         return "crew/review-crew";
     }
 
-
     // 크루 리뷰 저장
     @PostMapping("/review")
     public String reviewCrew(Model model, @ModelAttribute("reviewRequest") ReviewRequest crewReviewRequest) {
