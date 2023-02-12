@@ -59,8 +59,8 @@
                 <tbody id="crewList">
                 <tr th:each="crew: ${crewManageResponsePage}">
                     <td th:text="${crew.id}" id="crewId"></td>
-                    <td><a href="#" th:text="${crew.title}"></a></td>
-                    <td th:text="${crew.title}"></td>
+                    <td><a th:href="@{/view/v1/crews/{crewId}(crewId = ${crew.id})}" th:text="${crew.title}"></a></td>
+                    <td th:text="${crew.crewCaptain}"></td>
                     <td th:text="${crew.currentParticipants}"></td>
                     <td th:text="${crew.crewLimit}"></td>
                     <th th:text="${crew.status}"></th>

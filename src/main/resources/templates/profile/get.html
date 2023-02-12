@@ -89,6 +89,12 @@
 
 <body>
 
+<input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+<input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+<input hidden th:value="${AWS_REGION}" id="awsRegion">
+<input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+<input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
 
 <ul id="left-box">
     <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-thumbnail" style="width:100px; height:100px;">
@@ -163,8 +169,11 @@
                     </th:block>
                 </ul>
             </div>
+            <button id="follow">follow</button>
+            <input type="hidden" id="userId" th:value="${userProfileResponse.userId}">
         </div>
     </div>
+
 </div>
 
 <script type="application/javascript">
@@ -175,7 +184,26 @@
 </script>
 
 </body>
+<script>
+    document.getElementById('follow').addEventListener('click',follow);
+    console.log(document.getElementById('userId').value);
+    async function follow(){
+        let userId = document.getElementById('userId').value;
+        let response = await fetch(`/api/v1/social/${userId}/follow`,{
+            method :"POST",
+            headers : {
+                "Content-Type": "application/json",
+            }
+        })
+        let data = await response.json()
 
-
-
-
+        if(data.result.status===false){
+            alert("팔로우를 취소합니다.")
+            document.getElementById('follow').innerText='follow';
+        }else {
+            alert("팔로우 합니다.")
+            document.getElementById('follow').innerText='unfollow';
+            //unfollow
+        }
+    }
+</script>

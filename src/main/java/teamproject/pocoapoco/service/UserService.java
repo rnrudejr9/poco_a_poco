@@ -2,7 +2,6 @@ package teamproject.pocoapoco.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
@@ -192,15 +191,27 @@ public class UserService {
         String revisedNickName = (userProfileRequest.getNickName().isBlank())? beforeMyUser.getNickName(): userProfileRequest.getNickName();
         String revisedAddress = (userProfileRequest.getAddress().isBlank())? beforeMyUser.getAddress(): userProfileRequest.getAddress();
         String revisedPassword = (userProfileRequest.getPassword().isBlank())? beforeMyUser.getPassword(): encrypterConfig.encoder().encode(userProfileRequest.getPassword());
-        SportEnum sport1;
-        SportEnum sport2;
-        SportEnum sport3;
+        SportEnum sport1 = null;
+        SportEnum sport2 = null;
+        SportEnum sport3 = null;
 
         if(userProfileRequest.getSportListChange()){
-            sport1 = SportEnum.valueOf(userProfileRequest.getSportList().get(0));
-            sport2 = SportEnum.valueOf(userProfileRequest.getSportList().get(1));
-            sport3 = SportEnum.valueOf(userProfileRequest.getSportList().get(2));
 
+            if(userProfileRequest.getSportList().size()==0){
+
+            } else if(userProfileRequest.getSportList().size()==1){
+                sport1 = SportEnum.valueOf(userProfileRequest.getSportList().get(0));
+
+            }else if(userProfileRequest.getSportList().size()==2){
+                sport1 = SportEnum.valueOf(userProfileRequest.getSportList().get(0));
+                sport2 = SportEnum.valueOf(userProfileRequest.getSportList().get(1));
+
+            }else{
+                sport1 = SportEnum.valueOf(userProfileRequest.getSportList().get(0));
+                sport2 = SportEnum.valueOf(userProfileRequest.getSportList().get(1));
+                sport3 = SportEnum.valueOf(userProfileRequest.getSportList().get(2));
+
+            }
 
         } else{
             sport1 = beforeMyUser.getSport().getSport1();

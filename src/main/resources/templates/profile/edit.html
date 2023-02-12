@@ -72,17 +72,13 @@
 
 <ul id="left-box">
     <img src = "" class="img-thumbnail" style="width:100px; height:100px;" id="left-image">
-
     <p style="position: relative; top:10px;">소개말말말</p>
-
     <div class="container-navbar">
-
         <li><a class="home" href="/view/v1/crews/">홈화면</a></li>
         <li><a href="/view/v1/users/profile/my">프로필 수정</a></li>
+        <li id="sns"><a href="#">친구목록</a></li>
         <li><a href="#">참여중인 모임</a></li>
-        <li><a href="#">333444</a></li>
     </div>
-
 </ul>
 
 <div sec:authorize="isAuthenticated()">
@@ -100,6 +96,12 @@
         <form method="post" action="/view/v1/users/profile/edit" th:object="${userProfileRequest}">
 
             <img src="" class="rounded mx-auto d-block" style="height: 200px; width: 200px;" id="main-image">
+
+            <input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+            <input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+            <input hidden th:value="${AWS_REGION}" id="awsRegion">
+            <input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+            <input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
 
             <button class="btn btn-primary" type="button" onclick="location.href = '/view/v1/users/profile/image/edit';">프로필 사진 변경</button>
 
@@ -237,18 +239,25 @@
 
             <div class="container-sport">
                 <label class="col-sm-3 col-form-label">선호 종목</label>
+                <text>최대 3개까지 선택 가능합니다.</text>
                 <input hidden th:field="*{sportListChange}" id="isChangeSport">
                 <button type="button" onclick="checkSportListChange()">선호 종목 변경</button>
                 <br>
 
-                <label class="btn btn-outline-secondary" th:each="sport : ${sportEnums}">
-                    <input type="checkbox"
-                           onclick="count_check(this)"
-                           name="chk"
-                           th:field="*{sportList}"
-                           th:value="${sport}"
-                           th:text="${sport.getValue()}">
-                </label>
+                <div id="sports-count">
+                    <label class="btn btn-outline-secondary" th:each="sport : ${sportEnums}">
+                        <input hidden type="number" id="sportsCount" value="0">
+
+                        <input type="checkbox"
+                               onclick="countSportsNum(this)"
+                               name="chk"
+                               th:field="*{sportList}"
+                               th:value="${sport}"
+                               th:text="${sport.getValue()}">
+                    </label>
+                </div>
+
+
 
                 <span class="placeholder col-12 bg-light placeholder-lg"></span>
 
@@ -282,11 +291,11 @@
 
         let uuidString = self.crypto.randomUUID();
 
-        const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
-        const SECRET_ACCESS_KEY = 'AORsmgLfnyjTL2T9bqLqFeyDIhfQILtGa0vIvRQD';
-        const REGION = 'ap-northeast-2';
-        const BUCKET_NAME = 'poco-bucket-2';
-        const BUCKET_DIRECTORY = '/profileimages';
+        const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+        const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+        const REGION = document.getElementById("awsRegion").value;
+        const BUCKET_NAME = document.getElementById("awsBucketName").value;
+        const BUCKET_DIRECTORY = document.getElementById("awsBucketDirectory").value;
         const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
 
         // AWS ACCESS KEY를 세팅합니다.
@@ -347,6 +356,26 @@
         confirm("프로필 저장 시 선호 종목이 변경됩니다.");
 
     }
+
+    function countSportsNum(obj) {
+        var count = document.getElementById("sportsCount").value;
+
+        if(obj.checked){
+            document.getElementById("sportsCount").value = parseInt(count) +1;
+
+        } else{
+            document.getElementById("sportsCount").value = parseInt(count) -1;
+        }
+        console.log(document.getElementById("sportsCount").value);
+        if(document.getElementById("sportsCount").value >3){
+            alert("최대 3개 체크 가능합니다.");
+            obj.checked = false;
+        }
+
+
+
+    }
+
 
 </script>
 

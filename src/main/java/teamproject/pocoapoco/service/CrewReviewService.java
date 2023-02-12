@@ -3,6 +3,7 @@ package teamproject.pocoapoco.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewReviewRequest;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
@@ -12,6 +13,7 @@ import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.CrewReviewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.service.part.ParticipationService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,32 +29,27 @@ public class CrewReviewService {
 
     private final CrewReviewRepository crewReviewRepository;
 
-
-
-
     // 리뷰 저장
-    public void addReview(CrewReviewRequest crewReviewRequest) {
+    public void addReview(ReviewRequest crewReviewRequest) {
         List<Review> reviewList = new ArrayList<>();
-//        String reviews = String.join("|", crewReviewRequest.getReviews());
 
-        Optional<Crew> crew = crewRepository.findById(crewReviewRequest.getCrewId().get(0));
-        Optional<User> fromUser = userRepository.findById(crewReviewRequest.getFromUserId().get(0));
-        for(int i =0; i <crewReviewRequest.getCrewId().size();i++){
-            /*int index = reviewList.indexOf("|");
-            String str ="";
-            for (int j = 0; j < 2; j++) {
-                str += reviews.substring(0,index+1);
+        try{
+            Optional<Crew> crew = crewRepository.findById(crewReviewRequest.getCrewId().get(0));
+            Optional<User> fromUser = userRepository.findById(crewReviewRequest.getFromUserId().get(0));
+
+            for (int i = 0; i < crewReviewRequest.getCrewId().size(); i++) {
+                Review review = new Review();
+
+                Optional<User> toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i));
+
+                review.of(crew.get(), fromUser.get(), toUser.get(),
+                        crewReviewRequest.getUserMannerScore().get(i), crewReviewRequest.getUserReview().get(i));
+                reviewList.add(review);
             }
-            str+= reviews;*/
-            Review review = new Review();
-            Optional<User> toUser = userRepository.findById(crewReviewRequest.getToUserId().get(0));
-            review.of(crew.get(), fromUser.get(), toUser.get(),/* str,*/
-                    crewReviewRequest.getMannerScore().get(i), crewReviewRequest.getUserReview().get(i) );
-            reviewList.add(review);
+            crewReviewRepository.saveAll(reviewList);
+        }catch (NullPointerException e){
+            log.info("이용자 후기 NullPointerException : 작성 가능한 후기 내용이 없습니다.");
         }
-
-        log.info("!!!!!!!!!!!!! {}", reviewList.size());
-        crewReviewRepository.saveAll(reviewList);
     }
 
     public List<CrewReviewResponse> inquireAllReviewList(String userName) {

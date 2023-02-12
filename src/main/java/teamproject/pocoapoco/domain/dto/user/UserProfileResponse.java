@@ -8,6 +8,7 @@ import teamproject.pocoapoco.enums.SportEnum;
 @Builder
 @Getter
 public class UserProfileResponse {
+    private Long userId;
     private String nickName;
     private String address;
     private String sportValue1;
@@ -33,6 +34,7 @@ public class UserProfileResponse {
         }
 
         return UserProfileResponse.builder()
+                .userId(user.getId())
                 .nickName(user.getNickName())
                 .address(user.getAddress())
                 .sportValue1(sport1)
