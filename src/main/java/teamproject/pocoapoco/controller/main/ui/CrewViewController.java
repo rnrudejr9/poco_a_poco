@@ -212,6 +212,9 @@ public class CrewViewController {
         //현재 유저 정보
         User nowUser = crewService.findByUserName(authentication.getName());
         model.addAttribute("nowUser", nowUser.getId());
+        
+        //현재 유저 리뷰 작성여부 확인
+        crewReviewService.findReviewUser(nowUser);
 
         // 크루 게시글 정보
         Crew crew = crewService.findByCrewId(crewId);
