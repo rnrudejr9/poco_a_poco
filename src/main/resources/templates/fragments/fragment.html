@@ -16,44 +16,78 @@
     <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
 
     <!-- CSS only -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 
+    <!--폰트 여기어때-->
+    <link href="https://webfontworld.github.io/goodchoice/Jalnan.css" rel="stylesheet">
 
 
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
+
+        /*Box 크기 체크용*/
+        /*.boxTest {*/
+        /*    background-color: #585858;*/
+        /*    border:3px solid red;*/
+        /*}*/
+
+        /*폰트 적용*/
+        * {
+            font-family: 'Jalnan';
+            font-size: medium;
         }
 
+        /*메뉴바 적체 적용*/
+        .navBar {
+            width: 90%;
+            line-height: 300%;
+            text-align: center;
+            margin: 1% 0% 0% 5%;
+            border-radius: 50px;
+            background: rgb(52, 151, 218);
+            background: -webkit-linear-gradient(to right, #27d7ff, #4176fc);
+            background: linear-gradient(to right, #27d7ff, #4176fc);
+            box-shadow: 2px 3px 3px 2px rgba(101, 130, 138, 0.71), 0 5px 5px rgba(0, 0, 0, 0.22);
+            font-weight: 550;
+        }
 
+        /*메뉴바 카테고리*/
+        .textSize {
+            font-size: 1.5em;
+        }
 
-        .card-body {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
+        /*메뉴바 운동메 */
+        .mainText {
+            font-size: 2em;
+        }
+
+        /*메뉴바 환영인사*/
+        .text-end {
+            font-weight: normal;
+            font-size: 1em;
         }
 
     </style>
 
+        /*유저 이름*/
+        .userName {
+            color: #042441;
+            font-size: 1.5em;
+            text-decoration: underline;
+            text-underline-position:under;
+        }
+
+    </style>
 
 </head>
 <body>
 <!-- 네비바-->
-<header class="p-3 text-bg-dark" th:fragment="nav">
+<header class="navBar boxTest p-3 text-bg-dark" th:fragment="nav">
 <!--    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>-->
 <!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>-->
 <!--    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.10.2/umd/popper.min.js" integrity="sha512-nnzkI2u2Dy6HMnzMIkh7CPd1KX445z38XIu4jG1jGw7x5tSL3VBjE44dY4ihMU1ijAQV930SPM12cCFrB18sVw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>-->
 
     <!--    Jquery-->
-    <script
-            src="https://code.jquery.com/jquery-3.6.3.min.js"
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"
             integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
             crossOrigin="anonymous"></script>
 
@@ -66,9 +100,9 @@
             </a>
             <!-- 메뉴-->
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="#" class="nav-link px-2 text-white"><h4>💪운동메&emsp;&emsp;</h4></a></li>
-                <li><a href="/view/v1/crews/" class="nav-link px-2 text-white"><h5>모집글&emsp;&emsp;</h5></a></li>
-                <li><a href="/view/v1/alarm/" sec:authorize="isAuthenticated()" th:href="@{/view/v1/alarm}" class="nav-link px-2 text-white"><h5>알림&emsp;&emsp;</h5>
+                <li><a href="/view/v1/crews/" class="mainText nav-link px-2 text-white" >💪운동메&emsp;&emsp;</a></li>
+                <li><a href="/view/v1/crews/" class="textSize nav-link px-2 text-white">모집글&emsp;&emsp;</a></li>
+                <li><a href="/view/v1/alarm/" sec:authorize="isAuthenticated()" th:href="@{/view/v1/alarm}" class="textSize nav-link px-2 text-white">알림&emsp;&emsp;
                 </a></li>
                 <li><a href="/view/v1/users/profile/my" sec:authorize="isAuthenticated()" th:href="@{/view/v1/users/profile/my}"
                        class="nav-link px-2 text-white"><h5>My프로필&emsp;&emsp;</h5></a></li>
@@ -88,26 +122,36 @@
                 <button type="button" class="btn btn-warning" sec:authorize="!isAuthenticated()"
                         onclick="location.href='/view/v1/start'">Sign-up
                 </button>
-                <span class="text-white" sec:authorize="isAuthenticated()" sec:authentication="name" id="myName">사용자</span>
+                <span class="userName" sec:authorize="isAuthenticated()" sec:authentication="name" id="myName">사용자</span>
                 <span class="text-white" sec:authorize="isAuthenticated()" >님 환영합니다✨</span>
                 <a type="button" class="btn btn-warning" th:href="@{/view/v1/logout}" sec:authorize="isAuthenticated()">Logout</a>
+                <label class="dropdown" sec:authorize="isAuthenticated()">
+                    <button onclick="findPartSign()" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonAllowArea" data-bs-toggle="dropdown" aria-expanded="false">
+                        Crew 참여 신청 내역
+                    </button>
+                    <ul id="allowArea" class="dropdown-menu" aria-labelledby="dropdownMenuButtonAllowArea">
+                        <li><a class="dropdown-item" href="#">Action</a></li>
+                    </ul>
+                </label>
+                <script type="text/javascript" src="/js/participation.js"></script>
+                <script type="text/javascript" src="/js/sse.js"></script>
             </div>
-
-            <div class="dropdown" sec:authorize="isAuthenticated()">
-                <button onclick="findPartSign()" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonAllowArea" data-bs-toggle="dropdown" aria-expanded="false">
-                    Crew 참여 신청 내역
-                </button>
-                <ul id="allowArea" class="dropdown-menu" aria-labelledby="dropdownMenuButtonAllowArea">
-                    <li><a class="dropdown-item" href="#">Action</a></li>
-                </ul>
-            </div>
-
-            <script type="text/javascript" src="/js/participation.js"></script>
-            <script type="text/javascript" src="/js/sse.js"></script>
+<!--            <div class="dropdown" sec:authorize="isAuthenticated()">-->
+<!--                <button onclick="findPartSign()" class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButtonAllowArea" data-bs-toggle="dropdown" aria-expanded="false">-->
+<!--                    Crew 참여 신청 내역-->
+<!--                </button>-->
+<!--                <ul id="allowArea" class="dropdown-menu" aria-labelledby="dropdownMenuButtonAllowArea">-->
+<!--                    <li><a class="dropdown-item" href="#">Action</a></li>-->
+<!--                </ul>-->
+<!--            </div>-->
+<!--            <script type="text/javascript" src="/js/participation.js"></script>-->
+<!--            <script type="text/javascript" src="/js/sse.js"></script>-->
         </div>
     </div>
 </header>
 
+
+<!-- footer-->
 <footer class="py-3 my-4" th:fragment="footer">
     <ul class="nav justify-content-center border-bottom pb-3 mb-3">
         <li class="nav-item"><a href="#" class="nav-link px-2 text-muted">Home</a></li>

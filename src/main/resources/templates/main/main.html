@@ -8,9 +8,8 @@
           integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
 </head>
 <style>
-
     /*Box 크기 체크용*/
-    /*.crewBoxParent, .collapse, .btnBar, .ttt {*/
+    /*.crewBoxParent, .collapse, .btnBar, .boxTest {*/
     /*    background-color: #585858;*/
     /*    border:3px solid red;*/
     /*}*/
@@ -79,40 +78,29 @@
         background-color: rgba(248, 253, 253, 0.98);
     }
 
-    /*크루 모집글 박스*/
-    .crewBoxParent {
+    /*검색바*/
+    .searchBar {
         width: 100%;
-        margin: 0px auto;
-        padding-bottom: 1%;
-        overflow: auto;
-    }
-
-    .crewBox {
-        background-color: rgba(248, 253, 253, 0.98);
-        border-radius: 20px;
-        box-shadow: 5px 5px 5px 5px rgba(101, 130, 138, 0.71),
-        0 5px 5px rgba(0, 0, 0, 0.22);
         position: center;
-        overflow: auto;
-        width: 31.3%;
-        border: rgba(63, 122, 254, 0.7);
-        padding: 0.7%;
-        margin: 1%;
     }
 
-    .participation {
-        color: black;
+    .searchBar2 {
+        width: 80%;
+        margin-left: 10%;
+        margin-top: 7%;
+        position: center;
+        border-radius: 5px;
+        box-shadow: 0 4px 10px rgb(39, 172, 255),
+        0 5px 5px rgba(0, 0, 0, 0.22);
+        border: rgba(1, 27, 86, 0.94);
     }
 
-    /*크루 사진*/
-    .img-thumbnail {
+    .btnBar {
         width: 100%;
-        height: 225px;
-        border-radius: 20px;
-        margin-bottom: 7px;
+        margin-left: 0%;
     }
 
-    /*운동 버튼 무빙 효과*/
+    /*운동선책 버튼 무빙 효과*/
     .btn-jittery {
         animation: jittery 8s infinite;
     }
@@ -153,43 +141,57 @@
     }
 
     /*운동선택 버튼*/
+    .btn3 {
+        width: 27%;
+    }
+
     .btn.cyan {
-        background-color: #7fccde;
-        box-shadow: 0px 4px 0px #73B9C9;
+        height: 90%;
+        width: 40%;
+        background-color: #147fd3;
+        box-shadow: 0px 4px 3px #093ed2;
         padding: 8px 18px;
         font-size: 16px;
         color: white;
     }
 
     .btn-gradient.cyan {
-        background: rgba(27, 188, 194, 1);
-        background: -webkit-gradient(linear, 0 0, 0 100%, from(rgba(27, 188, 194, 1)), to(rgba(24, 163, 168, 1)));
-        background: -webkit-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
-        background: -moz-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
-        background: -o-linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
-        background: linear-gradient(rgba(27, 188, 194, 1) 0%, rgba(24, 163, 168, 1) 100%);
+        background: rgb(52, 151, 218);
+        background: -webkit-linear-gradient(to right, #27d7ff, #4176fc);
+        background: linear-gradient(to right, #27d7ff, #4176fc);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#1bbcc2', endColorstr='#18a3a8', GradientType=0);
     }
 
     . btn-outline-danger {
-        height: 70%;
+        height: 65%;
         width: 100%;
         padding: 8px 18px;
     }
 
+    /*랜덤매칭 버튼*/
+    .btn-random{
+        width: 40%;
+    }
+
+    /*랜덤매칭 text*/
+    .btn-random-text{
+        margin-top: 1.5%;
+        text-align : center;
+    }
+
     /*모임등록 버튼*/
-    .btn.blue {
-        height: 90%;
-        width: 60%;
-        background: #6698cb;
-        box-shadow: 0px 4px 0px rgba(162, 189, 217, 0.86);
-        padding: 8px 18px;
-        font-size: 16px;
-        color: white;
+    .btn-crewAdd {
+        width: 13%;
     }
 
     .btn.blue {
-        box-shadow: 0px 4px #74a3b0;
+        height: 90%;
+        width: 100%;
+        background-color: #147fd3;
+        box-shadow: 0px 4px 3px #093ed2;
+        padding: 8px 18px;
+        font-size: 16px;
+        color: white;
     }
 
     .btn.blue:active {
@@ -198,42 +200,10 @@
     }
 
     .btn-gradient.blue {
-        background: rgba(102, 152, 203, 1);
-        background: -moz-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
-        background: -webkit-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
-        background: -o-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
-        background: -ms-linear-gradient(top, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
-        background: linear-gradient(to bottom, rgba(102, 152, 203, 1) 0%, rgba(92, 138, 184, 1) 100%);
+        background: rgb(24, 71, 119);
+        background: -webkit-linear-gradient(to right, #27d7ff, #4176fc);
+        background: linear-gradient(to right, #27d7ff, #4176fc);
         filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#6698cb', endColorstr='#5c8ab8', GradientType=0);
-    }
-
-    /*검색바*/
-    .btnBar {
-        width: 100%;
-        margin: 0px auto;
-        padding: 0px;
-    }
-
-    .searchBar {
-        width: 100%;
-        position: center;
-    }
-
-    .searchBar2 {
-        width: 80%;
-        margin-left: 10%;
-        margin-top: 7%;
-        position: center;
-        border-radius: 5px;
-        box-shadow: 0 4px 10px rgba(1, 119, 152, 0.98),
-        0 5px 5px rgba(0, 0, 0, 0.22);
-        border: rgba(1, 27, 86, 0.94);
-    }
-
-    btn3 {
-        width: 30%;
-        background-color: rgb(101, 68, 76);
-        border: 3px solid rgba(46, 223, 255, 0.9);
     }
 
     /*운동 체크박스*/
@@ -275,7 +245,6 @@
         display: inline-block;
         padding: 10px 20px;
         border-radius: 15px;
-        font-family: "paybooc-Light", sans-serif;
         box-shadow: 0 5px 5px rgba(0, 0, 0, 0.2);
         text-decoration: none;
         font-weight: 600;
@@ -283,13 +252,17 @@
         transition: 0.25s;
     }
 
-    /*운동 체크박스 체크 후 조회 버튼*/
-    .w-btn-indigo {
-        background-color: rgba(216, 239, 250, 0.71);
-        color: #1e6b7b;
+    .btnBox-incheckBox {
+        margin-top: 3%;
     }
 
-    /*MySport 버튼*/
+    /*운동체크박스 체크 후 조회 버튼*/
+    .w-btn-indigo {
+        background-color: rgb(37, 225, 255);
+        color: #01264b;
+    }
+
+    /*My운동종목 버튼*/
     .w-btn:hover {
         letter-spacing: 2px;
         transform: scale(1.2);
@@ -301,7 +274,7 @@
     }
 
     .w-btn-gra1 {
-        background: linear-gradient(-45deg, #33ccff 0%, #ff99cc 100%);
+        background: linear-gradient(-45deg, #2b67ff 0%, #2edff6 100%);
         color: white;
     }
 
@@ -345,6 +318,39 @@
             height: 300px;
             opacity: 0;
         }
+    }
+
+    /*크루 모집글 박스*/
+    .crewBoxParent {
+        width: 100%;
+        margin: 0px auto;
+        padding-bottom: 1%;
+        overflow: auto;
+    }
+
+    .crewBox {
+        background-color: rgba(248, 253, 253, 0.98);
+        border-radius: 20px;
+        box-shadow: 5px 5px 5px 5px rgba(101, 130, 138, 0.71),
+        0 5px 5px rgba(0, 0, 0, 0.22);
+        position: center;
+        overflow: auto;
+        width: 31.3%;
+        border: rgba(63, 122, 254, 0.7);
+        padding: 0.7%;
+        margin: 1%;
+    }
+
+    .participation {
+        color: black;
+    }
+
+    /*크루 사진*/
+    .img-thumbnail {
+        width: 100%;
+        height: 225px;
+        border-radius: 20px;
+        margin-bottom: 7px;
     }
 
 
@@ -395,18 +401,15 @@
 
                 <!-- 운동종목&랜덤매칭&모임등록 버튼-->
                 <div class="btnBar row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
-                    <div class="btn3 d-grid gap-2 d-md-block">
+                    <div class="btn3 boxTest">
                         <button class="btn btn-gradient cyan btn-jittery" type="button" data-bs-toggle="collapse"
                                 data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
                             <strong>Like 운동</strong>
                         </button>
                     </div>
                     <div></div>
-                    <div></div>
-                    <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                        <p>
-                        <div id="randomCnt" th:text="${randomCnt}"></div>
-                        </p>
+                    <div class="boxTest btn-random gap-3 d-md-flex justify-content-md-end">
+                        <p><div class="btn-random-text" id="randomCnt" th:text="${randomCnt}">현제 대기중인 인원 : </div></p>
                         <button class="btn btn-danger" style="display: none" type="button" id="randomMatchCancel_btn"
                                 onclick="randomMatchCancel()">
                             + 랜덤 매칭 취소🌌
@@ -415,14 +418,12 @@
                             + 랜덤 매칭🔥
                         </button>
                     </div>
-                    <div class="d-grid gap-1 d-md-flex justify-content-md-end">
+                    <div class="boxTest btn-crewAdd">
                         <button class="btn btn-gradient blue" type="button" onclick="location.href='/view/v1/crews/write'">
                             <strong>+ 모임 등록</strong>
                         </button>
                     </div>
-
                 </div>
-
 
                 <!-- 운동종목 체크박스-->
                 <div class="collapse" id="collapseExample">
@@ -438,11 +439,8 @@
                                                    th:value="${sport}"
                                                    th:text="${sport.getValue()}">
                                         </label>
-                                        <label th:each="sport : ${sportEnums}">
-
-                                        </label>
                                     </div>
-                                    <div class="row justify-content-end">
+                                    <div class="btnBox-incheckBox row justify-content-end">
                                         <div class="col-8">
                                             <button class="w-btn w-btn-indigo" type="submit">
                                                 운동 조회
@@ -540,9 +538,9 @@
     <script type="text/javascript" src="/js/random.js"></script>
 
 
-<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"-->
-<!--            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"-->
-<!--            crossorigin="anonymous"></script>-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4"
+            crossorigin="anonymous"></script>
 
 
     <script type="text/javascript" th:inline="javascript">
