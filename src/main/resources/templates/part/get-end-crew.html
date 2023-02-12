@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/fragment::head"></head>
+<body>
+<header th:replace="fragments/fragment::nav"></header>
+<div class="container">
+    <div class="row py-5">
+        <div class="col-3">
+            <ul class="list-group mt-4">
+                <a href="/view/v1/crews/users/activeCrew" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                    참여하고 있는 모임
+                    <span th:text="${activeCrewCount}">3</span>
+                </a>
+                <a href="/view/v1/crews/users/endCrew" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active">
+                    종료한 모임
+                    <span th:text="${endCrewCount}">0</span>
+                </a>
+            </ul>
+        </div>
+        <div class="col-9">
+            <div class="card" th:if="${crewList.size() == 0}">
+                <div class="card-header">
+                    종료된 모임이 없습니다.
+                </div>
+            </div>
+            <div class="card" th:if="${crewList.size() > 0}">
+                <div class="card-header">
+                    종료된 모임 입니다.
+                </div>
+                <ul class="list-group list-group-flush">
+                    <th:block th:each="crew : ${crewList}">
+                        <a th:href="@{/view/v1/crews/{crewId}(crewId=${crew.id})}" class="list-group-item list-group-item-action">
+                            <div style="float: left">
+                                <img th:src="${crew.imagePath}" style="width: 80px; height: 80px; float: left; display: inline-block">
+                                <div style="margin-top: 10px; margin-left: 20px; display: inline-block">
+                                    <span style="color: black; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|${crew.title}|"></span><br>
+                                    <!--                                모집중, 모집완료, 모임종료를 보여주도록 작성-->
+                                    <!--                                <span style="color: orange; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|${crew.현재 상태}중 입니다.|"></span><br>-->
+                                    <small style="" th:text="|${crew.crewLimit}명이 참여 가능합니다.|"></small>
+                                </div>
+                            </div>
+                        </a>
+                    </th:block>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script async th:inline="javascript">
+    /*<![CDATA[*/
+
+    /*]]>*/
+</script>
+
+</body>
+<footer th:replace="fragments/fragment::footer"></footer>

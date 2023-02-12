@@ -12,17 +12,20 @@ import teamproject.pocoapoco.domain.dto.crew.*;
 import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.repository.part.ParticipationRepository;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -32,6 +35,7 @@ public class CrewService {
 
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
+    private final ParticipationRepository participationRepository;
 
     // 크루 게시글 등록
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
@@ -201,6 +205,34 @@ public class CrewService {
                 log.info("알람을 읽었습니다 : {}        알림 : {}", alarm.getId(), alarm.getReadOrNot());
             }
         }
+    }
+
+    // 내가 참여한 crew list
+    public List<CrewDetailResponse> inquireAllCrew(Integer status, String userName) {
+        User user = userRepository.findByUserName(userName).orElse(null);
+        List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
+        List<Crew> crewList = crewRepository.findByParticipationsIn(participations);
+        return crewList.stream()
+                .map(crew -> CrewDetailResponse.builder()
+                        .id(crew.getId())
+                        .strict(crew.getStrict())
+                        .title(crew.getTitle())
+                        .content(crew.getContent())
+                        .crewLimit(crew.getCrewLimit())
+                        .nickName(crew.getUser().getNickName())
+                        .userName(crew.getUser().getUsername())
+                        .createdAt(crew.getCreatedAt())
+                        .lastModifiedAt(crew.getLastModifiedAt())
+                        .imagePath(crew.getImagePath())
+                        .sportEnum(crew.getSportEnum())
+                        .build())
+                .collect(Collectors.toList());
+    }
+    // 내가 참여한 crew list
+    public long getCrewByUserAndStatus(Integer status,String userName) {
+        User user = userRepository.findByUserName(userName).orElse(null);
+        List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
+        return crewRepository.countByParticipationsIn(participations);
     }
 
 }

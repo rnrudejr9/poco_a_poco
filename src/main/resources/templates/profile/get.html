@@ -58,6 +58,28 @@
             font-weight: bold;
         }
 
+        .progress {
+            background-color: #d8d8d8;
+            border-radius: 20px;
+            position: relative;
+            margin: 15px 0;
+            height: 30px;
+            width: 300px;
+        }
+
+        .progress-done {
+            background: linear-gradient(to left, #F2709C, #FF9472);
+            box-shadow: 0 3px 3px -5px #F2709C, 0 2px 5px #F2709C;
+            border-radius: 20px;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+            width: 0;
+            opacity: 0;
+            transition: 1s ease 0.3s;
+        }
 
     </style>
 
@@ -106,6 +128,46 @@
                     <text th:text="${userProfileResponse.getSportValue3()}"></text>
 
                 </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="card mb3-l" style="max-width: 540px; padding: 20px;">
+        <span style="color: black; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|매너 온도|"/>
+            <img src="/images/heart.png" style="width:25px; height:25px"/>
+        </span>
+        <div class="progress"  style="align-items: center" >
+            <div class="progress-done" data-done="70">
+                70%
+            </div>
+        </div>
+    </div>
+<!--    후기 리스트-->
+    <div class="row py-5">
+        전체후기<span th:text="${reviewAllCount}">3</span>
+        <div class="col-11">
+            <div class="card" th:if="${reviewList.size() == 0}">
+                <div class="card-header">
+                    받은 후기가 없습니다.
+                </div>
+            </div>
+            <div class="card" th:if="${reviewList.size() > 0}">
+                <div class="card-header">
+                    모임을 함께한 분들에게 받은 후기들 입니다.
+                </div>
+                <ul class="list-group list-group-flush">
+                    <th:block th:each="review : ${reviewList}">
+                        <a th:href="@{/reviewList/{reviewId}(reviewId=${review.id})}" class="list-group-item list-group-item-action">
+                            <div style="float: left">
+                                <img th:src="${review.crewImage}" style="width: 80px; height: 80px; float: left; display: inline-block">
+                                <div style="margin-top: 10px; margin-left: 20px; display: inline-block">
+                                    <span style="color: orange; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|${review.fromUserName}님이 따뜻한 후기를 보냈어요.|"></span><br>
+                                    <small style="" th:text="|${review.fromUserName}님과 ${review.crewTitle}모임을 함께했어요. 클릭하여 상세 후기를 확인해보세요.|"></small>
+                                </div>
+                            </div>
+                        </a>
+                    </th:block>
+                </ul>
             </div>
             <button id="follow">follow</button>
             <input type="hidden" id="userId" th:value="${userProfileResponse.userId}">
@@ -113,6 +175,14 @@
     </div>
 
 </div>
+
+<script type="application/javascript">
+    const progress = document.querySelector('.progress-done');
+
+    progress.style.width = progress.getAttribute('data-done') + '%';
+    progress.style.opacity = 1;
+</script>
+
 </body>
 <script>
     document.getElementById('follow').addEventListener('click',follow);
