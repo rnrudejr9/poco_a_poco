@@ -28,7 +28,8 @@ if (userId.length > 0) {
         })
             .then(function (){
                 //date 채팅ID " " 크루ID
-                location.href="http://localhost:8080/view/v1/room?roomId="+split[0]+"&crewId=" + split[1];
+                // http://ec2-52-79-236-51.ap-northeast-2.compute.amazonaws.com:8080/view/v1/start
+                location.href="http://ec2-52-79-236-51.ap-northeast-2.compute.amazonaws.com:8080/view/v1/room?roomId="+split[0]+"&crewId=" + split[1];
             });
 
     });
