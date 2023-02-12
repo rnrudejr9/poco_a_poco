@@ -16,6 +16,7 @@ public class CrewManageResponse {
 
     private Long id;
     private String title;
+    private String crewCaptain;
 
     private String strict;
 
@@ -43,6 +44,7 @@ public class CrewManageResponse {
         return CrewManageResponse.builder()
                 .id(crew.getId())
                 .title(crew.getTitle())
+                .crewCaptain(crew.getParticipations().get(0).getUser().getUsername())
                 .strict(crew.getStrict())
                 .crewLimit(crew.getCrewLimit())
                 .currentParticipants(crew.getParticipations().size())

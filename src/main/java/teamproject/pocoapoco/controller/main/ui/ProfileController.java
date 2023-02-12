@@ -2,6 +2,7 @@ package teamproject.pocoapoco.controller.main.ui;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -43,8 +44,30 @@ public class ProfileController {
     private final EncrypterConfig encrypterConfig;
 
 
+    @Value("${aws.access.key}")
+    String AWS_ACCESS_KEY;
+
+    @Value("${aws.secret.access.key}")
+    String AWS_SECRET_ACCESS_KEY;
+
+    @Value("${aws.region}")
+    String AWS_REGION;
+
+    @Value("${aws.bucket.name}")
+    String AWS_BUCKET_NAME;
+
+    String AWS_BUCKET_DIRECTORY = "/profileimages";
+
+
     @PostMapping("/users/profile/edit")
     public String editUser(@ModelAttribute UserProfileRequest userProfileRequest, Model model, Authentication authentication, HttpServletResponse response){
+
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         log.info("닉네임: {}", userProfileRequest.getNickName());
         log.info("주소: {}", userProfileRequest.getAddress());
@@ -83,6 +106,12 @@ public class ProfileController {
     @GetMapping("/users/profile/edit")
     public String editUserPage(Model model, Authentication authentication){
 
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
         String userName = authentication.getName();
 
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
@@ -99,6 +128,12 @@ public class ProfileController {
 
     @GetMapping("/users/profile/my")
     public String getMyProfile(Model model, Authentication authentication,Pageable pageable){
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         String userName = authentication.getName();
         User user = userRepository.findByUserName(userName).get();
@@ -122,6 +157,12 @@ public class ProfileController {
 
     @GetMapping("/users/profile/{userName}")
     public String getUserProfile(@PathVariable String userName, Model model, HttpServletResponse response) throws IOException {
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         try{
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
@@ -182,6 +223,12 @@ public class ProfileController {
 
     @PostMapping("/users/profile/image/edit")
     public String uploadImage(String imagePath, Authentication authentication, Model model){
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         log.info(imagePath);
 
