@@ -106,16 +106,34 @@
                     <text th:text="${userProfileResponse.getSportValue3()}"></text>
 
                 </div>
-
             </div>
+            <button id="follow">follow</button>
+            <input type="hidden" id="userId" th:value="${userProfileResponse.userId}">
         </div>
     </div>
+
 </div>
-
-
-
 </body>
+<script>
+    document.getElementById('follow').addEventListener('click',follow);
+    console.log(document.getElementById('userId').value);
+    async function follow(){
+        let userId = document.getElementById('userId').value;
+        let response = await fetch(`/api/v1/social/${userId}/follow`,{
+            method :"POST",
+            headers : {
+                "Content-Type": "application/json",
+            }
+        })
+        let data = await response.json()
 
-
-
-
+        if(data.result.status===false){
+            alert("팔로우를 취소합니다.")
+            document.getElementById('follow').innerText='follow';
+        }else {
+            alert("팔로우 합니다.")
+            document.getElementById('follow').innerText='unfollow';
+            //unfollow
+        }
+    }
+</script>
