@@ -7,9 +7,11 @@ var line;
 window.addEventListener('beforeunload', () => {
     // 명세에 따라 preventDefault는 호출해야하며, 기본 동작을 방지합니다.
     var username = document.getElementById("myName").innerHTML;
-    stomp.send('/pub/chat/out', {}, JSON.stringify({roomId: roomId, writer: username}));
+    stomp.send('/pub/chat/out', {}, JSON.stringify({roomId: roomId, writer: username, stat: 0}));
     readSave();
 });
+
+
 //나가기 전 알림박스
 
 window.addEventListener('unload',()=>{
@@ -70,6 +72,22 @@ document.addEventListener("DOMContentLoaded",function(){
                 $("#messagearea").append(str);
                 // $('#messagearea').scrollTop($('#messagearea')[0].scrollHeight);
             }
+
+            for(const user of content.userList){
+                $('#live_'+user).attr('class','chatbox__user--active');
+            }
+
+            if(content.state === 1){
+                $('#live_'+content.writer).attr('class','chatbox__user--busy');
+            }
+
+            // if(content.stat === 1){
+            //     $('#live_'+writer).attr('class','chatbox__user--active');
+            // }
+            //
+            // if(content.stat === 0){
+            //     $('#live_'+writer).attr('class','chatbox__user--busy');
+            // }
         });
         stomp.send('/pub/chat/enter', {}, JSON.stringify({roomId: roomId, writer: username}))
 
@@ -118,7 +136,7 @@ async function readFetch(){
         var index= json.result.index;
         if(index === 0){
             document.getElementsByClassName("chatbox__messages__user-message--ind-message").item(index).innerHTML =
-                "처음이시군요!" + document.getElementsByClassName("chatbox__messages__user-message--ind-message").item(index).innerHTML;
+                "<p id='thisisfo' style='color: #09f3a7;  size: 3em' > 처음이시군요! </p>" + document.getElementsByClassName("chatbox__messages__user-message--ind-message").item(index).innerHTML;
         }else{
             index = index - 1;
         document.getElementsByClassName("chatbox__messages__user-message--ind-message").item(index).innerHTML =
@@ -205,8 +223,10 @@ async function fetcher() {
     console.log("end");
     console.log(response);
     $('#messagearea').scrollTop($('#messagearea')[0].scrollHeight);
+
 }
 
+// 참여자들 찾는 로직
 async function findMember(){
     console.log(crewId);
     let response = await fetch("/api/v1/part/members/"+crewId, {
@@ -222,7 +242,7 @@ async function findMember(){
         console.log(json.result);
         var str = "<h1>User list</h1>";
         for (var i in json.result) {
-            str += "<div class='chatbox__user--active'>"
+            str += "<div class='chatbox__user--busy' id='" + "live_" + json.result[i].joinUserName + "'>"
             str += "<p>"
             str += json.result[i].joinUserName;
             str += "</p>"
@@ -234,7 +254,7 @@ async function findMember(){
     }
 }
 
-
+// 크루상세내역 조회
 async function findCrewInfo(){
     console.log("findCrewInfo");
     let response = await fetch("/api/v1/crews/"+crewId, {
@@ -258,6 +278,8 @@ async function findCrewInfo(){
     }
 }
 
+
+// 카카오맵 렌더링
 function mapRender(){
     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
         mapOption = {
