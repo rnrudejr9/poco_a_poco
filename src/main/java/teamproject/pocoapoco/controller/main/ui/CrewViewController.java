@@ -248,9 +248,8 @@ public class CrewViewController {
         return "redirect:/";
     }
 
-    @GetMapping("/reviewList")
-    public String inquireReviewList(Authentication authentication, Model model) {
-        String userName = authentication.getName();
+    @GetMapping("/{userName}/reviewList")
+    public String inquireReviewList(@PathVariable String userName, Model model) {
 
         List<CrewReviewResponse> reviewList = crewReviewService.inquireAllReviewList(userName);
         model.addAttribute("reviewList", reviewList);
@@ -263,12 +262,12 @@ public class CrewViewController {
 
         return "review/review-list";
     }
-    @GetMapping("/reviewList/{reviewId}")
-    public String inquireReview(@PathVariable Long reviewId, Model model) {
+    @GetMapping("/{userName}/reviewList/{reviewId}")
+    public String inquireReview(@PathVariable String userName, @PathVariable Long reviewId, Model model) {
 
         CrewReviewDetailResponse review = crewReviewService.inquireReview(reviewId);
         model.addAttribute("review", review);
-
+        model.addAttribute("userName",userName);
         return "review/review-content";
     }
 
@@ -280,13 +279,12 @@ public class CrewViewController {
 
 
     // 내가 참여중인 모임 리스트
-    @GetMapping("/users/activeCrew")
-    public String getActiveCrewList(Authentication authentication, Model model) {
+    @GetMapping("/{userName}/active")
+    public String getActiveCrewList(@PathVariable String userName, Model model) {
 
         try{
-            String userName = authentication.getName();
             // list
-            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(2,authentication.getName()); // 2: 참여 완료
+            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(2,userName); // 2: 참여 완료
             model.addAttribute("crewList",crewList);
 
             // count
@@ -297,17 +295,17 @@ public class CrewViewController {
         }
     }
     // 내가 참여했고 종료된 모임 리스트
-    @GetMapping("/users/endCrew")
-    public String getEndCrewList(Authentication authentication, Model model) {
+    @GetMapping("/{userName}/end")
+    public String getEndCrewList(@PathVariable String userName, Model model) {
 
         try{
-            String userName = authentication.getName();
             // list
-            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(3,authentication.getName()); // 3: 모집 종료
+            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(3, userName); // 3: 모집 종료
             model.addAttribute("crewList",crewList);
 
             // count
             putCategorizeCrewCount(userName,model);
+            model.addAttribute("userName",userName);
 
             return "part/get-end-crew";
         } catch (AppException e){
