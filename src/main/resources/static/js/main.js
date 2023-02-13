@@ -49,16 +49,17 @@ async function joinCrewAwait(crewId) {
     }
 }
 
-window.onload = async function profileGet() {
+async function profileGet(imgKey, imgId) {
 
-    let uuidString = self.crypto.randomUUID();
+    // let uuidString = Math.random().toString(20).substr(2,8);
 
-    const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
-    const SECRET_ACCESS_KEY = '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';
-    const REGION = 'ap-northeast-2';
-    const BUCKET_NAME = 'poco-bucket-2';
-    const BUCKET_DIRECTORY = '/crewimages';
+    const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+    const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+    const REGION = document.getElementById("awsRegion").value;
+    const BUCKET_NAME = document.getElementById("awsBucketName").value;
+    const BUCKET_DIRECTORY = document.getElementById("awsBucketDirectory").value;
     const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
 
     // AWS ACCESS KEY를 세팅합니다.
 
@@ -71,7 +72,7 @@ window.onload = async function profileGet() {
         region: REGION
     });
 
-    var imgKey = $('input[name=img-key]').val();
+    // var imgKey = $('input[name=img-key]').val();
 
     if (!imgKey) {
         imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
@@ -92,10 +93,8 @@ window.onload = async function profileGet() {
     // const img1 = document.getElementById('left-image');
     // img1.src = url;
 
-    const img2 = document.getElementById('main-image');
-    img2.src = url;
+    console.log("imageId:{ }", imgId);
 
-    console.log(url);
-
+    document.getElementById(imgId).src = url;
 
 }
