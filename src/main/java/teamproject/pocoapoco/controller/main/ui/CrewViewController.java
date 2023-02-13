@@ -3,8 +3,8 @@ package teamproject.pocoapoco.controller.main.ui;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -15,12 +15,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.util.CollectionUtils;
-import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
 import teamproject.pocoapoco.domain.dto.Review.ReviewResponse;
-import teamproject.pocoapoco.domain.dto.crew.*;
-import teamproject.pocoapoco.domain.dto.crew.ReviewRequest;
+import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
 import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
@@ -30,11 +31,13 @@ import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
-import teamproject.pocoapoco.service.*;
+import teamproject.pocoapoco.service.CrewReviewService;
+import teamproject.pocoapoco.service.CrewService;
+import teamproject.pocoapoco.service.LikeViewService;
 import teamproject.pocoapoco.service.part.ParticipationService;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.*;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
@@ -107,14 +110,9 @@ public class CrewViewController {
 
     // 크루 게시글 수정
     @PutMapping("/{crewId}")
-    public String modifyCrew(@PathVariable Long crewId, @ModelAttribute CrewRequest crewRequest, Authentication authentication, Errors errors, RedirectAttributes attributes) {
-        if (errors.hasErrors()) {
-            return "crew/update-crew";
-        }
-        CrewResponse crewResponse = crewService.modifyCrew(crewId, crewRequest, authentication.getName());
-        attributes.addFlashAttribute("message", "게시글을 수정했습니다.");
-
-        return "redirect:" + "/view/v1/crews/" + crewResponse.getCrewId();
+    public String modifyCrew(@PathVariable Long crewId, @ModelAttribute CrewRequest crewRequest, Authentication authentication) {
+        crewService.modifyCrew(crewId, crewRequest, authentication.getName());
+        return "redirect:/view/v1/crews/{crewId}";
     }
 
     // 크루 게시글 수정화면
@@ -169,6 +167,7 @@ public class CrewViewController {
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
+        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!loginStatus : {}", crewSportRequest.isLoginStatus());
 
 
         // 유저 로그인 확인 후 운동 종목 데이터 확인
@@ -202,6 +201,13 @@ public class CrewViewController {
         List<SportEnum> sportEnums = List.of(SportEnum.values());
         model.addAttribute("sportEnums", sportEnums);
 
+
+
+
+        model.addAttribute("isLoginStatus", crewSportRequest.isLoginStatus());
+
+
+
         return "main/main";
     }
 
@@ -212,6 +218,9 @@ public class CrewViewController {
         //현재 유저 정보
         User nowUser = crewService.findByUserName(authentication.getName());
         model.addAttribute("nowUser", nowUser.getId());
+        
+        //현재 유저 리뷰 작성여부 확인
+        crewReviewService.findReviewUser(nowUser);
 
         // 크루 게시글 정보
         Crew crew = crewService.findByCrewId(crewId);

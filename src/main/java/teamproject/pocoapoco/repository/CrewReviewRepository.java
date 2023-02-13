@@ -10,5 +10,8 @@ import java.util.List;
 
 public interface CrewReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByToUser(User user);
+
+    boolean existsByFromUser(User user);
+
     long countReviewByToUser(User user);
 }
