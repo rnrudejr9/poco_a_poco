@@ -547,7 +547,7 @@
 
         window.onload = async function profileGet() {
 
-            let uuidString = self.crypto.randomUUID();
+            let uuidString = crypto.randomUUID();
 
             const ACCESS_KEY = document.getElementById("awsAccessKey").value;
             const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
