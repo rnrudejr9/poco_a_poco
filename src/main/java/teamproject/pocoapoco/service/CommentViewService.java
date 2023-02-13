@@ -53,7 +53,7 @@ public class CommentViewService {
         List<Comment> list = parentComment.getChildren();
         list.add(comment);
         parentComment.setChildren(list);
-        alarmRepository.save(Alarm.toEntity(user, parentComment.getCrew(), AlarmType.ADD_COMMENT, comment.getComment()));
+        alarmRepository.save(Alarm.toEntityFromComment(user, parentComment.getCrew(),parentComment ,AlarmType.ADD_COMMENT, comment.getComment()));
 
         //sse 로직
         if (sseEmitters.containsKey(parentComment.getUser().getUsername())) {
