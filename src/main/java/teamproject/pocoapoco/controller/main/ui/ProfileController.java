@@ -171,6 +171,7 @@ public class ProfileController {
 
             long reviewAllCount = crewReviewService.getReviewAllCount(userName);
             model.addAttribute("reviewAllCount", reviewAllCount);
+            model.addAttribute("userName", userName);
             return "profile/get";
         } catch (AppException e){
             response.setContentType("text/html; charset=UTF-8");

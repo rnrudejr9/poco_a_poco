@@ -3,18 +3,21 @@
 <head th:replace="fragments/fragment::head"></head>
 <body>
 <header th:replace="fragments/fragment::nav"></header>
-<div class="container">
+<div class="container"><br><br>
+    <h2>참여중인 모임 👨‍👧‍👦</h2>
     <div class="row py-5">
-        <div class="col-3">
-            <ul class="list-group mt-4">
-                <a href="/view/v1/crews/users/activeCrew" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+        <div class="col-2">
+            <ul class="list-group mt-1">
+                <a th:href="@{/view/v1/crews/{userName}/active(userName=${userName})}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                     참여하고 있는 모임
                     <span th:text="${activeCrewCount}">3</span>
                 </a>
-                <a href="/view/v1/crews/users/endCrew" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active">
+                <a th:href="@{/view/v1/crews/{userName}/end(userName=${userName})}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active">
                     종료한 모임
                     <span th:text="${endCrewCount}">0</span>
                 </a>
+                <br><br>
+                <a th:href="@{/view/v1/users/profile/{userName}(userName=${userName})}" class="btn btn-light" aria-describedby="submitHelp">이전으로</a>
             </ul>
         </div>
         <div class="col-9">
@@ -46,6 +49,7 @@
         </div>
     </div>
 </div>
+
 
 <script async th:inline="javascript">
     /*<![CDATA[*/
