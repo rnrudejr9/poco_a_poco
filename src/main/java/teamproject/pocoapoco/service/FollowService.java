@@ -45,11 +45,11 @@ public class FollowService {
         if(followRepository.findByFollowingUserIdAndFollowedUserId(followingUser.getId(),user.getId()).isPresent()){
             followRepository.delete(follow.get());
             //팔로우 취소
-            return new FollowingResponse(user.getUsername(),user.getNickName(),false);
+            return new FollowingResponse(user.getUsername(),user.getNickName(),false,user.getImagePath());
         }else
             //팔로우
             followRepository.save(new Follow(followingUser,user));
-        return new FollowingResponse(user.getUsername(),user.getNickName(),true);
+        return new FollowingResponse(user.getUsername(),user.getNickName(),true,user.getImagePath());
 
     }
 //    public String unFollow(String unFollowingUserId, Long userId){
