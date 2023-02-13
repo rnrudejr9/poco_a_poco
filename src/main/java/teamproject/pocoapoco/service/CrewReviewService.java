@@ -32,23 +32,32 @@ public class CrewReviewService {
     private final ParticipationRepository participationRepository;
 
     // 리뷰 저장
+    @Transactional
     public void addReview(ReviewRequest crewReviewRequest) {
         List<Review> reviewList = new ArrayList<>();
 
         try{
-            Optional<Crew> crew = crewRepository.findById(crewReviewRequest.getCrewId().get(0));
-            Optional<User> fromUser = userRepository.findById(crewReviewRequest.getFromUserId().get(0));
+            Crew crew = crewRepository.findById(crewReviewRequest.getCrewId().get(0)).get();
+            User fromUser = userRepository.findById(crewReviewRequest.getFromUserId().get(0)).get();
 
             for (int i = 0; i < crewReviewRequest.getCrewId().size(); i++) {
                 Review review = new Review();
 
-                Optional<User> toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i));
+                User toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i)).get();
 
-                review.of(crew.get(), fromUser.get(), toUser.get(),
+                review.of(crew, fromUser, toUser,
                         crewReviewRequest.getUserMannerScore().get(i), crewReviewRequest.getUserReview().get(i));
                 reviewList.add(review);
             }
             crewReviewRepository.saveAll(reviewList);
+
+            // reviewScore 저장
+            for (int i = 0; i < crewReviewRequest.getCrewId().size(); i++) {
+                User toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i)).get();
+                Review review = crewReviewRepository.findReviewByCrewAndToUser(crew, toUser);
+                toUser.addReviewScore(review.getReviewScore());
+            }
+
         }catch (NullPointerException e){
             log.info("이용자 후기 NullPointerException : 작성 가능한 후기 내용이 없습니다.");
         }
@@ -92,7 +101,7 @@ public class CrewReviewService {
 //                .reviews(reviews)
                 .build();
     }
-
+/*
     // reviewScore 계산
     @Transactional
     public double calcReviewScore(Long crewId, User receiver) {
@@ -104,14 +113,17 @@ public class CrewReviewService {
                 .map(Review::getReviewScore)
                 .collect(Collectors.toList());
         double reviewScoreToUser = reviewScores.stream().mapToDouble(i -> i).sum();
+        System.out.println("receiver:"+receiver.getUsername()+"받을 점수"+reviewScoreToUser);
         int reviewCount = crewReviewRepository.countReviewByCrewAndToUser(crew, receiver);
         double result = Math.round(reviewScoreToUser / reviewCount);
 
         return (result*100) / 100.0; // 소수점 2째자리
+
     }
+         */
 
     // reviewScore 저장
-    @Transactional
+    /*@Transactional
     public void addMannerScore(Long crewId) {
         Crew crew = crewRepository.findById(crewId).get();
         // 해당 모임에 참여한 참가자에서 user을 추출
@@ -121,10 +133,12 @@ public class CrewReviewService {
                 .collect(Collectors.toList());
         for(User user : users) {
             // user의 mannerScore에 계산된 reviewScore 추가
-            double addScore = calcReviewScore(crewId, user);
-            user.addReviewScore(addScore);
+             Review review = crewReviewRepository.findReviewByCrewAndToUser(crew, user);
+            double score = review.getReviewScore();
+            System.out.println("receiver:"+user.getUsername()+"받을 점수"+score);
+            user.addReviewScore(score);
         }
-    }
+    }*/
 
 
     public long getReviewAllCount(String userName) {
