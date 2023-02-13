@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import teamproject.pocoapoco.domain.dto.comment.CommentResponse;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import teamproject.pocoapoco.domain.dto.follow.FollowingResponse;
-import teamproject.pocoapoco.domain.entity.Comment;
 import teamproject.pocoapoco.domain.entity.Follow;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.exception.AppException;
@@ -16,6 +15,8 @@ import teamproject.pocoapoco.repository.UserRepository;
 
 import javax.transaction.Transactional;
 import java.util.Optional;
+
+import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmitters;
 
 @Service
 @RequiredArgsConstructor
@@ -46,9 +47,20 @@ public class FollowService {
             followRepository.delete(follow.get());
             //팔로우 취소
             return new FollowingResponse(user.getUsername(),user.getNickName(),false);
-        }else
+        }else{
             //팔로우
             followRepository.save(new Follow(followingUser,user));
+            //sse 로직
+            if (sseEmitters.containsKey(user.getUsername())) {
+                SseEmitter sseEmitter = sseEmitters.get(user.getUsername());
+                try {
+                    sseEmitter.send(SseEmitter.event().name("alarm").data(
+                            followingUser.getNickName() + "님이 회원님을 팔로우 합니다💕 "));
+                } catch (Exception e) {
+                    sseEmitters.remove(user.getUsername());
+                }
+            }
+        }
         return new FollowingResponse(user.getUsername(),user.getNickName(),true);
 
     }

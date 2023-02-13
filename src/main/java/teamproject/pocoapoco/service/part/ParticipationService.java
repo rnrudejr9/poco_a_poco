@@ -2,8 +2,8 @@ package teamproject.pocoapoco.service.part;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import teamproject.pocoapoco.domain.dto.Review.ReviewResponse;
 import teamproject.pocoapoco.domain.dto.error.ErrorResponse;
 import teamproject.pocoapoco.domain.dto.part.PartDto;
@@ -23,6 +23,8 @@ import teamproject.pocoapoco.repository.part.ParticipationRepository;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+
+import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmitters;
 
 @Service
 @RequiredArgsConstructor
@@ -53,6 +55,16 @@ public class ParticipationService {
 
         Participation participation = participationRepository.findByCrewAndUser(crew,user).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
         participation.setStatus(2);
+        //sse 로직
+        if (sseEmitters.containsKey(user.getUsername())) {
+            SseEmitter sseEmitter = sseEmitters.get(user.getUsername());
+            try {
+                sseEmitter.send(SseEmitter.event().name("alarm").data(
+                        crew.getTitle() + "모임에 참여신청이 수락되었습니다🔥 채팅방에서 인사를 건네보세요!"));
+            } catch (Exception e) {
+                sseEmitters.remove(user.getUsername());
+            }
+        }
         return Response.success("참여하기 성공");
     }
 
@@ -84,6 +96,17 @@ public class ParticipationService {
             }
         }
         participationRepository.save(savedParticipation);
+        //sse 로직
+        if (sseEmitters.containsKey(crew.getUser().getUsername())) {
+            SseEmitter sseEmitter = sseEmitters.get(crew.getUser().getUsername());
+            try {
+                sseEmitter.send(SseEmitter.event().name("alarm").data(
+                        user.getNickName() + "님이 모임 참여신청을 했습니다🔥" +
+                                "crew 참여신청 내역을 확인해주세요!"));
+            } catch (Exception e) {
+                sseEmitters.remove(crew.getUser().getUsername());
+            }
+        }
         return Response.success("참여하기 동작");
     }
 
