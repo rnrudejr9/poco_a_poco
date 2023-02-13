@@ -3,7 +3,7 @@ package teamproject.pocoapoco.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import teamproject.pocoapoco.domain.dto.crew.ReviewRequest;
+import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
@@ -12,7 +12,6 @@ import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.CrewReviewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
-import teamproject.pocoapoco.service.part.ParticipationService;
 
 import java.util.ArrayList;
 import java.util.List;
