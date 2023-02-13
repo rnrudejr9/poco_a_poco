@@ -14,6 +14,7 @@ import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.FollowRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.Optional;
 
 @Service
@@ -21,6 +22,8 @@ import java.util.Optional;
 public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+
+    @Transactional
     public FollowingResponse follow(String followingUserId, Long userId){
 
         User followingUser = userRepository.findByUserName(followingUserId).orElseThrow(()->
@@ -74,6 +77,8 @@ public class FollowService {
 //        return user.getUsername()+"님을 팔로우 취소합니다.";
 //
 //    }
+
+    @Transactional
     public Integer followedCount(Long userId){ //해당 유저를 팔로우 하고 있는 유저의 수
         User user = userRepository.findById(userId).orElseThrow(()->
         {
@@ -81,6 +86,7 @@ public class FollowService {
         });
         return followRepository.countByFollowedUserId(userId);
     }
+    @Transactional
     public Integer followingCount(Long userId){ //해당 유자가 팔로잉 하고 있는 유저의 수
         User user = userRepository.findById(userId).orElseThrow(()->
         {
@@ -95,7 +101,7 @@ public class FollowService {
             throw new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage());
         });
         Page<Follow> list = followRepository.findByFollowingUserId(pageable,userId);
-        return list.map(FollowingResponse::of);
+        return list.map(FollowingResponse::followingResponse);
     }
     public Page<FollowingResponse> getFollowedList(Pageable pageable, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()->
@@ -103,7 +109,7 @@ public class FollowService {
             throw new AppException(ErrorCode.USERID_NOT_FOUND,ErrorCode.USERID_NOT_FOUND.getMessage());
         });
         Page<Follow> list = followRepository.findByFollowedUserId(pageable,userId);
-        return list.map(FollowingResponse::of);
+        return list.map(FollowingResponse::followedResponse);
     }
 
 }
