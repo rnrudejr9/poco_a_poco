@@ -169,42 +169,44 @@
                         <div class="container-profile" style="padding:20px;">
                             <h4 th:text = "${userProfileResponse.nickName}"></h4>
                             <label class="col-sm-3 col-form-label" style="display: inline-block; vertical-align:middle;">선호 종목</label>
-                            <text th:text="${userProfileResponse.getSportValue1()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
-                            <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;">|</span>
-                            <text th:text="${userProfileResponse.getSportValue2()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
-                            <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;">|</span>
-                            <text th:text="${userProfileResponse.getSportValue3()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
+                                <text th:text="${userProfileResponse.getSportValue1()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
+                                <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;">|</span>
+                                <text th:text="${userProfileResponse.getSportValue2()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
+                                <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;">|</span>
+                                <text th:text="${userProfileResponse.getSportValue3()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
                             </label>
                             <label>활동 지역 </label>
-                            <text th:text="${userProfileResponse.getAddress()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text></label>
+                                <text th:text="${userProfileResponse.getAddress()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text></label>
                         </div>
 
                     </div>
                 </div>
             </div>
-            <div class="card mb3-l" style="max-width: 1200px; padding: 30px;">
-                <h5>
-                매너 온도<img src="/images/heart.png" style="width:25px; height:25px"/>
-                </h5>
+            <div class="card mb3-l" style="max-width: 1200px; padding: 20px;">
+                <h5>매너 온도<img src="/images/heart.png" style="width:25px; height:25px"/></h5>
                 <div class="progress">
-                    <div class="progress-done" data-done="70">
-                        70%
+                    <div class="progress-done">
+                        <span>[(${userProfileResponse.mannerScore})]°C</span>
                     </div>
                 </div>
+                <span style="color: gray; position: relative; left: 40.5%; bottom:3px">▴</span>
+                <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 5px; font-weight: bold; position: relative; left: 36%; bottom:10px">첫 온도 36.5°C</span>
             </div>
             <button id="follow">follow</button>
             <input type="hidden" id="userId" th:value="${userProfileResponse.userId}">
         </div>
     </div>
 </div>
-
-</body>
-<script>
+<script type="application/javascript">
+    const progressDone = [[${userProfileResponse.mannerScore}]];
     const progress = document.querySelector('.progress-done');
-    progress.style.width = progress.getAttribute('data-done') + '%';
-    progress.style.opacity = 1; // 투명도
-
+    setTimeout(()=>{
+        progress.style.width = progressDone + '%';
+        progress.style.opacity = 1; // 투명도
+    }, 500)
 </script>
+</body>
+
 <script>
     document.getElementById('follow').addEventListener('click',follow);
     console.log(document.getElementById('userId').value);
