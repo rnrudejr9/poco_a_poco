@@ -9,10 +9,13 @@ import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.Review;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.CrewReviewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.repository.part.ParticipationRepository;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +29,7 @@ public class CrewReviewService {
     private final CrewRepository crewRepository;
 
     private final CrewReviewRepository crewReviewRepository;
+    private final ParticipationRepository participationRepository;
 
     // 리뷰 저장
     public void addReview(ReviewRequest crewReviewRequest) {
@@ -99,8 +103,39 @@ public class CrewReviewService {
 //                .reviews(reviews)
                 .build();
     }
-//
-//    public double calcReviewScore
+
+    // reviewScore 계산
+    @Transactional
+    public double calcReviewScore(Long crewId, User receiver) {
+        // review 받는 사람 list Participation에서 구하고
+        Crew crew = crewRepository.findById(crewId).get();
+        // 같이 모임을 한 사람들의 review에서 reviewScore만 추출
+        List<Double> reviewScores = crewReviewRepository.findReviewByCrewAndToUser(crew, receiver)
+                .stream()
+                .map(Review::getReviewScore)
+                .collect(Collectors.toList());
+        double reviewScoreToUser = reviewScores.stream().mapToDouble(i -> i).sum();
+        int reviewCount = crewReviewRepository.countReviewByCrewAndToUser(crew, receiver);
+        double result = Math.round(reviewScoreToUser / reviewCount);
+
+        return (result*100) / 100.0; // 소수점 2째자리
+    }
+
+    // reviewScore 저장
+    @Transactional
+    public void addMannerScore(Long crewId) {
+        Crew crew = crewRepository.findById(crewId).get();
+        // 해당 모임에 참여한 참가자에서 user을 추출
+        List<User> users = participationRepository.findByCrew(crew)
+                .stream()
+                .map(Participation::getUser)
+                .collect(Collectors.toList());
+        for(User user : users) {
+            // user의 mannerScore에 계산된 reviewScore 추가
+            double addScore = calcReviewScore(crewId, user);
+            user.addReviewScore(addScore);
+        }
+    }
 
 
     public long getReviewAllCount(String userName) {

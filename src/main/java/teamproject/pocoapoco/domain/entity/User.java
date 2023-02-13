@@ -129,4 +129,7 @@ public class User implements UserDetails {
                 .password(encodedPassword)
                 .build();
     }
+    public void addReviewScore(double reviewScore) {
+        this.mannerScore += reviewScore;
+    }
 }

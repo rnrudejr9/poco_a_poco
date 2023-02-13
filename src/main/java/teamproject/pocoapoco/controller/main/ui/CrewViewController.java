@@ -243,6 +243,8 @@ public class CrewViewController {
     @PostMapping("/review")
     public String reviewCrew(Model model, @ModelAttribute("reviewRequest") ReviewRequest crewReviewRequest) {
         crewReviewService.addReview(crewReviewRequest);
+        Long crewId = crewReviewRequest.getCrewId().get(0);
+        crewReviewService.addMannerScore(crewId);
         return "redirect:/";
     }
 
