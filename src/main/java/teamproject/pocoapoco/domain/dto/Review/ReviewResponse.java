@@ -2,6 +2,7 @@ package teamproject.pocoapoco.domain.dto.Review;
 
 import lombok.*;
 import teamproject.pocoapoco.domain.entity.Sport;
+import teamproject.pocoapoco.enums.SportEnum;
 
 import java.util.List;
 
@@ -15,6 +16,6 @@ public class ReviewResponse {
     private Long joinUserId;
     private String joinUserNickName;
     private Double userMannerScore;
-    private List<Sport> sports;
+    private List<SportEnum> sports;
 
 }

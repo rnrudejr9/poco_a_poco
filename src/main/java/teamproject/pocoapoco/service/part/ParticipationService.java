@@ -168,6 +168,7 @@ public class ParticipationService {
                         .joinUserId(p.getUser().getId())
                         .joinUserNickName(p.getUser().getNickName())
                         .userMannerScore(p.getUser().getMannerScore())
+                        .sports(p.getUser().getSport().toList())
                         .build();
                 list.add(reviewResponse);
             }
