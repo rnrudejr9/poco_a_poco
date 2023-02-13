@@ -35,6 +35,11 @@
         padding: 15px;
         /*background-color: #fff;*/
     }
+    div.card {
+        width: 250px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        text-align: center;
+    }
 
     /*footer {*/
     /*    height: 50px;*/
@@ -87,7 +92,7 @@
                                 <li>위치 : <span th:text="${details.strict}"></span></li>
                                 <li>모집 내용 : <span th:text="${details.content}"></span></li>
                                 <li>생성 날짜 : <span th:text="${#temporals.format(details.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
-                                <li>수정 날짜 : <span th:text="${#temporals.format(details.lastModifiedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
+                                <li>모임 일시 : <span th:text="${details.date}"></span></li>
                             </th:block>
 
                         </ul>
