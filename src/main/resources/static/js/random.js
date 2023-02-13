@@ -1,10 +1,5 @@
 function randomMatch() {
 
-    let username = document.getElementById("myName").innerText;
-    // console.log(username);
-
-    checkLevel();
-
     Swal.fire({
         icon: 'question',
         title: '실시간 매칭',
@@ -100,7 +95,7 @@ function startMatching(level, sport) {
     console.log('랜덤매칭 시작')
     $.ajax({
         type: "POST",
-        url: '/api/v1/match/random' + "?username=" + username + "&sport=" + sport,
+        url: '/api/v1/match/live' + "?username=" + username + "&sport=" + sport,
         success: function (data) {
             let listCnt = data;
             if (listCnt > 0) {
@@ -148,7 +143,7 @@ function randomMatchCancel() {
 
     $.ajax({
         type: "POST",
-        url: '/api/v1/match/random/cancel' + "?username=" + username,
+        url: '/api/v1/match/live/cancel' + "?username=" + username,
         success: function (data) {
             let listCnt = data;
             if (listCnt > 0) {

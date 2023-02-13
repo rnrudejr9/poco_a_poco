@@ -39,6 +39,16 @@ public class Alarm extends BaseEntity {
         return alarm;
     }
 
+    public static Alarm toEntityFromComment(User user, Crew crew, Comment commentUser , AlarmType alarmType, String comment) {
+        Alarm alarm = Alarm.builder()
+                .user(commentUser.getUser())
+                .alarmType(alarmType)
+                .fromUserName(user.getNickName())
+                .targetCrewId(crew.getId())
+                .massage(comment)
+                .build();
+        return alarm;
+    }
     public boolean getReadOrNot() {
         return readOrNot;
     }
