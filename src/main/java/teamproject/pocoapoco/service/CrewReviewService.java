@@ -51,6 +51,17 @@ public class CrewReviewService {
         }
     }
 
+    // 리뷰 작성 여부 확인
+    public boolean findReviewUser(User nowUser) {
+
+        boolean reviewIsNowUser = crewReviewRepository.existsByFromUser(nowUser);
+
+        if(reviewIsNowUser) {
+            log.info("이미 리뷰를 작성하였습니다. : {}", reviewIsNowUser);
+        }
+        return reviewIsNowUser;
+    }
+
     public List<CrewReviewResponse> inquireAllReviewList(String userName) {
         User ToUser = userRepository.findByUserName(userName).get();
         List<Review> allReviewList = crewReviewRepository.findByToUser(ToUser);

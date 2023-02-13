@@ -429,7 +429,7 @@
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body collapse-body">
                         <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
-                            <small class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}"></small>
+                            <input class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}">
                                 <div class="grid text-center">
                                     <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
                                         <label class="checkBox-sport btn btn-outline-info" th:each="sport : ${sportEnums}">
@@ -510,7 +510,7 @@
                                                                                sportsList=${sportRequest.getSportsList()})}">Previous</a>
                     </li>
                     <th:block th:each="page : ${#numbers.sequence(startNumPage, endNumPage)}">
-                        <li class="page-item" th:if="${page != nowPage}"><a class="page-link"
+                        <li class="page-item" th:if="${page != nowPage && page != 0}"><a class="page-link"
                                                                             th:href="@{/view/v1/crews(
                                                                                                 page = ${page - 1},
                                                                                                 loginStatus = ${sportRequest.loginStatus},
@@ -518,11 +518,10 @@
                                                                                                 sportsList=${sportRequest.getSportsList()}
                                                                                                 )}" th:text="${page}">1</a>
                         </li>
-
                         <li class="page-item" th:if="${page == nowPage}"><strong class="page-link" th:text="${page}"
                                                                                  style="color: red"></strong></li>
                     </th:block>
-                    <li class="page-item" th:classappend="${lastPage == nowPage} ? 'disabled'">
+                    <li class="page-item" th:classappend="${lastPage == nowPage || lastPage == 0} ? 'disabled'">
                         <a class="page-link" th:href="@{/view/v1/crews(page = ${nowPage},
                                                                                strict=${sportRequest.getStrict()},
                                                                                loginStatus = ${sportRequest.loginStatus},

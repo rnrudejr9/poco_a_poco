@@ -163,6 +163,7 @@ public class CrewViewController {
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
+        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!loginStatus : {}", crewSportRequest.isLoginStatus());
 
 
         // 유저 로그인 확인 후 운동 종목 데이터 확인
@@ -196,6 +197,13 @@ public class CrewViewController {
         List<SportEnum> sportEnums = List.of(SportEnum.values());
         model.addAttribute("sportEnums", sportEnums);
 
+
+
+
+        model.addAttribute("isLoginStatus", crewSportRequest.isLoginStatus());
+
+
+
         return "main/main";
     }
 
@@ -206,6 +214,9 @@ public class CrewViewController {
         //현재 유저 정보
         User nowUser = crewService.findByUserName(authentication.getName());
         model.addAttribute("nowUser", nowUser.getId());
+        
+        //현재 유저 리뷰 작성여부 확인
+        crewReviewService.findReviewUser(nowUser);
 
         // 크루 게시글 정보
         Crew crew = crewService.findByCrewId(crewId);
