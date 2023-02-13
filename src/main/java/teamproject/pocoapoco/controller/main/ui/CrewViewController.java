@@ -248,24 +248,25 @@ public class CrewViewController {
         return "redirect:/";
     }
 
+    // 리뷰 리스트
     @GetMapping("/{userName}/reviewList")
-    public String inquireReviewList(@PathVariable String userName, Model model) {
+    public String findReviewList(@PathVariable String userName, Model model) {
 
-        List<CrewReviewResponse> reviewList = crewReviewService.inquireAllReviewList(userName);
+        List<CrewReviewResponse> reviewList = crewReviewService.findAllReviewList(userName);
         model.addAttribute("reviewList", reviewList);
 
         long reviewAllCount = crewReviewService.getReviewAllCount(userName);
         model.addAttribute("reviewAllCount", reviewAllCount);
 
-//        model.addAttribute("certifyYn", receiver.getCertifyYn());
-//        model.addAttribute("nickname", receiver.getNickname());
 
         return "review/review-list";
     }
-    @GetMapping("/{userName}/reviewList/{reviewId}")
-    public String inquireReview(@PathVariable String userName, @PathVariable Long reviewId, Model model) {
 
-        CrewReviewDetailResponse review = crewReviewService.inquireReview(reviewId);
+    // 리뷰 detail
+    @GetMapping("/{userName}/reviewList/{reviewId}")
+    public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model) {
+
+        CrewReviewDetailResponse review = crewReviewService.findReviewById(reviewId);
         model.addAttribute("review", review);
         model.addAttribute("userName",userName);
         return "review/review-content";
@@ -284,7 +285,7 @@ public class CrewViewController {
 
         try{
             // list
-            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(2,userName); // 2: 참여 완료
+            List<CrewDetailResponse> crewList = crewService.findAllCrew(2,userName); // 2: 참여 완료
             model.addAttribute("crewList",crewList);
 
             // count
@@ -294,13 +295,14 @@ public class CrewViewController {
             return "redirect:/view/v1/start";
         }
     }
-    // 내가 참여했고 종료된 모임 리스트
+
+    // 종료된 모임 리스트
     @GetMapping("/{userName}/end")
     public String getEndCrewList(@PathVariable String userName, Model model) {
 
         try{
             // list
-            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(3, userName); // 3: 모집 종료
+            List<CrewDetailResponse> crewList = crewService.findAllCrew(3, userName); // 3: 모집 종료
             model.addAttribute("crewList",crewList);
 
             // count
@@ -313,6 +315,7 @@ public class CrewViewController {
         }
     }
 
+    // 특정 crew를 count하는 메소드
     private void putCategorizeCrewCount(String userName, Model model) {
         long activeCrewCount = crewService.getCrewByUserAndStatus(2,userName);
         long endCrewCount = crewService.getCrewByUserAndStatus(3,userName);

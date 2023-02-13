@@ -65,7 +65,7 @@ public class CrewReviewService {
         return reviewIsNowUser;
     }
 
-    public List<CrewReviewResponse> inquireAllReviewList(String userName) {
+    public List<CrewReviewResponse> findAllReviewList(String userName) {
         User ToUser = userRepository.findByUserName(userName).get();
         List<Review> allReviewList = crewReviewRepository.findByToUser(ToUser);
         return allReviewList.stream()
@@ -77,23 +77,12 @@ public class CrewReviewService {
                         .build())
                 .collect(Collectors.toList());
     }
+
     // 리뷰 detail
-    public CrewReviewDetailResponse inquireReview(Long reviewId) {
+    public CrewReviewDetailResponse findReviewById(Long reviewId) {
         Review review = crewReviewRepository.findById(reviewId).get();
 
-        /*LinkedHashMap<String, String> reviews = new LinkedHashMap<>();
-        String[] reviewValues = review.getReviews().split("\\|");
-        for (String reviewValue : reviewValues) {
-            switch (reviewValue) {
-                case "01":
-                    reviews.put("01", "시간을 잘 지켜요.");
-                    break;
-                case "02":
-                    reviews.put("02", "다음 모임에서도 함께하고 싶어요.");
-                    break;
-            }
 
-        }*/
 
         return CrewReviewDetailResponse.builder()
                 .id(reviewId)
