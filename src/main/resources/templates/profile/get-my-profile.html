@@ -9,14 +9,16 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap" rel="stylesheet">
+    <link href="https://webfontworld.github.io/goodchoice/Jalnan.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
 
     <style>
-
         * {
-            font-family: 'Gowun Dodum', sans-serif;
+            font-family: 'Jalnan';
+            font-size: medium;
         }
+
 
 
         #container-profile {
@@ -38,16 +40,7 @@
 
         }
 
-        #left-box {
-            list-style-type: none;
-            padding: 10px;
-            margin: 0px;
-            width: 200px;
-            background: lightblue;
-            height: 100%;
-            overflow: auto;
-            position: fixed;
-        }
+
 
         li a {
             text-decoration: none;
@@ -65,6 +58,31 @@
             align-content: space-between;
             width: 100%;
         }
+
+        .navBar {
+            width: 90%;
+            line-height: 300%;
+            text-align: center;
+            margin: 1% 0% 0% 5%;
+            border-radius: 50px;
+            background: rgb(52, 151, 218);
+            background: -webkit-linear-gradient(to right, #27d7ff, #4176fc);
+            background: linear-gradient(to right, #27d7ff, #4176fc);
+            box-shadow: 2px 3px 3px 2px rgba(101, 130, 138, 0.71), 0 5px 5px rgba(0, 0, 0, 0.22);
+            font-weight: 550;
+        }
+
+        #sidebar{
+            width: 13%;
+            line-height: 80%;
+            text-align: center;
+            margin: 1% 0% 0% 5%;
+            border-radius: 40px;
+            background: rgb(52, 151, 218, 0.6);
+            box-shadow: 2px 3px 3px 2px rgba(101, 130, 138, 0.71), 0 5px 5px rgba(0, 0, 0, 0.22);
+            font-weight: 550;
+        }
+
     </style>
 </head>
 <header th:replace="fragments/fragment :: nav"></header>
@@ -79,97 +97,133 @@
 <input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
 <input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
 
-<ul id="left-box">
-    <img src = "" class="img-thumbnail" style="width:100px; height:100px;" id="left-image">
-    <p style="position: relative; top:10px;">소개말말말</p>
-    <div class="container-navbar">
-        <li><a class="home" href="/view/v1/crews/">홈화면</a></li>
-        <li><a href="/view/v1/users/profile/my">프로필 수정</a></li>
-        <li id="sns"><a href="#">친구목록</a></li>
-        <li><a href="/view/v1/crews/users/activeCrew">참여중인 모임</a></li>
-    </div>
-</ul>
-<div sec:authorize="isAuthenticated()">
-    <input type="hidden" name="img-key" th:value="${userProfileImagePath}">
-    <div class="container" style="padding:20px;" id="container-profile">
-        <span class="placeholder col-12 bg-light placeholder-lg"></span>
-        <span class="placeholder col-12 bg-light placeholder-lg"></span>
-        <span class="placeholder col-12 bg-light placeholder-lg"></span>
-        <img src="" class="rounded mx-auto d-block" style="height: 200px; width: 200px;" id="main-image">
-        <div class="mb-3 row">
-            <label for="nickName" class="col-sm-3 col-form-label">닉네임</label>
-            <div class="col-sm-10">
-                <input type="text" readonly class="form-control-plaintext" id="nickName" th:value="${userProfileResponse.nickName}"/>
-            </div>
-        </div>
-        <div class="mb-3 row">
-            <label for="address" class="col-sm-3 col-form-label">주소</label>
-            <div class="col-sm-10">
-                <input type="text" class="form-control-plaintext" id="address" th:value="${userProfileResponse.address}">
-            </div>
-        </div>
-        <div class="container-sport">
-            <label class="col-sm-3 col-form-label">선호 종목</label>
 
-            <div>
-                <text th:text="${userProfileResponse.getSportValue1()}"></text>
-            </div>
+<div style="height: 20px;">
 
-            <div>
-                <text th:text="${userProfileResponse.getSportValue2()}"></text>
-            </div>
-
-            <div>
-                <text th:text="${userProfileResponse.getSportValue3()}"></text>
-            </div>
-            <span class="placeholder col-12 bg-light placeholder-lg"></span>
-        </div>
-        <button class="btn btn-primary" type="button" onclick="location.href = '/view/v1/users/profile/edit';" >프로필 수정하기</button>
-    </div>
-    <div id="snsList" style="margin-top: 20px; display: none" class="layer">
-        <div class="merge" >
-            <div style="margin-right: auto">
-                <h2>
-                    팔로윙
-                </h2>
-                <div>
-                    <div  class="d-flex text-muted  pt-3" th:each="followingList : ${followingResponse}">
-                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
-                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
-                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#007bff"/>
-                            <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
-                        </svg>
-
-                        <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-                        <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                            <strong class="d-block text-gray-dark" th:text="|${followingList.nickName}|"></strong>
-                        </p>
-                    </div>
-                </div>
-            </div>
-            <div >
-                <h2>
-                    팔로워
-                </h2>
-                <div>
-                    <div  class="d-flex text-muted  pt-3" th:each="followedList : ${followedResponse}">
-                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
-                             xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
-                             preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-                            <rect width="100%" height="100%" fill="#007bff"/>
-                            <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
-                        </svg>
-                        <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-                        <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                            <strong class="d-block text-gray-dark" th:text="|${followedList.nickName}|"></strong>
-                        </p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
+
+<div class="d-flex flex-nowrap">
+
+
+    <div class="d-flex flex-column flex-shrink-0 p-3" id="sidebar">
+
+        <center>
+            <img src = "" class="img-thumbnail" style="width:100px; height:100px;" id="left-image">
+        </center>
+
+
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item">
+                <a href="/view/v1/crews" class="nav-link text-black" aria-current="page">
+                    홈화면
+                </a>
+            </li>
+            <li>
+                <a href="/view/v1/manage/crews" class="nav-link text-black">
+                    프로필 수정
+                </a>
+            </li>
+            <li id="sns"><a href="#">친구목록</a></li>
+            <li><a href="#">참여중인 모임</a></li>
+
+        </ul>
+        <hr>
+    </div>
+
+    <div class="d-flex flex-column flex-shrink-0" style="width: 200px;">
+
+    </div>
+
+
+    <div sec:authorize="isAuthenticated()">
+        <input type="hidden" name="img-key" th:value="${userProfileImagePath}">
+        <div class="container" style="padding:20px;" id="container-profile">
+            <span class="placeholder col-12 bg-light placeholder-lg"></span>
+            <span class="placeholder col-12 bg-light placeholder-lg"></span>
+            <span class="placeholder col-12 bg-light placeholder-lg"></span>
+            <img src="" class="rounded mx-auto d-block" style="height: 200px; width: 200px;" id="main-image">
+            <div class="mb-3 row">
+                <label for="nickName" class="col-sm-3 col-form-label">닉네임</label>
+                <div class="col-sm-10">
+                    <input type="text" readonly class="form-control-plaintext" id="nickName" th:value="${userProfileResponse.nickName}"/>
+                </div>
+            </div>
+            <div class="mb-3 row">
+                <label for="address" class="col-sm-3 col-form-label">주소</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control-plaintext" id="address" th:value="${userProfileResponse.address}">
+                </div>
+            </div>
+            <div class="container-sport">
+                <label class="col-sm-3 col-form-label">선호 종목</label>
+
+                <div>
+                    <text th:text="${userProfileResponse.getSportValue1()}"></text>
+                </div>
+
+                <div>
+                    <text th:text="${userProfileResponse.getSportValue2()}"></text>
+                </div>
+
+                <div>
+                    <text th:text="${userProfileResponse.getSportValue3()}"></text>
+                </div>
+                <span class="placeholder col-12 bg-light placeholder-lg"></span>
+            </div>
+            <button class="btn btn-primary" type="button" onclick="location.href = '/view/v1/users/profile/edit';" >프로필 수정하기</button>
+        </div>
+
+
+        <div id="snsList" style="margin-top: 20px; display: none" class="layer">
+            <div class="merge" >
+                <div style="margin-right: auto">
+                    <h2>
+                        팔로윙
+                    </h2>
+                    <div>
+                        <div  class="d-flex text-muted  pt-3" th:each="followingList : ${followingResponse}">
+                            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
+                                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                                <rect width="100%" height="100%" fill="#007bff"/>
+                                <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
+                            </svg>
+
+                            <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
+                            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
+                                <strong class="d-block text-gray-dark" th:text="|${followingList.nickName}|"></strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div >
+                    <h2>
+                        팔로워
+                    </h2>
+                    <div>
+                        <div  class="d-flex text-muted  pt-3" th:each="followedList : ${followedResponse}">
+                            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
+                                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
+                                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
+                                <rect width="100%" height="100%" fill="#007bff"/>
+                                <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
+                            </svg>
+                            <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
+                            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
+                                <strong class="d-block text-gray-dark" th:text="|${followedList.nickName}|"></strong>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 
@@ -180,7 +234,7 @@
 
     window.onload = async function profileGet() {
 
-        let uuidString = self.crypto.randomUUID();
+        let uuidString = Math.random().toString(20).substr(2,8);
 
         const ACCESS_KEY = document.getElementById("awsAccessKey").value;
         const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
