@@ -42,15 +42,8 @@
 
 
 
-        li a {
-            text-decoration: none;
-            padding: 10px;
-            display: block;
-            color: #000;
-            font-weight: bold;
-        }
-
         .layer{position: relative;top:50%;left:40%; overflow: auto; height: 600px; width:375px; margin-top: auto}
+
         .merge {
             margin: 0;
             display: flex;
@@ -70,6 +63,22 @@
             background: linear-gradient(to right, #27d7ff, #4176fc);
             box-shadow: 2px 3px 3px 2px rgba(101, 130, 138, 0.71), 0 5px 5px rgba(0, 0, 0, 0.22);
             font-weight: 550;
+        }
+
+        /*메뉴바 카테고리*/
+        .textSize {
+            font-size: 1.5em;
+        }
+
+        /*메뉴바 운동메 */
+        .mainText {
+            font-size: 2em;
+        }
+
+        /*메뉴바 환영인사*/
+        .text-end {
+            font-weight: normal;
+            font-size: 1em;
         }
 
         #sidebar{
@@ -124,8 +133,8 @@
                     프로필 수정
                 </a>
             </li>
-            <li id="sns"><a href="#">친구목록</a></li>
-            <li><a href="#">참여중인 모임</a></li>
+            <li id="sns"><a href="#" class="nav-link text-black">친구목록</a></li>
+            <li><a href="#" class="nav-link text-black">참여중인 모임</a></li>
 
         </ul>
         <hr>
