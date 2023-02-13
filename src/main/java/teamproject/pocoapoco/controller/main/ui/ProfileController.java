@@ -144,7 +144,7 @@ public class ProfileController {
         model.addAttribute("userProfileImagePath", userProfileImagePath);
         model.addAttribute("followingResponse", followingList);
         model.addAttribute("followedResponse", followedList);
-
+        model.addAttribute("userName",authentication.getName());
 
         return "profile/get-my-profile";
     }
