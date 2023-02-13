@@ -37,6 +37,7 @@ import teamproject.pocoapoco.service.LikeViewService;
 import teamproject.pocoapoco.service.part.ParticipationService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Controller
@@ -116,6 +117,7 @@ public class CrewViewController {
     }
 
     // 크루 게시글 수정화면
+    @Transactional
     @GetMapping("/update/{crewId}")
     public String updateCrew(@PathVariable Long crewId, Model model, Authentication authentication) {
         Crew crew = crewRepository.findById(crewId).orElse(null);
@@ -212,6 +214,7 @@ public class CrewViewController {
     }
 
     // 크루 리뷰 작성
+    @Transactional
     @GetMapping("/review/{crewId}")
     public String reviewCrew(@PathVariable Long crewId, Authentication authentication, Model model) {
 
