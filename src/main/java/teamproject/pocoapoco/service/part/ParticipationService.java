@@ -129,7 +129,7 @@ public class ParticipationService {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         int size = 0;
         for (Participation p : crew.getParticipations()) {
-            if (p.getStatus() == 2) {
+            if (p.getStatus() == 2 || p.getStatus() == 3) {
                 size++;
             }
         }
@@ -165,7 +165,7 @@ public class ParticipationService {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         List<PartJoinResponse> list = new ArrayList<>();
         for (Participation p : crew.getParticipations()) {
-            if (p.getStatus() == 2) {
+            if (p.getStatus() == 2 || p.getStatus() == 3) {
                 PartJoinResponse partJoinResponse = PartJoinResponse.builder()
                         .crewTitle(crew.getTitle())
                         .status(p.getStatus())
@@ -185,7 +185,7 @@ public class ParticipationService {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         List<ReviewResponse> list = new ArrayList<>();
         for (Participation p : crew.getParticipations()) {
-            if (p.getStatus() == 2) {
+            if (p.getStatus() == 2 || p.getStatus() == 3) {
                 ReviewResponse reviewResponse = ReviewResponse.builder()
                         .crewId(crewId)
                         .joinUserId(p.getUser().getId())
@@ -202,10 +202,19 @@ public class ParticipationService {
     public boolean isPartUser(long crewId, User user) {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         for (Participation p : crew.getParticipations()) {
-            if (p.getStatus() == 2 && p.getUser().getId() == user.getId()) {
+            if ((p.getStatus() == 2 || p.getStatus() ==3) && p.getUser().getId() == user.getId()) {
                 return true;
             }
         }
         return false;
+    }
+
+    @Transactional
+    public String finishPart(Long crewId){
+        Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
+        for(Participation p : crew.getParticipations()){
+            p.setStatus(3);
+        }
+        return "status 변경완료";
     }
 }
