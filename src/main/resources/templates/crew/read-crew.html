@@ -80,11 +80,9 @@
                         </div>
                         <div>
                             <small class="text-muted">Like : </small>
-                            <th:block th:each="index : ${#numbers.sequence(0, member.getSports().size()-1)}">
-                                <label th:if="${member.getSports().get(index) != null}">
-                                    <small class="text-muted" th:text="${member.getSports().get(index).value}">축구</small>
-                                    <small class="text-muted" th:if="${index < member.getSports().size()-1}" text="dd">, </small>
-                                </label>
+                            <th:block th:if="${member.getSports().size() > 0}" th:each="index : ${#numbers.sequence(0, member.getSports().size()-1)}">
+                                <small class="text-muted" th:text="${member.getSports().get(index).value}">축구</small>
+                                <small class="text-muted" th:if="${index < member.getSports().size()-1}" text="dd">, </small>
                             </th:block>
                         </div>
                     </div>
