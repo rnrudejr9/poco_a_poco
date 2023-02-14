@@ -9,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.SortDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -85,19 +86,24 @@ public class CrewViewController {
 
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
         Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
+        // 참여자 인원 정보
+        List<ReviewResponse> members = participationService.findAllPartMember(crewId);
+        model.addAttribute("members", members);
+        ReviewRequest crewReviewRequest = new ReviewRequest();
+        model.addAttribute("reviewRequest", crewReviewRequest);
 
         try {
             //알림 체크
             if(authentication != null) crewService.readAlarms(crewId, authentication.getName());
-            
+
             // 좋아요
             int count = likeViewService.getLikeCrew(crewId);
             model.addAttribute("likeCnt", count);
-            
+
             // 상세게시글 정보
             CrewDetailResponse details = list.getContent().get(0);
             model.addAttribute("details", details);
-            
+
             // 후기 작성여부 파악
             User nowUser = crewService.findByUserName(authentication.getName());
             boolean userReviewed = crewReviewService.findReviewedUser(crewId, nowUser);
@@ -107,18 +113,10 @@ public class CrewViewController {
             boolean isPartUser = participationService.isPartUser(crewId, nowUser);
             model.addAttribute("isPartUser", isPartUser);
 
+
         } catch (EntityNotFoundException e) {
             return "redirect:/index";
         }
-
-        // 참여자 인원 정보
-        List<ReviewResponse> members = participationService.findAllPartMember(crewId);
-        model.addAttribute("members", members);
-
-        ReviewRequest crewReviewRequest = new ReviewRequest();
-        model.addAttribute("reviewRequest", crewReviewRequest);
-
-
 
         // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber();
@@ -260,10 +258,17 @@ public class CrewViewController {
 
     // 리뷰 리스트
     @GetMapping("/{userName}/reviewList")
-    public String findReviewList(@PathVariable String userName, Model model) {
+    public String findReviewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
+            @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
 
-        List<CrewReviewResponse> reviewList = crewReviewService.findAllReviewList(userName);
+        Page<CrewReviewResponse> reviewList = crewReviewService.findAllReviewList(userName, pageable);
         model.addAttribute("reviewList", reviewList);
+
+        // paging
+        int startPage = Math.max(1,reviewList.getPageable().getPageNumber() - 4);
+        int endPage = Math.min(reviewList.getTotalPages(),reviewList.getPageable().getPageNumber() + 4);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
 
         long reviewAllCount = crewReviewService.getReviewAllCount(userName);
         model.addAttribute("reviewAllCount", reviewAllCount);
@@ -291,38 +296,38 @@ public class CrewViewController {
 
     // 내가 참여중인 모임 리스트
     @GetMapping("/{userName}/active")
-    public String getActiveCrewList(@PathVariable String userName, Model model) {
-
-        try{
-            // list
-            List<CrewDetailResponse> crewList = crewService.findAllCrew(2,userName); // 2: 참여 완료
-            model.addAttribute("crewList",crewList);
-
-            // count
-            putCategorizeCrewCount(userName,model);
-            return "part/get-current-crew";
-        } catch (AppException e){
-            return "redirect:/view/v1/start";
-        }
+    public String getActiveCrewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
+                                            @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
+        // list
+        Page<CrewDetailResponse> crewList = crewService.findAllCrew(2,userName, pageable); // 2: 참여 완료
+        model.addAttribute("crewList",crewList);
+        // paging
+        int startPage = Math.max(1,crewList.getPageable().getPageNumber() - 4);
+        int endPage = Math.min(crewList.getTotalPages(),crewList.getPageable().getPageNumber() + 4);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        // count
+        putCategorizeCrewCount(userName,model);
+        return "part/get-current-crew";
     }
 
     // 종료된 모임 리스트
     @GetMapping("/{userName}/end")
-    public String getEndCrewList(@PathVariable String userName, Model model) {
+    public String getEndCrewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
+            @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
+        // list
+        Page<CrewDetailResponse> crewList = crewService.findAllCrew(3, userName, pageable); // 3: 모집 종료
+        model.addAttribute("crewList",crewList);
+        // paging
+        int startPage = Math.max(1,crewList.getPageable().getPageNumber() - 4);
+        int endPage = Math.min(crewList.getTotalPages(),crewList.getPageable().getPageNumber() + 4);
+        model.addAttribute("startPage", startPage);
+        model.addAttribute("endPage", endPage);
+        // count
+        putCategorizeCrewCount(userName,model);
+        model.addAttribute("userName",userName);
 
-        try{
-            // list
-            List<CrewDetailResponse> crewList = crewService.findAllCrew(3, userName); // 3: 모집 종료
-            model.addAttribute("crewList",crewList);
-
-            // count
-            putCategorizeCrewCount(userName,model);
-            model.addAttribute("userName",userName);
-
-            return "part/get-end-crew";
-        } catch (AppException e){
-            return "redirect:/view/v1/start";
-        }
+        return "part/get-end-crew";
     }
 
     // 특정 crew를 count하는 메소드

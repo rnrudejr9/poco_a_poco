@@ -38,7 +38,6 @@ public class Crew extends BaseEntity{
     private Integer finish;
 
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="room_id")
     private ChatRoom chatRoom;

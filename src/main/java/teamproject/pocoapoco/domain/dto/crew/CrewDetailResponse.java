@@ -27,6 +27,7 @@ public class CrewDetailResponse {
     private SportEnum sportEnum;
     private Long chatRoomId;
     private String imagePath;
+    private String profileImagePath;
     private String date;
     private Integer finish;
     public static CrewDetailResponse of(Crew crew) {
@@ -42,6 +43,7 @@ public class CrewDetailResponse {
                 .createdAt(crew.getCreatedAt())
                 .lastModifiedAt(crew.getLastModifiedAt())
                 .imagePath(crew.getImagePath())
+                .profileImagePath(crew.getUser().getImagePath())
                 .chatRoomId(crew.getChatRoom().getRoomId())
                 .sportEnum(crew.getSportEnum())
                 .date(crew.getDatepick()+" "+crew.getTimepick())

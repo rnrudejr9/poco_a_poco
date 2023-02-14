@@ -28,7 +28,6 @@ public class DashboardService {
     private final CrewRepository crewRepository;
 
 
-    // 동시 접속자수 -> 로그 아웃은 어떻게 구현?
     public Long getUserCount() {
 
 
@@ -82,7 +81,6 @@ public class DashboardService {
         }
 
     }
-
 
 
 }

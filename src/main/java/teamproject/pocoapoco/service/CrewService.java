@@ -25,6 +25,7 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -36,6 +37,7 @@ public class CrewService {
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
     private final ParticipationRepository participationRepository;
+
 
     // 크루 게시글 등록
     public CrewResponse addCrew(CrewRequest crewRequest, String userName) {
@@ -128,6 +130,7 @@ public class CrewService {
     }
 
     // 크루 게시물 조회 By 지역 검색어
+    @Transactional
     public Page<CrewDetailResponse> findAllCrewsByStrict(CrewSportRequest crewSportRequest, Pageable pageable) {
 
         Page<Crew> crews = crewRepository.findByStrictContaining(pageable, crewSportRequest.getStrict());
@@ -137,6 +140,7 @@ public class CrewService {
 
 
     // 크루 게시물 조회 By 운동종목
+    @Transactional
     public Page<CrewDetailResponse> findAllCrewsBySport(List<String> sportsList, Pageable pageable) {
 
         Page<Crew> crews;
@@ -182,6 +186,7 @@ public class CrewService {
     }
 
     // 유저 선호 운동종목 확인
+    @Transactional
     public List<String> getUserSports(Authentication authentication, Boolean sportsListIsEmpty) {
 
         List<String> userSportsList = new ArrayList<>();
@@ -219,25 +224,11 @@ public class CrewService {
     }
 
     // 내가 참여한 crew list
-    public List<CrewDetailResponse> findAllCrew(Integer status, String userName) {
+    public Page<CrewDetailResponse> findAllCrew(Integer status, String userName,Pageable pageable) {
         User user = userRepository.findByUserName(userName).orElse(null);
         List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
-        List<Crew> crewList = crewRepository.findByParticipationsIn(participations);
-        return crewList.stream()
-                .map(crew -> CrewDetailResponse.builder()
-                        .id(crew.getId())
-                        .strict(crew.getStrict())
-                        .title(crew.getTitle())
-                        .content(crew.getContent())
-                        .crewLimit(crew.getCrewLimit())
-                        .nickName(crew.getUser().getNickName())
-                        .userName(crew.getUser().getUsername())
-                        .createdAt(crew.getCreatedAt())
-                        .lastModifiedAt(crew.getLastModifiedAt())
-                        .imagePath(crew.getImagePath())
-                        .sportEnum(crew.getSportEnum())
-                        .build())
-                .collect(Collectors.toList());
+        Page<Crew> crewList = crewRepository.findByParticipationsIn(participations, pageable);
+        return crewList.map(CrewDetailResponse::of);
     }
     // 내가 참여한 crew list
     public long getCrewByUserAndStatus(Integer status,String userName) {
@@ -245,5 +236,52 @@ public class CrewService {
         List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
         return crewRepository.countByParticipationsIn(participations);
     }
+
+    // 강퇴하면 Participation을 지우는 방법 이용
+    @Transactional
+    public void deleteUserAtCrew(Long userId, Long crewId, String authenticationName){
+
+        Optional<User> actingUserOptional = userRepository.findByUserName(authenticationName);
+
+        Optional<Crew> crewOptional = crewRepository.findById(crewId);
+
+        Optional<User> userOptional = userRepository.findById(userId);
+
+        if(actingUserOptional.isEmpty()){
+            throw new AppException(ErrorCode.FORBIDDEN_REQUEST, ErrorCode.FORBIDDEN_REQUEST.getMessage());
+        }
+
+        if(crewOptional.isEmpty()){
+            throw new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage());
+        }
+
+        if(userOptional.isEmpty()){
+            throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
+        }
+
+        User user = userOptional.get();
+
+        User actingUser = actingUserOptional.get();
+
+        Crew crew = crewOptional.get();
+
+        if((actingUser.getRole() == UserRole.ROLE_ADMIN) || (crew.getUser().getId().equals(actingUser.getId()))){
+            Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
+
+            if(participationOptional.isEmpty()){
+                throw new AppException(ErrorCode.NOT_FOUND_PARTICIPATION, ErrorCode.NOT_FOUND_PARTICIPATION.getMessage());
+            }
+
+            Participation befParticipation = participationOptional.get();
+
+            participationRepository.delete(befParticipation);
+
+
+        }else{
+            throw new AppException(ErrorCode.NOT_AUTHORIZED, ErrorCode.NOT_AUTHORIZED.getMessage());
+        }
+
+    }
+
 
 }

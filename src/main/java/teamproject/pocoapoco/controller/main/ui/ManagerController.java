@@ -2,6 +2,7 @@ package teamproject.pocoapoco.controller.main.ui;
 
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +31,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 @Controller
+@Slf4j
 @RequestMapping("/view/v1")
 @RequiredArgsConstructor
 public class ManagerController {
@@ -55,6 +57,9 @@ public class ManagerController {
 
     @GetMapping("/manage/crews")
     public String manageCrews(Model model,String strict, @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+        Long crewCountByStrict = dashboardService.getCrewCountByStrict(strict);
+        model.addAttribute("crewCountByStrict", crewCountByStrict);
+
         Page<CrewManageResponse> crewManageResponsePage = managerService.getCrewInfo(strict, pageable);
         model.addAttribute("crewManageResponsePage", crewManageResponsePage);
 
@@ -77,6 +82,7 @@ public class ManagerController {
             response.setContentType("text/html; charset=UTF-8");
             PrintWriter out = response.getWriter();
 
+
             out.println("<script>alert('모임 삭제 권한이 없습니다.'); history.go(-1); </script>");
 
             out.flush();
@@ -92,23 +98,32 @@ public class ManagerController {
 
         }
 
-
     }
 
-    @DeleteMapping("/manage/crews/{crewId}/{userName}")
+
+    @GetMapping("/manage/crews/{crewId}/{userId}/delete")
     @ApiOperation(value = "모임에서 회원 강제 퇴장", notes = "")
-    public String deleteUserFromCrew(@PathVariable Long crewId, @PathVariable String userName,Authentication authentication, Model model, HttpServletResponse response) throws IOException {
+    public String deleteUserFromCrew(@PathVariable Long crewId, @PathVariable Long userId, Authentication authentication, Model model, HttpServletResponse response) throws IOException {
 
         try{
-            model.addAttribute("message", userName+"님을 " + crewId + "번 모임에서 강제 퇴장했습니다.");
-            return "redirect:/view/v1/manage/crews";
+            crewService.deleteUserAtCrew(userId, crewId, authentication.getName());
+
+
+            response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+            out.println("<script>alert('참여자가 강퇴 되었습니다.'); </script>");
+
+            return "redirect:/view/v1/crews";
 
         } catch (AppException e){
+
+            log.info("오류 코드: {}", e.getErrorCode());
+            log.info("오류 메시지: {}", e.getMessage());
+
             response.setContentType("text/html; charset=UTF-8");
             PrintWriter out = response.getWriter();
 
             out.println("<script>alert('참여자 강제 퇴장 권한이 없습니다.'); history.go(-1); </script>");
-
             out.flush();
             return null;
         } catch (Exception e){
