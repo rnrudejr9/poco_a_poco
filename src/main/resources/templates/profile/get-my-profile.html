@@ -195,7 +195,7 @@
                             <img th:src="${followingList.imagePath}" class="rounded mx-auto d-block" style="height: 20px; width: 20px;" >
 
                             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-                            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
+                            <p  class="pb-3 mb-0 small lh-sm " >
                                 <a th:href="@{/view/v1/users/profile/{userName}(userName=${followingList.userName})}"><strong class="d-block text-gray-dark" th:text="|${followingList.nickName}|"></strong></a>
                             </p>
                         </div>
@@ -209,7 +209,7 @@
                         <div  class="d-flex text-muted  pt-3" th:each="followedList : ${followedResponse}">
                             <img th:src="${followedList.imagePath}" class="rounded mx-auto d-block" style="height: 20px; width: 20px;">
                             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-                            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
+                            <p  class="pb-3 mb-0 small lh-sm " >
                                 <a th:href="@{/view/v1/users/profile/{userName}(userName=${followedList.userName})}"><strong class="d-block text-gray-dark" th:text="|${followedList.nickName}|"></strong></a>
                             </p>
                         </div>

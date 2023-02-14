@@ -80,7 +80,7 @@
                             <div>
                                 <div style="display: flex">
                                 <!--여기에 사용자의 프로필 image 링크 넣기-->
-                                <img src=""  style="height: 20px; width: 20px; padding-right: 5px" id="main-image">
+                                <img th:src="details.images"  style="height: 20px; width: 20px; padding-right: 5px" id="main-image">
                                 <p class="mb-0 small lh-sm " >
                                     <a th:href="@{/view/v1/users/profile/{userName}(userName=${details.userName})}"><strong class="d-block text-gray-dark" th:text="|${details.userName}|"></strong></a>
                                 </p>
@@ -92,12 +92,11 @@
                             </div>
                             <hr>
                             <div >
-                                <li style="list-style: none">모집 내용 </li>
                                 <div>
-                                    <span style="font-size: small" th:text="${details.content}"></span>
+                                    <span th:text="${details.content}" style="font-size: large"></span>
                                 </div>
                                 <br><br><br><br><br>
-                                <li style="list-style: none">모임 일시 : <span style="font-size: small" th:text="${details.date}"></span></li>
+                                <li style="list-style: none;font-size: x-small">모임 일시 : <span style="font-size: x-small" th:text="${details.date}"></span></li>
                             </div>
 
                         </ul>
