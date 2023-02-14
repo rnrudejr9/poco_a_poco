@@ -91,7 +91,7 @@ async function joinCrewAwait(crewId) {
 
 function profileUpload() {
 
-    let uuidString = self.crypto.randomUUID();
+    let uuidString = Math.random().toString(20).substr(2,8);
 
     const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
     const SECRET_ACCESS_KEY = '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';

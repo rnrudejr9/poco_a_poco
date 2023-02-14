@@ -34,6 +34,8 @@ public class ChatConfigService {
 
     @Transactional
     public Response checkSave(CheckRequest checkRequest){
+
+
         Long roomId = checkRequest.getRoomId();
         String userName = checkRequest.getUserName();
         ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId).orElseThrow(()->new AppException(ErrorCode.DB_ERROR,ErrorCode.DB_ERROR.getMessage()));
