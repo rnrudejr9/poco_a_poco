@@ -18,12 +18,14 @@ public class FollowingResponse {
     private String userName;
     private String nickName;
     private Boolean status;
+    private String imagePath;
 
     public static FollowingResponse followingResponse(Follow follow) {
         return FollowingResponse.builder()
                 .userName(follow.getFollowedUser().getUsername())
                 .nickName(follow.getFollowedUser().getNickName())
                 .status(follow.getStatus())
+                .imagePath(follow.getFollowedUser().getImagePath())
                 .build();
     }
     public static FollowingResponse followedResponse(Follow follow) {
@@ -31,6 +33,7 @@ public class FollowingResponse {
                 .userName(follow.getFollowingUser().getUsername())
                 .nickName(follow.getFollowingUser().getNickName())
                 .status(follow.getStatus())
+                .imagePath(follow.getFollowingUser().getImagePath())
                 .build();
     }
 }
