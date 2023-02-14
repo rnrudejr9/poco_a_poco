@@ -223,6 +223,8 @@ public class CrewService {
         String strict="";
         if (authentication != null) {
             strict = findByUserName(authentication.getName()).getAddress();
+            if(strict != null)
+                strict = strict.split(" ")[0].substring(0, 2);
         }
         return strict;
     }

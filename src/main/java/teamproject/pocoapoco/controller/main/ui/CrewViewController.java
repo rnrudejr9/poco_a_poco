@@ -203,9 +203,8 @@ public class CrewViewController {
 
         // 유저 등록된 지역 확인
         if(crewSportRequest.getStrict() == null){
-            String strict[] = crewService.getUserStrict(authentication).split(" ");
-            crewSportRequest.setStrict(strict[0].substring(0,2));
-            log.info("!!!!!!!!!!!strict : {}", strict);
+            crewSportRequest.setStrict(crewService.getUserStrict(authentication));
+            log.info("!!!!!!!!!!!strict : {}", crewSportRequest.getStrict());
         }
         else{
             log.info("!!!!!!!!!!!strict : not empty");
