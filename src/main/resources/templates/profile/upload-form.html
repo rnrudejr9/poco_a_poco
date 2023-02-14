@@ -19,12 +19,12 @@
 <h3> 프로필 사진을 업로드해 주세요</h3>
 
 <input type="file" accept="image/*" id="imageFile"/>
-<button type="button" onclick="profileUpload()"> 업로드 </button>
-<br /> <br />
+<button type="button" onclick="profileUpload()"> 업로드</button>
+<br/> <br/>
 <div id="profileImage"></div>
-<form method="post" action="/view/v1/users/profile/image/edit" >
+<form method="post" action="/view/v1/users/profile/image/edit">
     <input type="hidden" value="" name="imagePath" id="imagePath"/>
-    <button type="submit"> 프로필 사진 수정 완료하기 </button>
+    <button type="submit"> 프로필 사진 수정 완료하기</button>
 
 </form>
 
@@ -33,7 +33,7 @@
 
     function profileUpload() {
 
-        let uuidString = self.crypto.randomUUID();
+        let uuidString = Math.random().toString(20).substr(2, 8);
 
         const ACCESS_KEY = document.getElementById("awsAccessKey").value;
         const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
@@ -50,10 +50,9 @@
 
         // 버킷에 맞는 이름과 리전을 설정합니다.
         const myBucket = new AWS.S3({
-            params: { Bucket: S3_BUCKET},
+            params: {Bucket: S3_BUCKET},
             region: REGION,
         });
-
 
 
         let files = document.getElementById('imageFile').files;
@@ -87,7 +86,6 @@
 
 
 </body>
-
 
 
 </html>

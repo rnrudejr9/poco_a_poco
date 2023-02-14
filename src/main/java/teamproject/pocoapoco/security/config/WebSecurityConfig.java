@@ -40,6 +40,8 @@ public class WebSecurityConfig {
                 .antMatchers(HttpMethod.DELETE, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.PUT, "/api/v1/**").authenticated()
                 .antMatchers(HttpMethod.GET, "/view/v1/dashboard").permitAll()
+                //권한처리 해야함
+                .and().formLogin().loginPage("/view/v1/start")
                 .and()
                 .oauth2Login()
                 .loginPage("/view/v1/start")
