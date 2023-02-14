@@ -25,7 +25,7 @@ window.addEventListener('unload', () => {
 document.addEventListener("DOMContentLoaded", function () {
     console.log("DOMContentLoaded..");
     // findMember();
-    testMethod();
+    findMember();
     loadFetcher();
     var username = document.getElementById("myName").innerHTML;
 
@@ -70,9 +70,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 // $('#messagearea').scrollTop($('#messagearea')[0].scrollHeight);
             }
 
-            for (const user of content.userList) {
-                $('#live_' + user).attr('class', 'chatbox__user--active');
-            }
+            findMember(content);
+
 
             if (content.state === 1) {
                 $('#live_' + content.writer).attr('class', 'chatbox__user--busy');
@@ -239,7 +238,7 @@ async function fetcher() {
 }
 
 // 참여자들 찾는 로직
-let testMethod = async function findMember() {
+async function findMember() {
     console.log("findMember");
     let response = await fetch("/api/v1/part/members/" + crewId, {
         method: "GET",
@@ -263,6 +262,36 @@ let testMethod = async function findMember() {
         document.getElementById("userArea").innerHTML = str;
     }
     console.log("findMember END");
+}
+
+// 참여자들 찾는 로직
+async function findMember(content) {
+    console.log("findMember Content");
+    let response = await fetch("/api/v1/part/members/" + crewId, {
+        method: "GET",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include"
+    })
+
+    if (response.ok) {
+        var json = await response.json();
+        console.log(json.result);
+        var str = "<h1>User list</h1>";
+        for (var i in json.result) {
+            str += "<div class='chatbox__user--busy' id='" + "live_" + json.result[i].joinUserName + "'>"
+            str += "<p>"
+            str += json.result[i].joinUserName;
+            str += "</p>"
+            str += "</div>"
+        }
+        document.getElementById("userArea").innerHTML = str;
+        for (const user of content.userList) {
+            $('#live_' + user).attr('class', 'chatbox__user--active');
+        }
+    }
+    console.log("findMember Content END");
 }
 
 // 크루상세내역 조회
