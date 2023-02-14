@@ -258,7 +258,7 @@ public class ProfileController {
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
-        return "/profile/upload-form";
+        return "profile/upload-form";
     }
 
 
