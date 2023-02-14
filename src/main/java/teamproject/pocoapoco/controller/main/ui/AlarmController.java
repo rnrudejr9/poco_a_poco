@@ -15,9 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import teamproject.pocoapoco.domain.dto.alarm.AlarmResponse;
 import teamproject.pocoapoco.service.AlarmService;
 
+import javax.transaction.Transactional;
+
 @Controller
 @RequestMapping("/view/v1")
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class AlarmController {
 

@@ -16,5 +16,5 @@ public interface CrewReviewRepository extends JpaRepository<Review, Long> {
     List<Review> findByCrewId(Long crewId);
 
     long countReviewByToUser(User user);
-    Review findReviewByCrewAndToUser(Crew crew, User user);
+    List<Review> findAllByCrewAndToUser(Crew crew, User user);
 }

@@ -20,12 +20,14 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.PrintWriter;
 
 @Controller
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class ViewController {
 
     private final UserService userService;

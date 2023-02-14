@@ -9,11 +9,13 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.follow.FollowingResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.entity.Follow;
 import teamproject.pocoapoco.service.FollowService;
+
+import javax.transaction.Transactional;
 
 @RestController
 @RequiredArgsConstructor
+@Transactional
 @RequestMapping("/api/v1/social")
 public class FollowController {
 

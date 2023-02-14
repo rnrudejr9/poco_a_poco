@@ -29,7 +29,6 @@ import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
-import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.CrewReviewService;
@@ -45,6 +44,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/view/v1/crews")
 @Slf4j
+@Transactional
 @Api(tags = {"Crew Controller"})
 public class CrewViewController {
 

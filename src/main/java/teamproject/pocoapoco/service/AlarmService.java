@@ -12,9 +12,12 @@ import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
+import javax.transaction.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AlarmService {
 
     private final AlarmRepository alarmRepository;
