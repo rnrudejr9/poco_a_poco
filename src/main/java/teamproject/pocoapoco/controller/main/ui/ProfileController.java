@@ -163,9 +163,16 @@ public class ProfileController {
         try{
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
             model.addAttribute("userProfileResponse", userProfileResponse);
-
+            //
             // 페이지 연결
             model.addAttribute("userName", userName);
+
+            // 후기 리스트
+            List<CrewReviewResponse> reviewList = crewReviewService.findAllReviewList(userName);
+            model.addAttribute("reviewList", reviewList);
+
+            long reviewAllCount = crewReviewService.getReviewAllCount(userName);
+            model.addAttribute("reviewAllCount", reviewAllCount);
             return "profile/get";
         } catch (AppException e){
             response.setContentType("text/html; charset=UTF-8");

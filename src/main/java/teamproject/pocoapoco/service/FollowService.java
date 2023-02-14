@@ -107,6 +107,8 @@ public class FollowService {
         return followRepository.countByFollowingUserId(userId);
     }
 
+
+    @Transactional
     public Page<FollowingResponse> getFollowingList(Pageable pageable, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()->
         {
@@ -115,6 +117,8 @@ public class FollowService {
         Page<Follow> list = followRepository.findByFollowingUserId(pageable,userId);
         return list.map(FollowingResponse::followingResponse);
     }
+
+    @Transactional
     public Page<FollowingResponse> getFollowedList(Pageable pageable, Long userId) {
         User user = userRepository.findById(userId).orElseThrow(()->
         {

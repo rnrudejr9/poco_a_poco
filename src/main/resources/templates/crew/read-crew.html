@@ -102,6 +102,7 @@
         <div class="row justify-content-center">
             <div class="col-md-2" id="members" style="display: none">
                 <input type="hidden" name="img-key" th:value="${details.imagePath}">
+                <input type="hidden" name="profile-img-key" th:value="${details.profileImagePath}">
             </div>
             <div class="col-md-7">
                 <!-- Begin Sidebar -replace demowebsite with your own id
@@ -110,14 +111,14 @@
                 <article class="card">
                     <h1 class="card-title display-5">
                         <span th:text="${details.title}"></span></h1>
-                    <img class="card-img-top mb-2" src=https://user-images.githubusercontent.com/73879325/214769088-0db6fd43-002a-4492-940a-9decd66d74a9.png alt="Card image">
+                    <img class="card-img-top mb-2" th:src="details.images" id="main-image">
                     <div class="card-body">
                         <ul>
 
                             <div>
                                 <div style="display: flex">
                                 <!--여기에 사용자의 프로필 image 링크 넣기-->
-                                <img th:src="details.images"  style="height: 20px; width: 20px; padding-right: 5px" id="main-image">
+                                <img style="height: 20px; width: 20px; padding-right: 5px" id="user-image" >
                                 <p class="mb-0 small lh-sm " >
                                     <a th:href="@{/view/v1/users/profile/{userName}(userName=${details.userName})}"><strong class="d-block text-gray-dark" th:text="|${details.userName}|"></strong></a>
                                 </p>

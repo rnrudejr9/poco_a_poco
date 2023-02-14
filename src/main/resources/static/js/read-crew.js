@@ -21,7 +21,9 @@ async function findMember(){
             str += "참여자 : " + json.result[i].joinUserName;
             str += "</span>"
             str += "</li>"
-            str += "<button id=deleteCrew"+ json.result[i].crewId + " onclick='deleteUserFromCrew(json.result[i].crewId, json.result[i].joinUserName)' sec:authorize =\"hasRole('ROLE_ADMIN')\">참여자 강퇴</button><br/>";
+
+            str += "<button id=deleteCrew onclick='deleteUserFromCrew("+ json.result[i].crewId + "," + json.result[i].joinUserId +")'>참여자 강퇴</button><br/>";
+
         }
         str += "</ul>"
         document.getElementById("members").innerHTML = str;
@@ -69,22 +71,18 @@ async function finishPart(){
     }
 }
 
-async function deleteUserFromCrew(crewId, userName){
-    console.log("deleteUserFromCrew()");
-    let response = await fetch("/view/v1/manage/crews/"+crewId + "/" + userName, {
-        method: "DELETE",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        credentials: "include"
-    })
-    if(response.ok) {
-        var json = await response.json();
-        console.log(json.result);
+async function deleteUserFromCrew(crewId, userId){
+    console.log(crewId);
+    console.log(userId);
+
+    if(confirm("삭제하시겠습니까?")){
+        location.href = "/view/v1/manage/crews/" + crewId + "/" + userId+"/delete";
+
+        return true;
     } else {
-        let json = await response.text();
-        alert(json);
+        return false;
     }
+
 }
 
 async function enterCheck(){
@@ -99,6 +97,7 @@ async function enterCheck(){
     })
     if(response.ok){
         var json = await response.json();
+
         if(json.result.status === 0){
             document.getElementById("sendtogle").style.display = "block";
             document.getElementById("notallowed").style.display = "none";
@@ -114,6 +113,7 @@ async function enterCheck(){
             document.getElementById("members").style.display = "none";
         }
         if(json.result.status === 2){
+        
             document.getElementById("sendtogle").style.display = "none";
             document.getElementById("signed").style.display = "block";
             document.getElementById("chatroom").style.display = "block";
@@ -129,6 +129,11 @@ async function enterCheck(){
             document.getElementById("finished").style.display = "block";
             document.getElementById("finishCrew").style.display = "none";
         }
+
+    }else{
+        var json = await response.json();
+        console.log(json);
+        
     }
 }
 

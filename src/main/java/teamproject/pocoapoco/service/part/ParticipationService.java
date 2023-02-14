@@ -119,7 +119,12 @@ public class ParticipationService {
             return PartResponse.builder().status(0).build();
         }
         Participation participation = participationRepository.findByCrewAndUser(crew, user).orElseThrow(() -> new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
-        return PartResponse.builder().now(crew.getParticipations().size()).limit(crew.getCrewLimit()).status(participation.getStatus()).build();
+
+        return PartResponse.builder()
+                .now(crew.getParticipations().size())
+                .limit(crew.getCrewLimit())
+                .status(participation.getStatus())
+                .build();
     }
 
 
@@ -165,12 +170,15 @@ public class ParticipationService {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         List<PartJoinResponse> list = new ArrayList<>();
         for (Participation p : crew.getParticipations()) {
-            if (p.getStatus() == 2 || p.getStatus() == 3) {
+
+            if ((p.getStatus() == 2 || p.getStatus() == 3) && p.getDeletedAt() == null) {
                 PartJoinResponse partJoinResponse = PartJoinResponse.builder()
                         .crewTitle(crew.getTitle())
+                        .crewId(crewId)
                         .status(p.getStatus())
                         .writerUserName(crew.getUser().getNickName())
                         .joinUserName(p.getUser().getNickName())
+                        .joinUserId(p.getUser().getId())
                         .now(crew.getParticipations().size())
                         .limit(crew.getCrewLimit())
                         .build();
@@ -181,6 +189,7 @@ public class ParticipationService {
     }
 
     //승인된 멤버 조회 return List<ReviewResponse>
+    @Transactional
     public List<ReviewResponse> findAllPartMember(long crewId) {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         List<ReviewResponse> list = new ArrayList<>();
@@ -200,6 +209,7 @@ public class ParticipationService {
         return list;
     }
 
+    @Transactional
     public boolean isPartUser(long crewId, User user) {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         for (Participation p : crew.getParticipations()) {
