@@ -2,8 +2,8 @@
 
 
 async function findMember(){
+    console.log("findMember()");
     var crewId = document.getElementById('crewIdJoin').value;
-    console.log(crewId);
     let response = await fetch("/api/v1/part/members/"+crewId, {
         method: "GET",
         headers: {
@@ -21,16 +21,53 @@ async function findMember(){
             str += "참여자 : " + json.result[i].joinUserName;
             str += "</span>"
             str += "</li>"
-            str += "<button id=deleteCrew onclick='deleteUserFromCrew("+ json.result[i].crewId + "," + json.result[i].joinUserId +")'>참여자 강퇴</button><br/>";
 
+            str += "<button id=deleteCrew onclick='deleteUserFromCrew("+ json.result[i].crewId + "," + json.result[i].joinUserId +")'>참여자 강퇴</button><br/>";
 
         }
         str += "</ul>"
-
-
-
         document.getElementById("members").innerHTML = str;
+    }
+}
 
+
+async function finishCrew(){
+    console.log("finishCrew()");
+    var crewId = document.getElementById('crewIdJoin').value;
+    let response = await fetch("/api/v1/crews/finish" ,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            id: crewId
+        })
+    })
+    if(response.ok){
+        var json = await response.json();
+        console.log(json);
+        finishPart();
+    }
+}
+
+async function finishPart(){
+    console.log("finishPart()");
+    var crewId = document.getElementById('crewIdJoin').value;
+    let response = await fetch("/api/v1/part/finish" ,{
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({
+            crewId: crewId
+        })
+    })
+    if(response.ok){
+        var json = await response.json();
+        console.log(json.result);
+        enterCheck();
     }
 }
 
@@ -46,12 +83,11 @@ async function deleteUserFromCrew(crewId, userId){
         return false;
     }
 
-
 }
 
 async function enterCheck(){
+    console.log("enterCheck()");
     var crewId = document.getElementById('crewIdJoin').value;
-    console.log(crewId);
     let response = await fetch("/api/v1/part/"+crewId, {
         method: "GET",
         headers: {
@@ -77,26 +113,35 @@ async function enterCheck(){
             document.getElementById("members").style.display = "none";
         }
         if(json.result.status === 2){
+        
             document.getElementById("sendtogle").style.display = "none";
             document.getElementById("signed").style.display = "block";
             document.getElementById("chatroom").style.display = "block";
             findMember();
             document.getElementById("members").style.display = "block";
         }
+        if(json.result.status === 3){
+            document.getElementById("sendtogle").style.display = "none";
+            document.getElementById("signed").style.display = "none";
+            document.getElementById("chatroom").style.display = "none";
+            findMember();
+            document.getElementById("members").style.display = "block";
+            document.getElementById("finished").style.display = "block";
+            document.getElementById("finishCrew").style.display = "none";
+        }
 
-        console.log(json);
-        console.log("enterCheck");
     }else{
         var json = await response.json();
         console.log(json);
+        
     }
 }
 
 
 
 async function joinCrewAwait(){
+    console.log("joinCrewAwait()");
     var crewId = document.getElementById('crewIdJoin').value;
-    console.log(crewId);
     let response = await fetch("/api/v1/part/gen", {
         method: "POST",
         headers: {
@@ -107,7 +152,6 @@ async function joinCrewAwait(){
             crewId: crewId
         })
     })
-    console.log("end");
     if(response.ok){
         var json = await response.json();
         alert(json.result);

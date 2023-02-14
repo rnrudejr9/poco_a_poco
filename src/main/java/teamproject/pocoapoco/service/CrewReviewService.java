@@ -2,6 +2,8 @@ package teamproject.pocoapoco.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
@@ -76,17 +78,10 @@ public class CrewReviewService {
         return false;
     }
 
-    public List<CrewReviewResponse> findAllReviewList(String userName) {
+    public Page<CrewReviewResponse> findAllReviewList(String userName, Pageable pageable) {
         User ToUser = userRepository.findByUserName(userName).get();
-        List<Review> allReviewList = crewReviewRepository.findByToUser(ToUser);
-        return allReviewList.stream()
-                .map(review -> CrewReviewResponse.builder()
-                        .id(review.getId())
-                        .fromUserName(review.getFromUser().getNickName())
-                        .crewTitle(review.getCrew().getTitle())
-                        .crewImage(review.getCrew().getImagePath())
-                        .build())
-                .collect(Collectors.toList());
+        Page<Review> allReviewList = crewReviewRepository.findByToUser(ToUser, pageable);
+        return allReviewList.map(CrewReviewResponse::of);
     }
 
     // 리뷰 detail

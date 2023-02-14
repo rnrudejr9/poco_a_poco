@@ -49,8 +49,8 @@ public class ParticipationService {
         }
 
         //같거나 클 경우에는 참여 못함
-        if (size >= crew.getCrewLimit()) {
-            return Response.error(new ErrorResponse(ErrorCode.NOT_ALLOWED_PARTICIPATION, ErrorCode.NOT_ALLOWED_PARTICIPATION.getMessage()));
+        if(size >= crew.getCrewLimit()){
+            return Response.error(new ErrorResponse(ErrorCode.NOT_ALLOWED_PARTICIPATION,ErrorCode.NOT_ALLOWED_PARTICIPATION.getMessage()));
         }
 
         Participation participation = participationRepository.findByCrewAndUser(crew, user).orElseThrow(() -> new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
@@ -134,7 +134,7 @@ public class ParticipationService {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         int size = 0;
         for (Participation p : crew.getParticipations()) {
-            if (p.getStatus() == 2) {
+            if (p.getStatus() == 2 || p.getStatus() == 3) {
                 size++;
             }
         }
@@ -170,7 +170,8 @@ public class ParticipationService {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         List<PartJoinResponse> list = new ArrayList<>();
         for (Participation p : crew.getParticipations()) {
-            if ((p.getStatus() == 2) && (p.getDeletedAt() == null)) {
+
+            if ((p.getStatus() == 2 || p.getStatus() == 3) && p.getDeletedAt() == null) {
                 PartJoinResponse partJoinResponse = PartJoinResponse.builder()
                         .crewTitle(crew.getTitle())
                         .crewId(crewId)
@@ -193,11 +194,12 @@ public class ParticipationService {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         List<ReviewResponse> list = new ArrayList<>();
         for (Participation p : crew.getParticipations()) {
-            if (p.getStatus() == 2) {
+            if (p.getStatus() == 2 || p.getStatus() == 3) {
                 ReviewResponse reviewResponse = ReviewResponse.builder()
                         .crewId(crewId)
                         .joinUserId(p.getUser().getId())
                         .joinUserNickName(p.getUser().getNickName())
+                        .userName(p.getUser().getUsername())
                         .userMannerScore(p.getUser().getMannerScore())
                         .sports(p.getUser().getSport().toList())
                         .build();
@@ -211,10 +213,19 @@ public class ParticipationService {
     public boolean isPartUser(long crewId, User user) {
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
         for (Participation p : crew.getParticipations()) {
-            if (p.getStatus() == 2 && p.getUser().getId() == user.getId()) {
+            if ((p.getStatus() == 2 || p.getStatus() ==3) && p.getUser().getId() == user.getId()) {
                 return true;
             }
         }
         return false;
+    }
+
+    @Transactional
+    public String finishPart(Long crewId){
+        Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
+        for(Participation p : crew.getParticipations()){
+            p.setStatus(3);
+        }
+        return "status 변경완료";
     }
 }

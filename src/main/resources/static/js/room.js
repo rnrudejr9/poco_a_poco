@@ -32,9 +32,6 @@ document.addEventListener("DOMContentLoaded",function(){
     //1. SockJS를 내부에 들고있는 stomp를 내어줌
     stomp = Stomp.over(sockJs);
 
-    stomp.heartbeat.outgoing = 1000;
-    stomp.heartbeat.incoming = 1000;
-
     //2. connection이 맺어지면 실행
     stomp.connect({}, function (){
         console.log("STOMP Connection")
@@ -95,15 +92,19 @@ document.addEventListener("DOMContentLoaded",function(){
         //3. send(path, header, message)로 메세지를 보낼 수 있음
     });
 
-    $("#button-send").on("click", function(e){
-        var msg = document.getElementById("msg");
-        console.log(username + ":" + msg.value);
-        fetcher();
-        stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: username}));
-        msg.value = '';
-    })
 });
 
+$("#button-send").on("click", function (e) {
+    var userName = document.getElementById("myName").innerHTML;
+    var msg = document.getElementById("msg");
+    if (msg.value.trim() == '') {
+        console.log("공백");
+        return;
+    }
+    fetcher();
+    stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: userName}));
+    msg.value = '';
+});
 $(document).keyup(function (event) {
     var userName = document.getElementById("myName").innerHTML;
     var msg = document.getElementById("msg");
@@ -116,7 +117,6 @@ $(document).keyup(function (event) {
         fetcher();
         stomp.send('/pub/chat/message', {}, JSON.stringify({roomId: roomId, message: msg.value, writer: userName}));
         msg.value = '';
-
     }
 });
 

@@ -62,4 +62,9 @@ public class ParticipationController {
         log.info("#1 participateController crewId: "+ crewId);
         return Response.success(participationService.AllowedMember(crewId));
     }
+
+    @PostMapping("/finish")
+    public Response finishPart(@RequestBody PartDto partDto){
+        return Response.success(participationService.finishPart(partDto.getCrewId()));
+    }
 }
