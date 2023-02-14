@@ -142,7 +142,12 @@
                 </a>
             </li>
             <li id="sns"><a href="#" class="nav-link text-black">친구목록</a></li>
-            <li><a href="#" class="nav-link text-black">참여중인 모임</a></li>
+            <li><a th:href="@{/view/v1/crews/{userName}/active(userName=${userName})}" class="nav-link text-black">참여중인 모임</a></li>
+            <li>
+                <a th:href="@{/view/v1/crews/{userName}/reviewList(userName=${userName})}" class="nav-link text-black">
+                    받은 후기
+                </a>
+            </li>
 
         </ul>
         <hr>

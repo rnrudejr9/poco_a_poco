@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns="http://www.w3.org/1999/html">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -41,8 +42,8 @@
         .progress {
             background-color: #d8d8d8;
             border-radius: 20px;
+            margin: auto;
             position: relative;
-            margin: 15px 0;
             height: 30px;
             width: 300px;
         }
@@ -58,7 +59,7 @@
             height: 100%;
             width: 0;
             opacity: 0;
-            transition: 1s ease 0.3s;
+            transition: 1s ease;
         }
 
         .navBar {
@@ -127,9 +128,7 @@
 
 </div>
 
-<div class="d-flex flex-nowrap">
-
-
+<div class="d-flex nowrap">
     <div class="d-flex flex-column flex-shrink-0 p-3" id="sidebar">
 
         <center>
@@ -144,101 +143,70 @@
                     홈화면
                 </a>
             </li>
+            <li><a th:href="@{/view/v1/crews/{userName}/active(userName=${userName})}" class="nav-link text-black">참여중인 모임</a></li>
             <li>
-                <a href="/view/v1/users/profile/my" class="nav-link text-black">
-                    프로필 수정
+                <a th:href="@{/view/v1/crews/{userName}/reviewList(userName=${userName})}" class="nav-link text-black">
+                    받은 후기
                 </a>
             </li>
-            <li><a href="#" class="nav-link text-black">참여중인 모임</a></li>
         </ul>
         <hr>
     </div>
 
-    <div class="d-flex flex-column flex-shrink-0" style="width: 200px;">
+    <div class="d-flex flex-column flex-shrink-5 " style="flex-basis: 1200px;" id="content">
+        <div class="container" style="padding:20px;" id="container-profile">
+            <div class="card mb3-l" style="max-width: 1200px;">
+                <div class="row g-0">
+                    <div class="col-md-5">
 
+                        <div class="container-image" style="padding:20px;">
+                            <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-fluid rounded-start" style="height: 250px;width: 250px;">
+
+                        </div>
+
+                    </div>
+                    <div class="col-md-7">
+                        <div class="container-profile" style="padding:20px;">
+                            <h4 th:text = "${userProfileResponse.nickName}"></h4>
+                            <label class="col-sm-3 col-form-label" style="display: inline-block; vertical-align:middle;">선호 종목</label>
+                                <text th:text="${userProfileResponse.getSportValue1()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
+                                <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;">|</span>
+                                <text th:text="${userProfileResponse.getSportValue2()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
+                                <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;">|</span>
+                                <text th:text="${userProfileResponse.getSportValue3()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
+                            </label>
+                            <label>활동 지역 </label>
+                                <text th:text="${userProfileResponse.getAddress()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text></label>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="card mb3-l" style="max-width: 1200px; padding: 20px;">
+                <h5>매너 온도<img src="/images/heart.png" style="width:25px; height:25px"/></h5>
+                <div class="progress">
+                    <div class="progress-done">
+                        <span>[(${userProfileResponse.mannerScore})]°C</span>
+                    </div>
+                </div>
+                <span style="color: gray; position: relative; left: 40.5%; bottom:3px">▴</span>
+                <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 5px; font-weight: bold; position: relative; left: 36%; bottom:10px">첫 온도 36.5°C</span>
+            </div>
+            <button id="follow">follow</button>
+            <input type="hidden" id="userId" th:value="${userProfileResponse.userId}">
+        </div>
     </div>
-
-    <div class="container" style="padding:20px;" id="container-profile">
-        <div class="card mb3-l" style="max-width: 540px;">
-            <div class="row g-0">
-                <div class="col-md-5">
-
-                    <div class="container-image" style="padding:20px;">
-                        <img src="https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png" class="img-fluid rounded-start" style="height: 250px;width: 250px;">
-
-                    </div>
-
-                </div>
-                <div class="col-md-7">
-                    <div class="container-profile" style="padding:20px;">
-                        <h4 th:text = "${userProfileResponse.nickName}"></h4>
-                        <label class="col-sm-3 col-form-label">선호 종목</label>
-                        <text th:text="${userProfileResponse.getSportValue1()}"></text>
-                        <text th:text="${userProfileResponse.getSportValue2()}"></text>
-                        <text th:text="${userProfileResponse.getSportValue3()}"></text>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-        <div class="card mb3-l" style="max-width: 540px; padding: 20px;">
-            <span style="color: black; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|매너 온도|"/>
-            <img src="/images/heart.png" style="width:25px; height:25px"/>
-            </span>
-            <div class="progress"  style="align-items: center" >
-                <div class="progress-done" data-done="70">
-                    70%
-                </div>
-            </div>
-        </div>
-        <!--    후기 리스트-->
-        <div class="row py-5">
-            전체후기<span th:text="${reviewAllCount}">3</span>
-            <div class="col-11">
-                <div class="card" th:if="${reviewList.size() == 0}">
-                    <div class="card-header">
-                        받은 후기가 없습니다.
-                    </div>
-                </div>
-                <div class="card" th:if="${reviewList.size() > 0}">
-                    <div class="card-header">
-                        모임을 함께한 분들에게 받은 후기들 입니다.
-                    </div>
-                    <ul class="list-group list-group-flush">
-                        <th:block th:each="review : ${reviewList}">
-                            <a th:href="@{/reviewList/{reviewId}(reviewId=${review.id})}" class="list-group-item list-group-item-action">
-                                <div style="float: left">
-                                    <img th:src="${review.crewImage}" style="width: 80px; height: 80px; float: left; display: inline-block">
-                                    <div style="margin-top: 10px; margin-left: 20px; display: inline-block">
-                                        <span style="color: orange; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|${review.fromUserName}님이 따뜻한 후기를 보냈어요.|"></span><br>
-                                        <small style="" th:text="|${review.fromUserName}님과 ${review.crewTitle}모임을 함께했어요. 클릭하여 상세 후기를 확인해보세요.|"></small>
-                                    </div>
-                                </div>
-                            </a>
-                        </th:block>
-                    </ul>
-                </div>
-                <button id="follow">follow</button>
-                <input type="hidden" id="userId" th:value="${userProfileResponse.userId}">
-            </div>
-        </div>
-
-    </div>
-
 </div>
-
-
-
-
 <script type="application/javascript">
+    const progressDone = [[${userProfileResponse.mannerScore}]];
     const progress = document.querySelector('.progress-done');
-
-    progress.style.width = progress.getAttribute('data-done') + '%';
-    progress.style.opacity = 1;
+    setTimeout(()=>{
+        progress.style.width = progressDone + '%';
+        progress.style.opacity = 1; // 투명도
+    }, 500)
 </script>
-
 </body>
+
 <script>
     document.getElementById('follow').addEventListener('click',follow);
     console.log(document.getElementById('userId').value);

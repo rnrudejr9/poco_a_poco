@@ -23,7 +23,7 @@ public class Review{
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fromUser_id")
     private User fromUser;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "toUser_id")
     private User toUser;
 

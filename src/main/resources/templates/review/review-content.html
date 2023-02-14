@@ -5,8 +5,8 @@
 <body>
 <div class="container">
     <div class="input-form-background row">
-        <div class="input-form mx-auto">
-            <h4 class="mb-3" style="display: inline-block;" th:text="|${review.fromUserName}님이 따듯한 후기를 보냈어요|"></h4><img style="margin-left: 50px;" src="https://img.icons8.com/external-justicon-blue-justicon/60/null/external-love-letter-valentines-day-justicon-blue-justicon.png" alt="mail"/><br><br>
+        <div class="input-form mx-auto" style="margin: auto"><br><br>
+            <h4 class="mb-3" style="display: inline-block;">[(${review.fromUserName})]님이 따듯한 후기를 보냈어요🔥</h4><br><br>
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title" th:text="|From. ${review.fromUserName}|"></h5>
@@ -16,8 +16,10 @@
                         <label th:text="${review.value}" class="form-check-label" style="color: black;opacity: 1"></label>
                     </div>-->
                 </div>
+                <br>
+                <a th:href="@{/view/v1/crews/{userName}/reviewList(userName=${userName})}" class="btn btn-light" aria-describedby="submitHelp" style="position: absolute;
+  top: 100%; right: 0;">이전으로</a>
             </div><br>
-            <span class="text-muted" th:text="|${review.fromUserName}님과 ${review.crewTitle} 모임을 함께했어요.|"></span>
         </div>
     </div>
 </div>

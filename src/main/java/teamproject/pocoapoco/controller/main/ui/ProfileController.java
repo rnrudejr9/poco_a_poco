@@ -144,7 +144,7 @@ public class ProfileController {
         model.addAttribute("userProfileImagePath", userProfileImagePath);
         model.addAttribute("followingResponse", followingList);
         model.addAttribute("followedResponse", followedList);
-
+        model.addAttribute("userName",authentication.getName());
 
         return "profile/get-my-profile";
     }
@@ -163,14 +163,9 @@ public class ProfileController {
         try{
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
             model.addAttribute("userProfileResponse", userProfileResponse);
-            //
 
-            // 후기 리스트
-            List<CrewReviewResponse> reviewList = crewReviewService.inquireAllReviewList(userName);
-            model.addAttribute("reviewList", reviewList);
-
-            long reviewAllCount = crewReviewService.getReviewAllCount(userName);
-            model.addAttribute("reviewAllCount", reviewAllCount);
+            // 페이지 연결
+            model.addAttribute("userName", userName);
             return "profile/get";
         } catch (AppException e){
             response.setContentType("text/html; charset=UTF-8");

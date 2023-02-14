@@ -14,6 +14,7 @@ public class UserProfileResponse {
     private String sportValue1;
     private String sportValue2;
     private String sportValue3;
+    private double mannerScore;
 
     public static UserProfileResponse fromEntity(User user){
 
@@ -40,6 +41,7 @@ public class UserProfileResponse {
                 .sportValue1(sport1)
                 .sportValue2(sport2)
                 .sportValue3(sport3)
+                .mannerScore(user.getMannerScore())
                 .build();
     }
 }
