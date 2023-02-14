@@ -17,6 +17,7 @@ public class AlarmResponse {
     private Long id;
     private AlarmType alarmType;
     private String fromUserName;
+    private String imagePath;
     private Long targetId;
     private String text;
     private LocalDateTime createdAt;
@@ -31,6 +32,7 @@ public class AlarmResponse {
                 .text(alarm.getMassage())
                 .createdAt(alarm.getCreatedAt())
                 .readOrNot(alarm.getReadOrNot())
+                .imagePath(alarm.getUser().getImagePath())
                 .build();
     }
 }
