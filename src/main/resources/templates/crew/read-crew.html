@@ -114,11 +114,12 @@
                                     <button th:if="${#authentication.name} == ${details.userName}" id="btn-post-delete" class="btn btn-danger " type="button" onclick="confirmDelete()">글 삭제</button>
                                 </div>
                                 <div class="form-group" align="center">
-                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp">모입 종료</a>
-                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} != ${details.userName} and ${isPartUser == true} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp">후기 작성</a>
+<!--                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp">모입 종료</a>-->
+<!--                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} != ${details.userName} and ${isPartUser == true} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp">후기 작성</a>-->
                                 </div>
                             </form>
                         </div>
+                        <button id="finishCrew" th:if="${#authentication.name} == ${details.userName} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp" onclick="finishCrew()">모임 종료</button>
 
                         <!-- Begin Like -replace demowebsite with your own id
                         ================================================== -->
@@ -159,6 +160,7 @@
                 <div class="row justify-content-center">
                     <button type="button" class="btn btn-primary" style="display: none" id="signed" >참여 중</button>
                     <button type="button" class="btn btn-success" style="display: none" id="notallowed" th:onclick="joinCrewAwait()">승인 대기/취소 하기</button>
+                    <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" type="button" class="btn btn-success" style="display: none" id="finished">종료된 모임입니다! 후기 작성하기</a>
                     <a type="button" th:href="@{/view/v1/room(roomId=${details.chatRoomId},crewId=${details.id})}" class="btn btn-primary" style="display: none" id="chatroom">채팅방</a>
                     <button type="button" id="sendtogle" sec:authorize="isAuthenticated()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">참여하기</button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
