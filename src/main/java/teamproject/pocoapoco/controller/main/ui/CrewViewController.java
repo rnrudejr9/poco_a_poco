@@ -87,16 +87,38 @@ public class CrewViewController {
         Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
 
         try {
-            CrewDetailResponse details = list.getContent().get(0);
             //알림 체크
             if(authentication != null) crewService.readAlarms(crewId, authentication.getName());
+            
+            // 좋아요
             int count = likeViewService.getLikeCrew(crewId);
-
-            model.addAttribute("details", details);
             model.addAttribute("likeCnt", count);
+            
+            // 상세게시글 정보
+            CrewDetailResponse details = list.getContent().get(0);
+            model.addAttribute("details", details);
+            
+            // 후기 작성여부 파악
+            User nowUser = crewService.findByUserName(authentication.getName());
+            boolean userReviewed = crewReviewService.findReviewedUser(crewId, nowUser);
+            model.addAttribute("userReviewed", userReviewed);
+
+            // 참여자 확인
+            boolean isPartUser = participationService.isPartUser(crewId, nowUser);
+            model.addAttribute("isPartUser", isPartUser);
+
         } catch (EntityNotFoundException e) {
             return "redirect:/index";
         }
+
+        // 참여자 인원 정보
+        List<ReviewResponse> members = participationService.findAllPartMember(crewId);
+        model.addAttribute("members", members);
+
+        ReviewRequest crewReviewRequest = new ReviewRequest();
+        model.addAttribute("reviewRequest", crewReviewRequest);
+
+
 
         // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber();
@@ -169,8 +191,6 @@ public class CrewViewController {
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
-        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!loginStatus : {}", crewSportRequest.isLoginStatus());
-
 
         // 유저 로그인 확인 후 운동 종목 데이터 확인
         List<String> userSportsList = crewService.getUserSports(authentication, CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
@@ -203,12 +223,7 @@ public class CrewViewController {
         List<SportEnum> sportEnums = List.of(SportEnum.values());
         model.addAttribute("sportEnums", sportEnums);
 
-
-
-
         model.addAttribute("isLoginStatus", crewSportRequest.isLoginStatus());
-
-
 
         return "main/main";
     }
@@ -221,9 +236,6 @@ public class CrewViewController {
         //현재 유저 정보
         User nowUser = crewService.findByUserName(authentication.getName());
         model.addAttribute("nowUser", nowUser.getId());
-        
-        //현재 유저 리뷰 작성여부 확인
-        crewReviewService.findReviewUser(nowUser);
 
         // 크루 게시글 정보
         Crew crew = crewService.findByCrewId(crewId);

@@ -29,6 +29,7 @@ public class CrewReviewService {
 
     // 리뷰 저장
     public void addReview(ReviewRequest crewReviewRequest) {
+
         List<Review> reviewList = new ArrayList<>();
 
         try{
@@ -51,14 +52,15 @@ public class CrewReviewService {
     }
 
     // 리뷰 작성 여부 확인
-    public boolean findReviewUser(User nowUser) {
+    public boolean findReviewedUser(Long crewId, User nowUser) {
 
-        boolean reviewIsNowUser = crewReviewRepository.existsByFromUser(nowUser);
+        List<Review> reviewList = crewReviewRepository.findByCrewId(crewId);
 
-        if(reviewIsNowUser) {
-            log.info("이미 리뷰를 작성하였습니다. : {}", reviewIsNowUser);
+        for(Review r : reviewList){
+            if(r.getFromUser().getId() == nowUser.getId())
+                return true;
         }
-        return reviewIsNowUser;
+        return false;
     }
 
     public List<CrewReviewResponse> inquireAllReviewList(String userName) {

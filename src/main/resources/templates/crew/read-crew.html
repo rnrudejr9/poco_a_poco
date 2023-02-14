@@ -114,8 +114,8 @@
                                     <button th:if="${#authentication.name} == ${details.userName}" id="btn-post-delete" class="btn btn-danger " type="button" onclick="confirmDelete()">글 삭제</button>
                                 </div>
                                 <div class="form-group" align="center">
-                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName}"  class="btn btn-info" aria-describedby="submitHelp">모입 종료</a>
-
+                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp">모입 종료</a>
+                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} != ${details.userName} and ${isPartUser == true} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp">후기 작성</a>
                                 </div>
                             </form>
                         </div>

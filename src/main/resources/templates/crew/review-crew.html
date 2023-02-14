@@ -50,6 +50,19 @@
             margin: 4% 0% 0% 0%;
         }
 
+        .partList {
+            width: 200%;
+            margin-bottom: 2%;
+        }
+
+        .toUserList {
+            width: 50%;
+        }
+
+        .reviewSocre {
+            width: 50%;
+        }
+
     </style>
 </head>
 
@@ -73,20 +86,18 @@
                 </h4>
                 <ul class="list-group mb-3">
                     <li class="list-group-item d-flex justify-content-between lh-sm" th:each="member : ${members}">
-                        <div class="row">
-                            <div class="boxTest col">
-                                <svg class="" th:if="${member.joinUserId == crew.userId}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                        <div class="">
+                            <div class="boxTest col partList">
+                                <svg th:if="${member.joinUserId == crew.userId}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
                                     <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001"/>
                                 </svg>
-                                <strong><label class="form-label col-5" for="address" th:text="|${member.joinUserNickName}님|">Member NickName</label></strong>
+                                <label for="address" th:text="|${member.joinUserNickName}님|">Member NickName</label>
                             </div>
-                            <div>
+                            <div class="col">
                                 <small class="text-muted">Like : </small>
-                                <th:block th:each="index : ${#numbers.sequence(0, member.getSports().size()-1)}">
-                                    <label th:if="${member.getSports().get(index) != null}">
+                                <th:block th:if="${member.getSports().size() > 0}" th:each="index : ${#numbers.sequence(0, member.getSports().size()-1)}">
                                         <small class="text-muted" th:text="${member.getSports().get(index).value}">축구</small>
                                         <small class="text-muted" th:if="${index < member.getSports().size()-1}" text="dd">, </small>
-                                    </label>
                                 </th:block>
                             </div>
                         </div>
@@ -114,8 +125,8 @@
                         <div th:if="${nowUser != member.joinUserId}">
                             <input type="hidden" name="crewId" th:value="${crew.id}">
                             <input type="hidden" name="fromUserId" th:value="${nowUser}">
-                            <div class="row">
-                                <div class="col">
+                            <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-col-4">
+                                <div class="col toUserList boxTest">
                                     <img src='https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png'  width='35px' height='35px' alt='userImg' class='userImg'>
                                     <input type="hidden" name="toUserId" th:value="${member.joinUserId}">
                                     <svg  th:if="${member.joinUserId == crew.userId}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-flag-fill" viewBox="0 0 16 16">
@@ -123,7 +134,7 @@
                                     </svg>
                                     <label class="form-label col-5" for="address" th:text="|${member.joinUserNickName}님|">유저 이름</label>
                                 </div>
-                                <div class="col">
+                                <div class="col reviewSocre boxTest">
                                     <label class="row">
                                         <label>매너 점수(1 - 5)</label>
                                         <input type="range" id="a" th:field="*{userMannerScore}" min="1" max="5" step="1">
