@@ -169,8 +169,8 @@ public class ParticipationService {
                PartJoinResponse partJoinResponse =  PartJoinResponse.builder()
                        .crewTitle(crew.getTitle())
                        .status(p.getStatus())
-                       .writerUserName(crew.getUser().getNickName())
-                       .joinUserName(p.getUser().getNickName())
+                       .writerUserName(crew.getUser().getUsername())
+                       .joinUserName(p.getUser().getUsername())
                        .now(crew.getParticipations().size())
                        .limit(crew.getCrewLimit())
                        .build();
