@@ -35,7 +35,7 @@ public class Crew extends BaseEntity{
 
     private String datepick;
     private String timepick;
-
+    private Integer finish;
 
 
     @OneToOne(cascade = CascadeType.ALL)
@@ -57,6 +57,9 @@ public class Crew extends BaseEntity{
     private List<Participation> participations = new ArrayList<>();
 
 
+    public void setFinish(Integer finish){
+        this.finish = finish;
+    }
     public void setChatRoom(ChatRoom chatRoom){
         this.chatRoom = chatRoom;
     }

@@ -4,13 +4,14 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
 import teamproject.pocoapoco.domain.dto.follow.FollowingResponse;
-import teamproject.pocoapoco.domain.dto.user.*;
+import teamproject.pocoapoco.domain.dto.user.UserProfileRequest;
+import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
@@ -20,7 +21,7 @@ import teamproject.pocoapoco.service.CrewReviewService;
 import teamproject.pocoapoco.service.FollowService;
 import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
-import org.springframework.data.domain.Pageable;
+
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -163,9 +164,10 @@ public class ProfileController {
         try{
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
             model.addAttribute("userProfileResponse", userProfileResponse);
-
+            //
             // 페이지 연결
             model.addAttribute("userName", userName);
+
             return "profile/get";
         } catch (AppException e){
             response.setContentType("text/html; charset=UTF-8");

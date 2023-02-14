@@ -7,6 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="Mark Otto, Jacob Thornton, and Bootstrap contributors">
     <meta name="generator" content="Hugo 0.104.2">
+    <!--   sweetalert2 알림 커스텀    -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
 
@@ -99,7 +100,8 @@
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"
             integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU="
             crossOrigin="anonymous"></script>
-
+    <!--  알림 js  -->
+    <script type="text/javascript" src="/js/swal.js"></script>
     <div class="container">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
             <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
@@ -206,8 +208,11 @@
         const SECRET_ACCESS_KEY = 'AORsmgLfnyjTL2T9bqLqFeyDIhfQILtGa0vIvRQD';
         const REGION = 'ap-northeast-2';
         const BUCKET_NAME = 'poco-bucket-2';
-        const BUCKET_DIRECTORY = '/crewimages';
-        const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+        const BUCKET_CREW_IMAGE_DIRECTORY = '/crewimages';
+        const BUCKET_PROFILE_IMAGE_DIRECTORY = '/profileimages';
+
+        const S3_CREW_BUCKET = BUCKET_NAME + BUCKET_CREW_IMAGE_DIRECTORY;
+        const S3_PROFILE_BUCKET = BUCKET_NAME + BUCKET_PROFILE_IMAGE_DIRECTORY;
 
         // AWS ACCESS KEY를 세팅합니다.
 
@@ -221,31 +226,47 @@
         });
 
         var imgKey = $('input[name=img-key]').val();
+        var profileImgKey = $('input[name=profile-img-key]').val();
 
         if(!imgKey){
             imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+        }
+
+        if(!profileImgKey){
+            profileImgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
         }
 
         // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
 
 
 
-        const params = {
-            Bucket: S3_BUCKET,
+        const params1 = {
+            Bucket: S3_CREW_BUCKET,
             Key: imgKey
         };
 
-        var url = s3.getSignedUrl(
-            "getObject", params
+        const params2 = {
+            Bucket: S3_PROFILE_BUCKET,
+            Key: profileImgKey
+        };
+
+        var url1 = s3.getSignedUrl(
+            "getObject", params1
         );
 
-        // const img1 = document.getElementById('left-image');
-        // img1.src = url;
+        var url2 = s3.getSignedUrl(
+            "getObject", params2
+        );
 
-        const img2 = document.getElementById('main-image');
-        img2.src = url;
 
-        console.log(url);
+        const img1 = document.getElementById('main-image');
+        img1.src = url1;
+
+        const img2 = document.getElementById('user-image');
+        img2.src = url2;
+
+        console.log("메인 이미지 url: {}", url1);
+        console.log("프로필 이미지 url: {}", url2);
 
 
     }
@@ -267,7 +288,7 @@
     }
 
     function replyPut() { // 대댓글 수정
-        if (confirm("수정하시겠습니까?")) {
+        {
             const commentId= $('#id').val();
             const crewId= $('#crewId').val();
             const content= $('#rcontent').val();
@@ -293,7 +314,7 @@
     }
 
     function replyDelete(id) { // parentId
-        if (confirm("삭제하시겠습니까?")) {
+        {
             const crewId= $('#crewIdComment').val();
             $.ajax({
                 type: "DELETE",
@@ -314,7 +335,7 @@
 
 
     function commentUpdate (id) {
-        if (confirm("수정하시겠습니까?")) {
+        {
             const crewId = $('#crewIdComment').val();
             const ucommentContent = $('#'+id+'ucommentContent').val();
             $.ajax({
@@ -434,7 +455,7 @@
 
 
     function commentDelete (id) {
-        if (confirm("삭제하시겠습니까?")) {
+        {
             $.ajax({
                 type: "DELETE",
                 url: "/view/v1/crews/"+crewId+"/comments/"+ id,
@@ -636,12 +657,12 @@
             success: function(data) {
                 console.log(data);
                 if(data.likeCheck == 1){
-                    alert("좋아요를 누르시겠습니까?")
+                    alert("좋아요를 눌렀습니다💕")
                     $("#likeCnt").empty();
                     $("#likeCnt").append(data.count);
                 }
                 else if (data.likeCheck == 0){
-                    alert("좋아요를 취소하시겠습니까?")
+                    alert("좋아요를 취소했습니다✔")
                     $("#likeCnt").empty();
                     $("#likeCnt").append(data.count);
 

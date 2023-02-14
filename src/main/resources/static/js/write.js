@@ -28,6 +28,7 @@ async function crewMake() {
     let choose = document.querySelector('input[type=radio][name=sportradio]:checked').value;
 
     if (choose === null) {
+        alert('빈칸을 채워주세요')
         console.log("error not choose");
         return;
     }
@@ -54,7 +55,6 @@ async function crewMake() {
     if (response.ok) {
         let json = await response.json()
         console.log(json);
-        alert("모임등록성공!");
         let crewId = json.result.crewId;
         // chatRoomMake(crewId);
         joinCrewAwait(crewId);
@@ -80,8 +80,6 @@ async function joinCrewAwait(crewId) {
     })
     console.log("end");
     if (response.ok) {
-        var json = await response.json();
-        alert(json.result);
         console.log(json);
     } else {
         var json = await response.json();

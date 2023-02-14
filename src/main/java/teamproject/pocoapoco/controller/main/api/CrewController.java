@@ -45,6 +45,12 @@ public class CrewController {
         return Response.success(crewService.deleteCrew(crewId, authentication.getName()));
     }
 
+    @PostMapping("/finish")
+    @ApiOperation(value = "크루 게시글 모임종료", notes = "")
+    public Response finishCrew(@RequestBody CrewRequest crewRequest, Authentication authentication) {
+        return Response.success(crewService.finishCrew(crewRequest.getId(), authentication.getName()));
+    }
+
     // 크루 게시물 상세 조회
     @GetMapping("/{crewId}")
     @ApiOperation(value = "크루 게시글 상세조회", notes = "")

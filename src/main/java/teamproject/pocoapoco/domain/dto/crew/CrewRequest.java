@@ -12,7 +12,7 @@ import teamproject.pocoapoco.enums.SportEnum;
 @Setter
 @Builder
 public class CrewRequest {
-
+    private Long id;
     private String strict;
     private String title;
     private String content;
@@ -46,6 +46,7 @@ public class CrewRequest {
                 .chatRoom(ChatRoom.builder().name(title).user(user).build())
                 .sportEnum(of(chooseSport))
                 .user(user)
+                .finish(0)
                 .build();
     }
 
