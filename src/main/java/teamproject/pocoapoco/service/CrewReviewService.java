@@ -55,8 +55,10 @@ public class CrewReviewService {
             // reviewScore 저장
             for (int i = 0; i < crewReviewRequest.getCrewId().size(); i++) {
                 User toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i)).get();
-                Review review = crewReviewRepository.findReviewByCrewAndToUser(crew, toUser);
-                toUser.addReviewScore(review.getReviewScore());
+                List<Review> reviews = crewReviewRepository.findAllByCrewAndToUser(crew, toUser);
+                for (Review review : reviews) {
+                    toUser.addReviewScore(review.getReviewScore());
+                }
             }
 
         }catch (NullPointerException e){
