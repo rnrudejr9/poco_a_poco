@@ -66,6 +66,7 @@ public class CrewReviewService {
         }
     }
 
+    @Transactional
     // 리뷰 작성 여부 확인
     public boolean findReviewedUser(Long crewId, User nowUser) {
 
@@ -78,6 +79,7 @@ public class CrewReviewService {
         return false;
     }
 
+    @Transactional
     public Page<CrewReviewResponse> findAllReviewList(String userName, Pageable pageable) {
         User ToUser = userRepository.findByUserName(userName).get();
         Page<Review> allReviewList = crewReviewRepository.findByToUser(ToUser, pageable);
@@ -85,6 +87,7 @@ public class CrewReviewService {
     }
 
     // 리뷰 detail
+    @Transactional
     public CrewReviewDetailResponse findReviewById(Long reviewId) {
         Review review = crewReviewRepository.findById(reviewId).get();
 

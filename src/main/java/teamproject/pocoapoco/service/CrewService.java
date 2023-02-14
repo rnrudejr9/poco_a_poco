@@ -313,7 +313,11 @@ public class CrewService {
 
             Participation befParticipation = participationOptional.get();
 
-            participationRepository.delete(befParticipation);
+            if(befParticipation.getUser().getId().equals(actingUser.getId())){
+                throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
+            } else{
+                participationRepository.delete(befParticipation);
+            }
 
 
         }else{
