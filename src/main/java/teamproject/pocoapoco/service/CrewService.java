@@ -219,25 +219,11 @@ public class CrewService {
     }
 
     // 내가 참여한 crew list
-    public List<CrewDetailResponse> findAllCrew(Integer status, String userName) {
+    public Page<CrewDetailResponse> findAllCrew(Integer status, String userName,Pageable pageable) {
         User user = userRepository.findByUserName(userName).orElse(null);
         List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
-        List<Crew> crewList = crewRepository.findByParticipationsIn(participations);
-        return crewList.stream()
-                .map(crew -> CrewDetailResponse.builder()
-                        .id(crew.getId())
-                        .strict(crew.getStrict())
-                        .title(crew.getTitle())
-                        .content(crew.getContent())
-                        .crewLimit(crew.getCrewLimit())
-                        .nickName(crew.getUser().getNickName())
-                        .userName(crew.getUser().getUsername())
-                        .createdAt(crew.getCreatedAt())
-                        .lastModifiedAt(crew.getLastModifiedAt())
-                        .imagePath(crew.getImagePath())
-                        .sportEnum(crew.getSportEnum())
-                        .build())
-                .collect(Collectors.toList());
+        Page<Crew> crewList = crewRepository.findByParticipationsIn(participations, pageable);
+        return crewList.map(CrewDetailResponse::of);
     }
     // 내가 참여한 crew list
     public long getCrewByUserAndStatus(Integer status,String userName) {

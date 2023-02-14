@@ -21,12 +21,12 @@
             </ul>
         </div>
         <div class="col-9">
-            <div class="card" th:if="${crewList.size() == 0}">
+            <div class="card" th:if="${crewList.getTotalElements() == 0}">
                 <div class="card-header">
                     참여중인 모임이 없습니다.
                 </div>
             </div>
-            <div class="card" th:if="${crewList.size() > 0}">
+            <div class="card" th:if="${crewList.getTotalElements() > 0}">
                 <div class="card-header">
                     현재 <span th:text="${userName}" style="color: #01264b; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;"></span>님이 참여중인 모임입니다.
                 </div>
@@ -50,11 +50,19 @@
     </div>
 </div>
 
-<script async th:inline="javascript">
-    /*<![CDATA[*/
-
-    /*]]>*/
-</script>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${1 == crewList.pageable.pageNumber + 1} ? 'disabled'">
+            <a class="page-link" href="#" th:href="@{/view/v1/crews/{userName}/active(userName=${userName}, page=${crewList.pageable.pageNumber - 1})}">Previous</a>
+        </li>
+        <li class="page-item" th:classappend="${i == crewList.pageable.pageNumber + 1} ? 'disabled'" th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <a class="page-link" href="#" th:href="@{/view/v1/crews/{userName}/active(userName=${userName}, page=${i - 1})}" th:text="${i}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${crewList.totalPages == crewList.pageable.pageNumber + 1} ? 'disabled'">
+            <a class="page-link" href="#" th:href="@{/view/v1/crews/{userName}/active(userName=${userName}, page=${crewList.pageable.pageNumber + 1})}">Next</a>
+        </li>
+    </ul>
+</nav>
 
 </body>
 <footer th:replace="fragments/fragment::footer"></footer>

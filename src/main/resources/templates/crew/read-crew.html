@@ -62,6 +62,45 @@
 
 <section class="bg-gray200 pt-5 pb-5">
     <div class="container">
+        <!-- 참여자 명단 -->
+        <div class="col-md-5 col-lg-3 order-md-last" style="position: fixed; top: 155px; right: 70px;">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-primary">참여자 명단</span>
+                <span class="badge bg-primary rounded-pill" th:text="|${members.size()} 명|">3명</span>
+            </h4>
+            <ul class="list-group mb-3">
+                <li class="list-group-item d-flex justify-content-between lh-sm" th:each="member : ${members}">
+                    <a th:href="@{/view/v1/users/profile/{userName}(userName=${member.userName})}" style="display: block; text-decoration : none;">
+                    <div class="row">
+                        <div class="boxTest col">
+                            <svg class="" th:if="${member.joinUserId == details.userId}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16">
+                                <path d="M14.778.085A.5.5 0 0 1 15 .5V8a.5.5 0 0 1-.314.464L14.5 8l.186.464-.003.001-.006.003-.023.009a12.435 12.435 0 0 1-.397.15c-.264.095-.631.223-1.047.35-.816.252-1.879.523-2.71.523-.847 0-1.548-.28-2.158-.525l-.028-.01C7.68 8.71 7.14 8.5 6.5 8.5c-.7 0-1.638.23-2.437.477A19.626 19.626 0 0 0 3 9.342V15.5a.5.5 0 0 1-1 0V.5a.5.5 0 0 1 1 0v.282c.226-.079.496-.17.79-.26C4.606.272 5.67 0 6.5 0c.84 0 1.524.277 2.121.519l.043.018C9.286.788 9.828 1 10.5 1c.7 0 1.638-.23 2.437-.477a19.587 19.587 0 0 0 1.349-.476l.019-.007.004-.002h.001"/>
+                            </svg>
+                            <strong><label class="form-label col-5" th:text="|${member.joinUserNickName}님|">Member NickName</label></strong>
+                        </div>
+                        <div>
+                            <small class="text-muted">Like : </small>
+                            <th:block th:each="index : ${#numbers.sequence(0, member.getSports().size()-1)}">
+                                <label th:if="${member.getSports().get(index) != null}">
+                                    <small class="text-muted" th:text="${member.getSports().get(index).value}">축구</small>
+                                    <small class="text-muted" th:if="${index < member.getSports().size()-1}" text="dd">, </small>
+                                </label>
+                            </th:block>
+                        </div>
+                    </div>
+                    </a>
+                    <div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-heart-pulse-fill" viewBox="0 0 16 16">
+                            <path d="M1.475 9C2.702 10.84 4.779 12.871 8 15c3.221-2.129 5.298-4.16 6.525-6H12a.5.5 0 0 1-.464-.314l-1.457-3.642-1.598 5.593a.5.5 0 0 1-.945.049L5.889 6.568l-1.473 2.21A.5.5 0 0 1 4 9H1.475Z"/>
+                            <path d="M.88 8C-2.427 1.68 4.41-2 7.823 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C11.59-2 18.426 1.68 15.12 8h-2.783l-1.874-4.686a.5.5 0 0 0-.945.049L7.921 8.956 6.464 5.314a.5.5 0 0 0-.88-.091L3.732 8H.88Z"/>
+                        </svg>
+                        <strong>
+                            <span>[(${member.userMannerScore})]℃</span>
+                        </strong>
+                    </div>
+                </li>
+            </ul>
+        </div>
         <div class="row justify-content-center">
             <div class="col-md-2" id="members" style="display: none">
                 <input type="hidden" name="img-key" th:value="${details.imagePath}">
@@ -100,14 +139,12 @@
                             </div>
 
                         </ul>
-                        <hr>
-                        <!-- 목록으로 돌아가기 버튼
+                        <!-- 목록으로 돌아가기 버튼, update, delete, 종료 버튼
                         ================================================== -->
                         <div class="row justify-content-center">
                             <form id="form" class="col-sm-8" action="#"
                                   th:action="@{'/view/v1/crews/'+ ${crewId}}" th:object="${crew}" th:method="delete" novalidate>
                                 <input id="_method" type="hidden" name="_method" value="delete"/>
-
                                 <div class="form-group" align="center">
                                     <a th:href="@{'/view/v1/crews/'}" class="btn btn-success" aria-describedby="submitHelp">목록으로</a>
                                     <a th:href="@{'/view/v1/crews/update/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName}"  class="btn btn-primary " aria-describedby="submitHelp">글 수정</a>
@@ -121,7 +158,7 @@
                         </div>
                         <button id="finishCrew" th:if="${#authentication.name} == ${details.userName} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp" onclick="finishCrew()">모임 종료</button>
 
-                        <!-- Begin Like -replace demowebsite with your own id
+                        <!-- Begin Like
                         ================================================== -->
 
                         <div align="center">
@@ -133,7 +170,7 @@
                         </div>
                         <h6 style="font-size: x-small;text-align: right"  th:text="${#temporals.format(details.createdAt, 'MM-dd HH:mm:ss')}"></h6>
 
-                        <!-- Begin Comments -replace demowebsite with your own id
+                        <!-- Begin Comments
                         ================================================== -->
                         <p class="comment">댓글</p>
                         <form method="post">
@@ -190,7 +227,6 @@
                 </div>
             </div>
         </div>
-    </div>
     </div>
 </section>
 

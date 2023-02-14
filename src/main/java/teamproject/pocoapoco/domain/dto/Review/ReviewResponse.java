@@ -15,6 +15,7 @@ public class ReviewResponse {
     private Long crewId;
     private Long joinUserId;
     private String joinUserNickName;
+    private String userName;
     private Double userMannerScore;
     private List<SportEnum> sports;
 

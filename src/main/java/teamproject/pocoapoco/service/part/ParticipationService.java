@@ -49,8 +49,8 @@ public class ParticipationService {
         }
 
         //같거나 클 경우에는 참여 못함
-        if (size >= crew.getCrewLimit()) {
-            return Response.error(new ErrorResponse(ErrorCode.NOT_ALLOWED_PARTICIPATION, ErrorCode.NOT_ALLOWED_PARTICIPATION.getMessage()));
+        if(size >= crew.getCrewLimit()){
+            return Response.error(new ErrorResponse(ErrorCode.NOT_ALLOWED_PARTICIPATION,ErrorCode.NOT_ALLOWED_PARTICIPATION.getMessage()));
         }
 
         Participation participation = participationRepository.findByCrewAndUser(crew, user).orElseThrow(() -> new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
@@ -190,6 +190,7 @@ public class ParticipationService {
                         .crewId(crewId)
                         .joinUserId(p.getUser().getId())
                         .joinUserNickName(p.getUser().getNickName())
+                        .userName(p.getUser().getUsername())
                         .userMannerScore(p.getUser().getMannerScore())
                         .sports(p.getUser().getSport().toList())
                         .build();
