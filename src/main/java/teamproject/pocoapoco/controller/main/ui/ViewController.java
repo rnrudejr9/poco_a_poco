@@ -20,8 +20,8 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.UnsupportedEncodingException;
-import java.util.concurrent.TimeUnit;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 @Controller
 @Slf4j
@@ -41,10 +41,19 @@ public class ViewController {
     }
 
     @PostMapping("/view/v1/signin")
-    public String login(UserLoginRequest userLoginRequest, HttpServletResponse response) throws UnsupportedEncodingException {
+    public String login(UserLoginRequest userLoginRequest, HttpServletResponse response) throws IOException {
 
-        UserLoginResponse tokens = userService.login(userLoginRequest);
+        UserLoginResponse tokens = null;
+        try {
+            tokens = userService.login(userLoginRequest);
+        } catch (Exception e) {
+            response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
 
+            out.println("<script>alert('정확한 정보를 입력해 주세요.'); history.go(-1); </script>");
+
+            out.flush();
+        }
 
 
         //cookie 설정은 스페이스가 안되기 때문에 Bearer 앞에 +를 붙인다. Security Filter에서 + -> " " 로 치환할 것이다.
