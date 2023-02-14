@@ -67,7 +67,7 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         // 함수를 통해 구현해보기
         String provider = oAuth2UserInfo.getProvider(); // google
         String providerId = oAuth2UserInfo.getProviderId();
-        String nickName = oAuth2UserInfo.getName() + "_" + provider;
+        String nickName = oAuth2UserInfo.getName() + "_" + provider + (int)(Math.random() * (100 - 10) + 10);
         String userName = provider + "_" + providerId; //google_3894u2138413
         String password = encoder.encode("poco a poco");
         String email = oAuth2UserInfo.getEmail();

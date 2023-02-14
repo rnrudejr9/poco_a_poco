@@ -35,6 +35,7 @@ public class StompChatController {
             }
         }
         message.setUserList(liveUser);
+        message.setState(0);
         template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 
@@ -56,6 +57,14 @@ public class StompChatController {
 
     @MessageMapping(value = "/chat/message")
     public void message(ChatMessageDTO message){
+        List<String> liveUser = new ArrayList<>();
+        for(Map.Entry<String, Long> entry : map.entrySet()){
+            if(entry.getValue().equals(message.getRoomId()) ){
+                liveUser.add(entry.getKey());
+            }
+        }
+        message.setUserList(liveUser);
+        message.setState(0);
         template.convertAndSend("/sub/chat/room/" + message.getRoomId(), message);
     }
 

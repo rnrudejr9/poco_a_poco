@@ -9,12 +9,12 @@
         <h2>전체후기💌</h2>
             <div>  총 건수 : <small th:text="${reviewAllCount}">3</small></div>
         <div class="col-9" style="margin: auto;">
-                <div class="card" th:if="${reviewList.size() == 0}">
+                <div class="card" th:if="${reviewList.getTotalElements() == 0}">
                     <div class="card-header">
                         받은 후기가 없습니다.
                     </div>
                 </div>
-                <div class="card" th:if="${reviewList.size() > 0}">
+                <div class="card" th:if="${reviewList.getTotalElements() > 0}">
                     <div class="card-header">
                         <small>모임을 함께한 분들에게 받은 후기들 입니다.</small>
                     </div>
@@ -37,11 +37,19 @@
         </div>
 <!--    </div>-->
 </main>
-<script async th:inline="javascript">
-    /*<![CDATA[*/
-
-    /*]]>*/
-</script>
+<nav aria-label="Page navigation example">
+    <ul class="pagination justify-content-center">
+        <li class="page-item" th:classappend="${1 == reviewList.pageable.pageNumber + 1} ? 'disabled'">
+            <a class="page-link" href="#" th:href="@{/view/v1/crews/{userName}/reviewList(userName=${userName}, page=${reviewList.pageable.pageNumber - 1})}">Previous</a>
+        </li>
+        <li class="page-item" th:classappend="${i == reviewList.pageable.pageNumber + 1} ? 'disabled'" th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <a class="page-link" href="#" th:href="@{/view/v1/crews/{userName}/reviewList(userName=${userName}, page=${i - 1})}" th:text="${i}">1</a>
+        </li>
+        <li class="page-item" th:classappend="${reviewList.totalPages == reviewList.pageable.pageNumber + 1} ? 'disabled'">
+            <a class="page-link" href="#" th:href="@{/view/v1/crews/{userName}/reviewList(userName=${userName}, page=${reviewList.pageable.pageNumber + 1})}">Next</a>
+        </li>
+    </ul>
+</nav>
 
 </body>
 <footer th:replace="fragments/fragment::footer"></footer>
