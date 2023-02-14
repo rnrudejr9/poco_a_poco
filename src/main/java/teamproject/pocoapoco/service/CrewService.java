@@ -94,8 +94,6 @@ public class CrewService {
 
 
 
-
-
     // 크루 게시물 상세 조회
     public CrewDetailResponse detailCrew(Long crewId) {
 
@@ -120,6 +118,31 @@ public class CrewService {
             return findAllCrewsBySport(crewSportRequest.getSportsList(), pageable);
         }
 
+    }
+
+    // 크루 게시물 전체조회, 지역조회, 운동종목 조회
+    @Transactional
+    public Page<CrewDetailResponse> findAllCrewsByStrictAndSportEnum2(CrewSportRequest crewSportRequest, boolean sportsListIsEmpty, Pageable pageable) {
+
+        //지역검색 null 확인
+        if (crewSportRequest.getStrict() != null) log.info("!!!!!!!!!!!!!!!!!InService strict is not null");
+        else crewSportRequest.setStrict("");
+        log.info("!!!!!!!!!!!!!!!!!InService strict2 : {}", crewSportRequest.getStrict());
+
+        // 운동종목 비선택
+        if (CollectionUtils.isEmpty(crewSportRequest.getSportsList())) {
+            return findAllCrewsByStrict(crewSportRequest, pageable);
+        }
+        // 운동종목 선택
+        else {
+            List<SportEnum> sportEnums = new ArrayList<>();
+            for (String s : crewSportRequest.getSportsList()) sportEnums.add(SportEnum.valueOf(s));
+
+            log.info("!!!!!!!!!!!!!!!!!SportEnums : {}", sportEnums);
+            return crewRepository.findByStrictContainsAndSportEnumIn(crewSportRequest.getStrict(), sportEnums, pageable).map(CrewDetailResponse::of);
+        }
+
+//        return crewRepository.findByStrictContainingAndSportEnumOrSportEnumOrSportEnum(crewSportRequest.getStrict(), SportEnum.SOCCER, SportEnum.FOOTVOLLEYBALL, null, pageable).map(CrewDetailResponse::of);
     }
 
 
@@ -179,7 +202,7 @@ public class CrewService {
     @Transactional
     public void findByUserAndCrewContaining(User user, Crew crew) {
 
-        if(!user.getRole().equals(UserRole.ROLE_ADMIN)){
+        if (!user.getRole().equals(UserRole.ROLE_ADMIN)) {
             if (!user.getCrews().contains(crew)) {
                 throw new AppException(ErrorCode.INVALID_PERMISSION, "해당 게시글에 접근 권한이 없습니다.");
             }
@@ -198,19 +221,31 @@ public class CrewService {
 
             User user = findByUserName(authentication.getName());
 
-            if(user.getSport().getSport1()!=null){
+            if (user.getSport().getSport1() != null) {
                 userSportsList.add(String.valueOf(user.getSport().getSport1()));
             }
-            if(user.getSport().getSport2()!=null){
+            if (user.getSport().getSport2() != null) {
                 userSportsList.add(String.valueOf(user.getSport().getSport2()));
             }
-            if(user.getSport().getSport3()!=null){
+            if (user.getSport().getSport3() != null) {
                 userSportsList.add(String.valueOf(user.getSport().getSport3()));
             }
 
 
         }
         return userSportsList;
+    }
+
+    // 유저 등록된 지역 확인
+    public String getUserStrict(Authentication authentication) {
+
+        String strict="";
+        if (authentication != null) {
+            strict = findByUserName(authentication.getName()).getAddress();
+            if(strict != null)
+                strict = strict.split(" ")[0].substring(0, 2);
+        }
+        return strict;
     }
 
     @Transactional
@@ -233,8 +268,9 @@ public class CrewService {
         Page<Crew> crewList = crewRepository.findByParticipationsIn(participations, pageable);
         return crewList.map(CrewDetailResponse::of);
     }
+
     // 내가 참여한 crew list
-    public long getCrewByUserAndStatus(Integer status,String userName) {
+    public long getCrewByUserAndStatus(Integer status, String userName) {
         User user = userRepository.findByUserName(userName).orElse(null);
         List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
         return crewRepository.countByParticipationsIn(participations);
