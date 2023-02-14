@@ -108,7 +108,7 @@
         for (let i = 0; i < userList.rows.length; i++) {
             userList.rows[i].cells[6].onclick = async function () {
                 let crewId = userList.rows[i].cells[0].innerText;
-                alert(crewId + "을 선택하셨습니다.");
+
 
                 let response = await fetch("/api/v1/crews/" + crewId, {
                     method: "DELETE",
@@ -120,8 +120,8 @@
                 })
                 if (response.ok) {
                     let json = await response.json();
+                    alert(crewId + "번 모임을 삭제했습니다.");
 
-                    confirm("모임이 삭제 되었습니다.");
                     window.location.href = '/view/v1/manage/crews';
                 } else {
                     let json = await response.text();

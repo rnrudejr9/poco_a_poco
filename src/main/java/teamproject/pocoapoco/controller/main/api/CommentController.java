@@ -11,10 +11,13 @@ import teamproject.pocoapoco.domain.dto.comment.*;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.service.CommentService;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequestMapping("/api/v1/crews")
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class CommentController {
 
     private final CommentService commentService;

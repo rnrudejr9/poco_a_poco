@@ -11,7 +11,6 @@ import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.Review;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.CrewReviewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -20,11 +19,10 @@ import teamproject.pocoapoco.repository.part.ParticipationRepository;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class CrewReviewService {
     private final UserRepository userRepository;
@@ -57,8 +55,10 @@ public class CrewReviewService {
             // reviewScore 저장
             for (int i = 0; i < crewReviewRequest.getCrewId().size(); i++) {
                 User toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i)).get();
-                Review review = crewReviewRepository.findReviewByCrewAndToUser(crew, toUser);
-                toUser.addReviewScore(review.getReviewScore());
+                List<Review> reviews = crewReviewRepository.findAllByCrewAndToUser(crew, toUser);
+                for (Review review : reviews) {
+                    toUser.addReviewScore(review.getReviewScore());
+                }
             }
 
         }catch (NullPointerException e){
@@ -66,6 +66,7 @@ public class CrewReviewService {
         }
     }
 
+    @Transactional
     // 리뷰 작성 여부 확인
     public boolean findReviewedUser(Long crewId, User nowUser) {
 
@@ -78,6 +79,7 @@ public class CrewReviewService {
         return false;
     }
 
+    @Transactional
     public Page<CrewReviewResponse> findAllReviewList(String userName, Pageable pageable) {
         User ToUser = userRepository.findByUserName(userName).get();
         Page<Review> allReviewList = crewReviewRepository.findByToUser(ToUser, pageable);
@@ -85,6 +87,7 @@ public class CrewReviewService {
     }
 
     // 리뷰 detail
+    @Transactional
     public CrewReviewDetailResponse findReviewById(Long reviewId) {
         Review review = crewReviewRepository.findById(reviewId).get();
 

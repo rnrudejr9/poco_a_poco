@@ -8,7 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import teamproject.pocoapoco.domain.dto.crew.*;
+import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
+import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
+import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
 import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
@@ -26,11 +29,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class CrewService {
 
@@ -274,7 +277,11 @@ public class CrewService {
 
             Participation befParticipation = participationOptional.get();
 
-            participationRepository.delete(befParticipation);
+            if(befParticipation.getUser().getId().equals(actingUser.getId())){
+                throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
+            } else{
+                participationRepository.delete(befParticipation);
+            }
 
 
         }else{

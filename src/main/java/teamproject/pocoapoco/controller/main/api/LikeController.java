@@ -6,12 +6,14 @@ import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.like.LikeResponse;
 import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.entity.Like;
 import teamproject.pocoapoco.service.LikeService;
+
+import javax.transaction.Transactional;
 
 @RestController
 @RequestMapping("/api/v1/crews")
 @RequiredArgsConstructor
+@Transactional
 public class LikeController {
     private final LikeService likeService;
     @PostMapping("/{crewId}/like")
