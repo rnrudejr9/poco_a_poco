@@ -149,7 +149,7 @@ public class ParticipationService {
         List<PartJoinResponse> participations = new ArrayList<>();
         for (Crew crew : user.getCrews()) {
             for (Participation participation : crew.getParticipations()) {
-                if (participation.getStatus() == 1) {
+                if (participation.getStatus() == 1 && participation.getDeletedAt() == null) {
                     participations.add(PartJoinResponse.builder()
                             .crewId(participation.getCrew().getId())
                             .body(participation.getBody())
@@ -176,9 +176,11 @@ public class ParticipationService {
                         .crewTitle(crew.getTitle())
                         .crewId(crewId)
                         .status(p.getStatus())
-                        .writerUserName(crew.getUser().getNickName())
-                        .joinUserName(p.getUser().getNickName())
+                        .writerUserName(crew.getUser().getUsername())
+                        .joinUserName(p.getUser().getUsername())
                         .joinUserId(p.getUser().getId())
+                        .writerUserNickName(crew.getUser().getNickName())
+                        .joinUserNickName(p.getUser().getNickName())
                         .now(crew.getParticipations().size())
                         .limit(crew.getCrewLimit())
                         .build();
