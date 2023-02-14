@@ -77,6 +77,17 @@ public class CrewService {
         return new CrewResponse("Crew 삭제 완료", crewId);
     }
 
+    @Transactional
+    public CrewResponse finishCrew(Long crewId,String userName){
+        User user = findByUserName(userName);
+        Crew crew = findByCrewId(crewId);
+        findByUserAndCrewContaining(user,crew);
+
+        crew.setFinish(1);
+        return new CrewResponse("Crew 상태변경 완료",crewId);
+    }
+
+
 
 
 
