@@ -37,7 +37,6 @@ public class Crew extends BaseEntity{
     private String timepick;
 
 
-
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name="room_id")
     private ChatRoom chatRoom;

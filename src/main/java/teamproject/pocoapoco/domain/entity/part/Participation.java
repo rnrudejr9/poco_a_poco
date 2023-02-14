@@ -5,6 +5,8 @@ import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Builder
@@ -29,5 +31,22 @@ public class Participation {
     private String body;
 
     private Integer status;
+
+    private LocalDateTime deletedAt;
+
+    public static Participation deleteParticipation(Participation beforeParticipation, LocalDateTime localDateTime){
+
+        return Participation.builder()
+                .id(beforeParticipation.id)
+                .user(beforeParticipation.user)
+                .crew(beforeParticipation.crew)
+                .title(beforeParticipation.title)
+                .body(beforeParticipation.body)
+                .status(beforeParticipation.status)
+                .deletedAt(localDateTime)
+                .build();
+
+
+    }
 
 }

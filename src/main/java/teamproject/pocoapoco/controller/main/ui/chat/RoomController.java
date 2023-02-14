@@ -11,14 +11,27 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import teamproject.pocoapoco.domain.dto.chat.ChatRoomDTO;
+import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.domain.entity.part.Participation;
+import teamproject.pocoapoco.exception.AppException;
+import teamproject.pocoapoco.exception.ErrorCode;
+import teamproject.pocoapoco.repository.CrewRepository;
+import teamproject.pocoapoco.repository.UserRepository;
+import teamproject.pocoapoco.repository.part.ParticipationRepository;
 import teamproject.pocoapoco.service.chat.ChatRoomService;
 import teamproject.pocoapoco.service.chat.ChatService;
+
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping(value = "/view/v1")
 @Log4j2
 public class RoomController {
+    private final CrewRepository crewRepository;
+    private final UserRepository userRepository;
+    private final ParticipationRepository participationRepository;
 
     private final ChatRoomService chatRoomService;
     private final ChatService chatService;
@@ -42,6 +55,7 @@ public class RoomController {
     //채팅방 조회
     @GetMapping("/room")
     public String getRoom(Long roomId, Long crewId, Model model){
+
         log.info("# get Chat Room, roomID : " + roomId);
         model.addAttribute("crewId",crewId);
         model.addAttribute("room", chatRoomService.findRoomById(roomId));
