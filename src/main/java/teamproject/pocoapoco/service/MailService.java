@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import teamproject.pocoapoco.domain.dto.mail.UserMailResponse;
 
 import javax.mail.Message;
@@ -15,6 +16,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.Random;
 
 @Service
+@Transactional
 public class MailService   {
     @Autowired
     JavaMailSender emailsender; // Bean 등록해둔 MailConfig 를 emailsender 라는 이름으로 autowired
