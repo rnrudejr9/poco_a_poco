@@ -3,44 +3,40 @@
 <head th:replace="fragments/fragment::head"></head>
 <body>
 <header th:replace="fragments/fragment::nav"></header>
-<div class="container">
-    <div class="row py-5">
-        <div class="col-3">
-            <ul class="list-group mt-4">
-                <a href="/reviewList/all" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center active">
-                    전체후기
-                    <span th:text="${reviewAllCount}">3</span>
-                </a>
-            </ul>
-        </div>
-        <div class="col-9">
-            <div class="card" th:if="${reviewList.size() == 0}">
-                <div class="card-header">
-                    받은 후기가 없습니다.
+<main class="container mt-4">
+    <div class="container"><br>
+<!--        <div class="row py-5">-->
+        <h2>전체후기💌</h2>
+            <div>  총 건수 : <small th:text="${reviewAllCount}">3</small></div>
+        <div class="col-9" style="margin: auto;">
+                <div class="card" th:if="${reviewList.size() == 0}">
+                    <div class="card-header">
+                        받은 후기가 없습니다.
+                    </div>
                 </div>
-            </div>
-            <div class="card" th:if="${reviewList.size() > 0}">
-                <div class="card-header">
-                    모임을 함께한 분들에게 받은 후기들 입니다.
-                </div>
-                <ul class="list-group list-group-flush">
-                    <th:block th:each="review : ${reviewList}">
-                        <a th:href="@{/view/v1/crews/reviewList/{reviewId}(reviewId=${review.id})}" class="list-group-item list-group-item-action">
-                            <div style="float: left">
-                                <img th:src="${review.crewImage}" style="width: 80px; height: 80px; float: left; display: inline-block">
-                                <div style="margin-top: 10px; margin-left: 20px; display: inline-block">
-                                    <span style="color: orange; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|${review.fromUserName}님이 따뜻한 후기를 보냈어요.|"></span><br>
-                                    <small style="" th:text="|${review.fromUserName}님과 ${review.crewTitle}모임을 함께했어요. 클릭하여 상세 후기를 확인해보세요.|"></small>
+                <div class="card" th:if="${reviewList.size() > 0}">
+                    <div class="card-header">
+                        <small>모임을 함께한 분들에게 받은 후기들 입니다.</small>
+                    </div>
+                    <ul class="list-group list-group-flush">
+                        <th:block th:each="review : ${reviewList}">
+                            <a th:href="@{/view/v1/crews/{userName}/reviewList/{reviewId}(reviewId=${review.id}, userName=${userName})}" class="list-group-item list-group-item-action">
+                                <div style="float: left">
+                                    <img th:src="${review.crewImage}" style="width: 80px; height: 80px; float: left; display: inline-block">
+                                    <div style="margin-top: 10px; margin-left: 20px; display: inline-block">
+                                        <span style="color: orange; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|${review.fromUserName}님이 보낸  후기입니다.|"></span><br>
+                                        <small style="color: darkgray; font-family: 'Jua', sans-serif; font-weight: bold;" th:text="|${review.fromUserName}님과 ${review.crewTitle}모임을 함께했어요. 클릭하여 상세 후기를 확인해보세요.|"></small>
+                                    </div>
                                 </div>
-                            </div>
-                        </a>
-                    </th:block>
-                </ul>
+                            </a>
+                        </th:block>
+                    </ul>
+                </div><br><a th:href="@{/view/v1/users/profile/{userName}(userName=${userName})}" class="btn btn-light" aria-describedby="submitHelp" style="position: absolute;
+  top: 100%; right: 0;">이전으로</a>
             </div>
         </div>
-    </div>
-</div>
-
+<!--    </div>-->
+</main>
 <script async th:inline="javascript">
     /*<![CDATA[*/
 

@@ -142,7 +142,12 @@
                 </a>
             </li>
             <li id="sns"><a href="#" class="nav-link text-black">친구목록</a></li>
-            <li><a href="#" class="nav-link text-black">참여중인 모임</a></li>
+            <li><a th:href="@{/view/v1/crews/{userName}/active(userName=${userName})}" class="nav-link text-black">참여중인 모임</a></li>
+            <li>
+                <a th:href="@{/view/v1/crews/{userName}/reviewList(userName=${userName})}" class="nav-link text-black">
+                    받은 후기
+                </a>
+            </li>
 
         </ul>
         <hr>
@@ -200,16 +205,11 @@
                     </h2>
                     <div>
                         <div  class="d-flex text-muted  pt-3" th:each="followingList : ${followingResponse}">
-                            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
-                                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
-                                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-                                <rect width="100%" height="100%" fill="#007bff"/>
-                                <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
-                            </svg>
+                            <img th:src="${followingList.imagePath}" class="rounded mx-auto d-block" style="height: 20px; width: 20px;" >
 
                             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-                            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                                <strong class="d-block text-gray-dark" th:text="|${followingList.nickName}|"></strong>
+                            <p  class="pb-3 mb-0 small lh-sm " >
+                                <a th:href="@{/view/v1/users/profile/{userName}(userName=${followingList.userName})}"><strong class="d-block text-gray-dark" th:text="|${followingList.nickName}|"></strong></a>
                             </p>
                         </div>
                     </div>
@@ -220,15 +220,10 @@
                     </h2>
                     <div>
                         <div  class="d-flex text-muted  pt-3" th:each="followedList : ${followedResponse}">
-                            <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="24" height="24"
-                                 xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32"
-                                 preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title>
-                                <rect width="100%" height="100%" fill="#007bff"/>
-                                <text x="50%" y="50%" fill="#007bff" dy=".3em">32x32</text>
-                            </svg>
+                            <img th:src="${followedList.imagePath}" class="rounded mx-auto d-block" style="height: 20px; width: 20px;">
                             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-                            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                                <strong class="d-block text-gray-dark" th:text="|${followedList.nickName}|"></strong>
+                            <p  class="pb-3 mb-0 small lh-sm " >
+                                <a th:href="@{/view/v1/users/profile/{userName}(userName=${followedList.userName})}"><strong class="d-block text-gray-dark" th:text="|${followedList.nickName}|"></strong></a>
                             </p>
                         </div>
                     </div>

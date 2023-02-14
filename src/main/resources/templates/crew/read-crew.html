@@ -35,6 +35,11 @@
         padding: 15px;
         /*background-color: #fff;*/
     }
+    div.card {
+        width: 250px;
+        box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+        text-align: center;
+    }
 
     /*footer {*/
     /*    height: 50px;*/
@@ -59,7 +64,7 @@
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-2" id="members" style="display: none">
-
+                <input type="hidden" name="img-key" th:value="${details.imagePath}">
             </div>
             <div class="col-md-7">
                 <!-- Begin Sidebar -replace demowebsite with your own id
@@ -71,39 +76,46 @@
                     <img class="card-img-top mb-2" src=https://user-images.githubusercontent.com/73879325/214769088-0db6fd43-002a-4492-940a-9decd66d74a9.png alt="Card image">
                     <div class="card-body">
                         <ul>
+
                             <div>
+                                <div style="display: flex">
                                 <!--여기에 사용자의 프로필 image 링크 넣기-->
-                                <img src="" class="rounded mx-auto d-block" style="height: 200px; width: 200px;" id="main-image">
-                                <input type="hidden" name="img-key" th:value="${details.imagePath}">
-
-                                <h4><a class=name th:href="@{/view/v1/users/profile/{userName}(userName=${details.getUserName()})}">
-                                    <span th:text="${details.userName}"></span></a>
-                                </h4>
-
-
+                                <img th:src="details.images"  style="height: 20px; width: 20px; padding-right: 5px" id="main-image">
+                                <p class="mb-0 small lh-sm " >
+                                    <a th:href="@{/view/v1/users/profile/{userName}(userName=${details.userName})}"><strong class="d-block text-gray-dark" th:text="|${details.userName}|"></strong></a>
+                                </p>
+                                </div>
+                                <div style="display: flex; justify-content: space-between " class="mb-0">
+                                <h6  style="font-size: x-small; color: #6c757d" th:text="${details.strict}"class="mb-0"></h6>
+                                <h6 style="font-size: x-small;color: #6c757d" th:text="${details.crewLimit}+명" class="mb-0"></h6>
+                                </div>
                             </div>
-                            <th:block>
-                                <li>모집 인원 : <span th:text="${details.crewLimit}"></span></li>
-                                <li>위치 : <span th:text="${details.strict}"></span></li>
-                                <li>모집 내용 : <span th:text="${details.content}"></span></li>
-                                <li>생성 날짜 : <span th:text="${#temporals.format(details.createdAt, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
-                                <li>수정 날짜 : <span th:text="${#temporals.format(details.lastModifiedAt, 'yyyy-MM-dd HH:mm:ss')}"></span></li>
-                            </th:block>
+                            <hr>
+                            <div >
+                                <div>
+                                    <span th:text="${details.content}" style="font-size: large"></span>
+                                </div>
+                                <br><br><br><br><br>
+                                <li style="list-style: none;font-size: x-small">모임 일시 : <span style="font-size: x-small" th:text="${details.date}"></span></li>
+                            </div>
 
                         </ul>
+                        <hr>
                         <!-- 목록으로 돌아가기 버튼
                         ================================================== -->
                         <div class="row justify-content-center">
                             <form id="form" class="col-sm-8" action="#"
                                   th:action="@{'/view/v1/crews/'+ ${crewId}}" th:object="${crew}" th:method="delete" novalidate>
                                 <input id="_method" type="hidden" name="_method" value="delete"/>
+
                                 <div class="form-group" align="center">
                                     <a th:href="@{'/view/v1/crews/'}" class="btn btn-success" aria-describedby="submitHelp">목록으로</a>
                                     <a th:href="@{'/view/v1/crews/update/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName}"  class="btn btn-primary " aria-describedby="submitHelp">글 수정</a>
                                     <button th:if="${#authentication.name} == ${details.userName}" id="btn-post-delete" class="btn btn-danger " type="button" onclick="confirmDelete()">글 삭제</button>
                                 </div>
                                 <div class="form-group" align="center">
-                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName}"  class="btn btn-info" aria-describedby="submitHelp">모입 종료</a>
+                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} == ${details.userName} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp">모입 종료</a>
+                                <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" th:if="${#authentication.name} != ${details.userName} and ${isPartUser == true} and ${userReviewed} == false"  class="btn btn-info" aria-describedby="submitHelp">후기 작성</a>
                                 </div>
                             </form>
                         </div>
@@ -118,7 +130,7 @@
                                 <tr><div id="likeCnt" th:text="${likeCnt}"></div> </tr>
                             </form>
                         </div>
-
+                        <h6 style="font-size: x-small;text-align: right"  th:text="${#temporals.format(details.createdAt, 'MM-dd HH:mm:ss')}"></h6>
 
                         <!-- Begin Comments -replace demowebsite with your own id
                         ================================================== -->

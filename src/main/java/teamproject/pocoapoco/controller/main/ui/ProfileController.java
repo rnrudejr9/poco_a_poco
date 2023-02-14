@@ -144,7 +144,7 @@ public class ProfileController {
         model.addAttribute("userProfileImagePath", userProfileImagePath);
         model.addAttribute("followingResponse", followingList);
         model.addAttribute("followedResponse", followedList);
-
+        model.addAttribute("userName",authentication.getName());
 
         return "profile/get-my-profile";
     }
@@ -163,14 +163,9 @@ public class ProfileController {
         try{
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
             model.addAttribute("userProfileResponse", userProfileResponse);
-            //
 
-            // 후기 리스트
-            List<CrewReviewResponse> reviewList = crewReviewService.inquireAllReviewList(userName);
-            model.addAttribute("reviewList", reviewList);
-
-            long reviewAllCount = crewReviewService.getReviewAllCount(userName);
-            model.addAttribute("reviewAllCount", reviewAllCount);
+            // 페이지 연결
+            model.addAttribute("userName", userName);
             return "profile/get";
         } catch (AppException e){
             response.setContentType("text/html; charset=UTF-8");
@@ -252,8 +247,12 @@ public class ProfileController {
 
 
     @GetMapping("/users/profile/image/edit")
-    public String uploadImagePage(){
-
+    public String uploadImagePage(Model model){
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         return "/profile/upload-form";
     }

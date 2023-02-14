@@ -87,16 +87,38 @@ public class CrewViewController {
         Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
 
         try {
-            CrewDetailResponse details = list.getContent().get(0);
             //알림 체크
             if(authentication != null) crewService.readAlarms(crewId, authentication.getName());
+            
+            // 좋아요
             int count = likeViewService.getLikeCrew(crewId);
-
-            model.addAttribute("details", details);
             model.addAttribute("likeCnt", count);
+            
+            // 상세게시글 정보
+            CrewDetailResponse details = list.getContent().get(0);
+            model.addAttribute("details", details);
+            
+            // 후기 작성여부 파악
+            User nowUser = crewService.findByUserName(authentication.getName());
+            boolean userReviewed = crewReviewService.findReviewedUser(crewId, nowUser);
+            model.addAttribute("userReviewed", userReviewed);
+
+            // 참여자 확인
+            boolean isPartUser = participationService.isPartUser(crewId, nowUser);
+            model.addAttribute("isPartUser", isPartUser);
+
         } catch (EntityNotFoundException e) {
             return "redirect:/index";
         }
+
+        // 참여자 인원 정보
+        List<ReviewResponse> members = participationService.findAllPartMember(crewId);
+        model.addAttribute("members", members);
+
+        ReviewRequest crewReviewRequest = new ReviewRequest();
+        model.addAttribute("reviewRequest", crewReviewRequest);
+
+
 
         // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber();
@@ -169,8 +191,6 @@ public class CrewViewController {
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
-        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!loginStatus : {}", crewSportRequest.isLoginStatus());
-
 
         // 유저 로그인 확인 후 운동 종목 데이터 확인
         List<String> userSportsList = crewService.getUserSports(authentication, CollectionUtils.isEmpty(crewSportRequest.getSportsList()));
@@ -203,12 +223,7 @@ public class CrewViewController {
         List<SportEnum> sportEnums = List.of(SportEnum.values());
         model.addAttribute("sportEnums", sportEnums);
 
-
-
-
         model.addAttribute("isLoginStatus", crewSportRequest.isLoginStatus());
-
-
 
         return "main/main";
     }
@@ -221,9 +236,6 @@ public class CrewViewController {
         //현재 유저 정보
         User nowUser = crewService.findByUserName(authentication.getName());
         model.addAttribute("nowUser", nowUser.getId());
-        
-        //현재 유저 리뷰 작성여부 확인
-        crewReviewService.findReviewUser(nowUser);
 
         // 크루 게시글 정보
         Crew crew = crewService.findByCrewId(crewId);
@@ -246,27 +258,27 @@ public class CrewViewController {
         return "redirect:/";
     }
 
-    @GetMapping("/reviewList")
-    public String inquireReviewList(Authentication authentication, Model model) {
-        String userName = authentication.getName();
+    // 리뷰 리스트
+    @GetMapping("/{userName}/reviewList")
+    public String findReviewList(@PathVariable String userName, Model model) {
 
-        List<CrewReviewResponse> reviewList = crewReviewService.inquireAllReviewList(userName);
+        List<CrewReviewResponse> reviewList = crewReviewService.findAllReviewList(userName);
         model.addAttribute("reviewList", reviewList);
 
         long reviewAllCount = crewReviewService.getReviewAllCount(userName);
         model.addAttribute("reviewAllCount", reviewAllCount);
 
-//        model.addAttribute("certifyYn", receiver.getCertifyYn());
-//        model.addAttribute("nickname", receiver.getNickname());
 
         return "review/review-list";
     }
-    @GetMapping("/reviewList/{reviewId}")
-    public String inquireReview(@PathVariable Long reviewId, Model model) {
 
-        CrewReviewDetailResponse review = crewReviewService.inquireReview(reviewId);
+    // 리뷰 detail
+    @GetMapping("/{userName}/reviewList/{reviewId}")
+    public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model) {
+
+        CrewReviewDetailResponse review = crewReviewService.findReviewById(reviewId);
         model.addAttribute("review", review);
-
+        model.addAttribute("userName",userName);
         return "review/review-content";
     }
 
@@ -278,13 +290,12 @@ public class CrewViewController {
 
 
     // 내가 참여중인 모임 리스트
-    @GetMapping("/users/activeCrew")
-    public String getActiveCrewList(Authentication authentication, Model model) {
+    @GetMapping("/{userName}/active")
+    public String getActiveCrewList(@PathVariable String userName, Model model) {
 
         try{
-            String userName = authentication.getName();
             // list
-            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(2,authentication.getName()); // 2: 참여 완료
+            List<CrewDetailResponse> crewList = crewService.findAllCrew(2,userName); // 2: 참여 완료
             model.addAttribute("crewList",crewList);
 
             // count
@@ -294,18 +305,19 @@ public class CrewViewController {
             return "redirect:/view/v1/start";
         }
     }
-    // 내가 참여했고 종료된 모임 리스트
-    @GetMapping("/users/endCrew")
-    public String getEndCrewList(Authentication authentication, Model model) {
+
+    // 종료된 모임 리스트
+    @GetMapping("/{userName}/end")
+    public String getEndCrewList(@PathVariable String userName, Model model) {
 
         try{
-            String userName = authentication.getName();
             // list
-            List<CrewDetailResponse> crewList = crewService.inquireAllCrew(3,authentication.getName()); // 3: 모집 종료
+            List<CrewDetailResponse> crewList = crewService.findAllCrew(3, userName); // 3: 모집 종료
             model.addAttribute("crewList",crewList);
 
             // count
             putCategorizeCrewCount(userName,model);
+            model.addAttribute("userName",userName);
 
             return "part/get-end-crew";
         } catch (AppException e){
@@ -313,6 +325,7 @@ public class CrewViewController {
         }
     }
 
+    // 특정 crew를 count하는 메소드
     private void putCategorizeCrewCount(String userName, Model model) {
         long activeCrewCount = crewService.getCrewByUserAndStatus(2,userName);
         long endCrewCount = crewService.getCrewByUserAndStatus(3,userName);

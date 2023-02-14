@@ -5,6 +5,9 @@ import teamproject.pocoapoco.domain.entity.chat.Chat;
 import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 
 @Builder
@@ -19,6 +22,9 @@ public class ChatMessageDTO {
     private String message;
 
     private String createdAt;
+    private List<String> userList;
+    private Integer state;
+
     public Chat toChat(ChatRoom chatRoom){
         return Chat.builder().message(message)
                 .writer(writer)

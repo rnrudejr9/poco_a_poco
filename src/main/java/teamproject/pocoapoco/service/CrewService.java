@@ -208,7 +208,7 @@ public class CrewService {
     }
 
     // 내가 참여한 crew list
-    public List<CrewDetailResponse> inquireAllCrew(Integer status, String userName) {
+    public List<CrewDetailResponse> findAllCrew(Integer status, String userName) {
         User user = userRepository.findByUserName(userName).orElse(null);
         List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
         List<Crew> crewList = crewRepository.findByParticipationsIn(participations);
