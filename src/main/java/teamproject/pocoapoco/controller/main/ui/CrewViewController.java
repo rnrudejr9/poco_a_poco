@@ -273,6 +273,13 @@ public class CrewViewController {
     public String findReviewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
 
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", "/profileimages");
+
+
         Page<CrewReviewResponse> reviewList = crewReviewService.findAllReviewList(userName, pageable);
         model.addAttribute("reviewList", reviewList);
 

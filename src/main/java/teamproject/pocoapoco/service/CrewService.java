@@ -282,25 +282,42 @@ public class CrewService {
 
         Crew crew = crewOptional.get();
 
-        if((actingUser.getRole() == UserRole.ROLE_ADMIN) || (crew.getUser().getId().equals(actingUser.getId()))){
-            Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
+        Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
 
-            if(participationOptional.isEmpty()){
-                throw new AppException(ErrorCode.NOT_FOUND_PARTICIPATION, ErrorCode.NOT_FOUND_PARTICIPATION.getMessage());
-            }
-
-            Participation befParticipation = participationOptional.get();
-
-            if(befParticipation.getUser().getId().equals(actingUser.getId())){
-                throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
-            } else{
-                participationRepository.delete(befParticipation);
-            }
-
-
-        }else{
-            throw new AppException(ErrorCode.NOT_AUTHORIZED, ErrorCode.NOT_AUTHORIZED.getMessage());
+        if(participationOptional.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND_PARTICIPATION, ErrorCode.NOT_FOUND_PARTICIPATION.getMessage());
         }
+
+        Participation befParticipation = participationOptional.get();
+
+        // 방장 강퇴 못하도록 막음
+        if(befParticipation.getUser().getId().equals(actingUser.getId())){
+            throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
+        } else{
+            participationRepository.delete(befParticipation);
+        }
+
+
+        // 방장이거나 운영자인 경우만 삭제할 수 있는 기능 주석처리
+//        if((actingUser.getRole() == UserRole.ROLE_ADMIN) || (crew.getUser().getId().equals(actingUser.getId()))){
+//            Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
+//
+//            if(participationOptional.isEmpty()){
+//                throw new AppException(ErrorCode.NOT_FOUND_PARTICIPATION, ErrorCode.NOT_FOUND_PARTICIPATION.getMessage());
+//            }
+//
+//            Participation befParticipation = participationOptional.get();
+//
+//            if(befParticipation.getUser().getId().equals(actingUser.getId())){
+//                throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
+//            } else{
+//                participationRepository.delete(befParticipation);
+//            }
+//
+//
+//        }else{
+//            throw new AppException(ErrorCode.NOT_AUTHORIZED, ErrorCode.NOT_AUTHORIZED.getMessage());
+//        }
 
     }
 
