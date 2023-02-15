@@ -155,7 +155,7 @@ public class ProfileController {
 
 
     @GetMapping("/users/profile/{userName}")
-    public String getUserProfile(@PathVariable String userName, Model model, HttpServletResponse response) throws IOException {
+    public String getUserProfile(@PathVariable String userName, Model model, HttpServletResponse response, Authentication authentication) throws IOException {
 
         model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
         model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
@@ -164,9 +164,11 @@ public class ProfileController {
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         try{
+            // 알림 체크
+            if(authentication != null) followService.readAlarmsFollow(authentication.getName());
+
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
             model.addAttribute("userProfileResponse", userProfileResponse);
-            //
             // 페이지 연결
             model.addAttribute("userName", userName);
 

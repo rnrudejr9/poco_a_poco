@@ -285,7 +285,10 @@ public class CrewViewController {
 
     // 리뷰 detail
     @GetMapping("/{userName}/reviewList/{reviewId}")
-    public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model) {
+    public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model, Authentication authentication) {
+
+        //알림 체크
+        if(authentication != null) crewService.readAlarmsReview(reviewId, authentication.getName());
 
         CrewReviewDetailResponse review = crewReviewService.findReviewById(reviewId);
         model.addAttribute("review", review);
