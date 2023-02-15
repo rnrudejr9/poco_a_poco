@@ -86,7 +86,7 @@ public class CrewViewController {
                              @PageableDefault(page = 0, size = 1, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
 
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
-        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
+        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum2(crewSportRequest, true, pageable);
         // 참여자 인원 정보
         List<ReviewResponse> members = participationService.findAllPartMember(crewId);
         model.addAttribute("members", members);

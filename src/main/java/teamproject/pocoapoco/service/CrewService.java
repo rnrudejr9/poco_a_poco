@@ -105,23 +105,6 @@ public class CrewService {
 
     // 크루 게시물 전체조회, 지역조회, 운동종목 조회
     @Transactional
-    public Page<CrewDetailResponse> findAllCrewsByStrictAndSportEnum(CrewSportRequest crewSportRequest, boolean sportsListIsEmpty, Pageable pageable) {
-
-        if (crewSportRequest.getStrict() == null && CollectionUtils.isEmpty(crewSportRequest.getSportsList()) && sportsListIsEmpty) {
-            log.info("service findAllCrews : action");
-            return findAllCrews(pageable);
-        } else if (crewSportRequest.getStrict() != null && crewSportRequest.getStrict() != "") {
-            log.info("service findAllCrewsByStrict : action");
-            return findAllCrewsByStrict(crewSportRequest, pageable);
-        } else {
-            log.info("service findAllCrewsBySport : action");
-            return findAllCrewsBySport(crewSportRequest.getSportsList(), pageable);
-        }
-
-    }
-
-    // 크루 게시물 전체조회, 지역조회, 운동종목 조회
-    @Transactional
     public Page<CrewDetailResponse> findAllCrewsByStrictAndSportEnum2(CrewSportRequest crewSportRequest, boolean sportsListIsEmpty, Pageable pageable) {
 
         //지역검색 null 확인
@@ -139,10 +122,9 @@ public class CrewService {
             for (String s : crewSportRequest.getSportsList()) sportEnums.add(SportEnum.valueOf(s));
 
             log.info("!!!!!!!!!!!!!!!!!SportEnums : {}", sportEnums);
-            return crewRepository.findByStrictContainsAndSportEnumIn(crewSportRequest.getStrict(), sportEnums, pageable).map(CrewDetailResponse::of);
+            return crewRepository.findByDeletedAtIsNullAndStrictContainsAndSportEnumIn(crewSportRequest.getStrict(), sportEnums, pageable).map(CrewDetailResponse::of);
         }
 
-//        return crewRepository.findByStrictContainingAndSportEnumOrSportEnumOrSportEnum(crewSportRequest.getStrict(), SportEnum.SOCCER, SportEnum.FOOTVOLLEYBALL, null, pageable).map(CrewDetailResponse::of);
     }
 
 
