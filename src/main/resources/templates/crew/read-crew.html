@@ -2,7 +2,9 @@
 <script src="https://code.jquery.com/jquery-3.5.1.min.js" crossorigin="anonymous"
         xmlns:display="http://www.w3.org/1999/xhtml"></script>
 <html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
-<head th:replace="fragments/fragment :: head"></head>
+<head th:replace="fragments/fragment :: head">
+    <script src="../../static/js/read-crew.js"></script>
+</head>
 <!-- 네비바-->
 
 
@@ -198,7 +200,8 @@
                     <button type="button" class="btn btn-success" style="display: none" id="notallowed" th:onclick="joinCrewAwait()">승인 대기/취소 하기</button>
                     <a th:href="@{'/view/v1/crews/review/' + ${crewId}}" type="button" class="btn btn-success" style="display: none" id="finished">종료된 모임입니다! 후기 작성하기</a>
                     <a type="button" th:href="@{/view/v1/room(roomId=${details.chatRoomId},crewId=${details.id})}" class="btn btn-primary" style="display: none" id="chatroom">채팅방</a>
-                    <button type="button" id="sendtogle" sec:authorize="isAuthenticated()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">참여하기</button>
+                    <button type="button" th:if="${details.finish} == 0" id="sendtogle" sec:authorize="isAuthenticated()" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal" data-bs-whatever="@mdo">참여하기</button>
+                    <button type="button" th:unless="${details.finish} == 0" id="sendtogle" class="btn btn-primary">모임이 종료되었습니다</button>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">

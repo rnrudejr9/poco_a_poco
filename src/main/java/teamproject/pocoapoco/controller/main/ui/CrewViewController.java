@@ -38,6 +38,7 @@ import teamproject.pocoapoco.service.part.ParticipationService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.PrintWriter;
 import java.util.List;
 
 @Controller
@@ -242,6 +243,11 @@ public class CrewViewController {
         // 참여자 인원 정보
         List<ReviewResponse> members = participationService.findAllPartMember(crewId);
         model.addAttribute("members", members);
+
+        if(crewReviewService.isContainReview(crew,nowUser)){
+            return "redirect:/";
+        }
+
 
         ReviewRequest crewReviewRequest = new ReviewRequest();
         model.addAttribute("reviewRequest", crewReviewRequest);
