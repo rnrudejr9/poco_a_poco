@@ -13,10 +13,13 @@ import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.enums.StrictEnum;
 import teamproject.pocoapoco.service.manage.DashboardService;
 
+import javax.transaction.Transactional;
+
 @Controller
 @RequestMapping("/view/v1")
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class DashboardController {
 
     private final DashboardService dashboardService;

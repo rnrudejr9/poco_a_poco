@@ -3,7 +3,6 @@ package teamproject.pocoapoco.controller.main.ui;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,15 +17,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
 import teamproject.pocoapoco.domain.dto.manage.CrewManageResponse;
 import teamproject.pocoapoco.domain.dto.manage.UserManageResponse;
-import teamproject.pocoapoco.domain.dto.response.Response;
-import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.service.CrewService;
-import teamproject.pocoapoco.service.UserService;
 import teamproject.pocoapoco.service.manage.DashboardService;
 import teamproject.pocoapoco.service.manage.ManagerService;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.PrintWriter;
 
@@ -34,6 +31,7 @@ import java.io.PrintWriter;
 @Slf4j
 @RequestMapping("/view/v1")
 @RequiredArgsConstructor
+@Transactional
 public class ManagerController {
 
 

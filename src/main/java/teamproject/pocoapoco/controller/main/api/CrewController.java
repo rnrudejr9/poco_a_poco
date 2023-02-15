@@ -14,11 +14,14 @@ import teamproject.pocoapoco.domain.dto.crew.CrewSportRequest;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.service.CrewService;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/crews")
 @Slf4j
 @Api(tags = {"Crew Controller"})
+@Transactional
 public class CrewController {
 
     private final CrewService crewService;

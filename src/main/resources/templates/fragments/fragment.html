@@ -272,6 +272,8 @@
     }
 
 
+
+
     const crewId = [[${crewId}]];
     const username = [[${#authentication.name}]];
 
@@ -400,7 +402,7 @@
                         html += "<li class='list-group-item comments'>";
                         html += "<div class='comment' id='"+this.id+"comment'>";
                         html += "<a href='javascript:; class='userImg'>";
-                        html += "<img src='https://user-images.githubusercontent.com/109712249/214782553-abb78e43-e1d8-4b35-bd7f-5127e852f398.png'  width='35px' height='35px' alt='userImg' class='userImg'>";
+                        html += "<img width='35px' height='35px' alt='userImg' class='userImg' th:id='${'"+this.id+'imgId'+"'}'>";
                         html += "</a>";
                         html += "<a href='javascript:;' class='writer' style='display:inline'>" + this.userName + "</a>";
                         html += "<div class='comment-info'>";
@@ -427,6 +429,7 @@
                         html += "</div>";
                         html += "</li>";
                         html += "<div id='"+this.id+"children' class='children'></div>";
+
                     }
 
                 });

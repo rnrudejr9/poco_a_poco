@@ -84,6 +84,10 @@ public class ParticipationService {
         User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
         Crew crew = crewRepository.findById(partDto.getCrewId()).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
 
+        if(crew.getFinish() == 1){
+            return Response.success("이미 종료된 모임입니다");
+        }
+
         if (participationRepository.existsByCrewAndAndUser(crew, user)) {
             Participation participation = participationRepository.findByCrewAndUser(crew, user).orElseThrow(() -> new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
             participationRepository.delete(participation);
@@ -115,6 +119,7 @@ public class ParticipationService {
     public PartResponse findParticipate(Long crewId, String userName) {
         User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
+
         if (!participationRepository.existsByCrewAndAndUser(crew, user)) {
             return PartResponse.builder().status(0).build();
         }
@@ -149,7 +154,7 @@ public class ParticipationService {
         List<PartJoinResponse> participations = new ArrayList<>();
         for (Crew crew : user.getCrews()) {
             for (Participation participation : crew.getParticipations()) {
-                if (participation.getStatus() == 1) {
+                if (participation.getStatus() == 1 && participation.getDeletedAt() == null) {
                     participations.add(PartJoinResponse.builder()
                             .crewId(participation.getCrew().getId())
                             .body(participation.getBody())
@@ -176,9 +181,11 @@ public class ParticipationService {
                         .crewTitle(crew.getTitle())
                         .crewId(crewId)
                         .status(p.getStatus())
-                        .writerUserName(crew.getUser().getNickName())
-                        .joinUserName(p.getUser().getNickName())
+                        .writerUserName(crew.getUser().getUsername())
+                        .joinUserName(p.getUser().getUsername())
                         .joinUserId(p.getUser().getId())
+                        .writerUserNickName(crew.getUser().getNickName())
+                        .joinUserNickName(p.getUser().getNickName())
                         .now(crew.getParticipations().size())
                         .limit(crew.getCrewLimit())
                         .build();

@@ -24,6 +24,7 @@ import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmi
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;

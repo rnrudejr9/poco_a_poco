@@ -21,7 +21,6 @@ async function findMember(){
             str += "참여자 : " + json.result[i].joinUserName;
             str += "</span>"
             str += "</li>"
-
             str += "<button id=deleteCrew onclick='deleteUserFromCrew("+ json.result[i].crewId + "," + json.result[i].joinUserId +")'>참여자 강퇴</button><br/>";
 
         }
@@ -97,7 +96,7 @@ async function enterCheck(){
     })
     if(response.ok){
         var json = await response.json();
-
+        console.log(json.result);
         if(json.result.status === 0){
             document.getElementById("sendtogle").style.display = "block";
             document.getElementById("notallowed").style.display = "none";
@@ -130,10 +129,6 @@ async function enterCheck(){
             document.getElementById("finishCrew").style.display = "none";
         }
 
-    }else{
-        var json = await response.json();
-        console.log(json);
-        
     }
 }
 
