@@ -163,12 +163,39 @@
                 <script>
                     var mapContainer = document.getElementById('map'), // 지도를 표시할 div
                         mapOption = {
-                            center: new kakao.maps.LatLng(37.566826, 126.9786567), // 지도의 중심좌표
-                            level: 1 // 지도의 확대 레벨
+                            center: new kakao.maps.LatLng(37.570986845248676, 126.97889161410725), // 지도의 중심좌표
+                            level: 3 // 지도의 확대 레벨
                         };
-
-                    // 지도를 생성합니다
                     var map = new kakao.maps.Map(mapContainer, mapOption);
+
+
+                    var lionPosition =  new kakao.maps.LatLng(37.570986845248676, 126.97889161410725);
+
+                    // 마커를 생성합니다
+                    var lionMarker = new kakao.maps.Marker({
+                        position: lionPosition
+                    });
+                    // 마커를 지도에 표시합니다.
+                    lionMarker.setMap(map);
+
+                    // 마커에 커서가 오버됐을 때 마커 위에 표시할 인포윈도우를 생성합니다
+                    var iwContent = '<div class="alert alert-primary" role="alert" style="align-content: center">멋쟁이사자처럼🦁 </div>'; // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
+                    // 인포윈도우를 생성합니다
+                    var infowindows = new kakao.maps.InfoWindow({
+                        content : iwContent
+                    });
+
+                    // 마커에 마우스오버 이벤트를 등록합니다
+                    kakao.maps.event.addListener(lionMarker, 'mouseover', function() {
+                        // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
+                        infowindows.open(map, lionMarker);
+                    });
+
+                    // 마커에 마우스아웃 이벤트를 등록합니다
+                    kakao.maps.event.addListener(lionMarker, 'mouseout', function() {
+                        // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
+                        infowindows.close();
+                    });
 
                     // 주소-좌표 변환 객체를 생성합니다
                     var geocoder = new kakao.maps.services.Geocoder();
@@ -185,13 +212,15 @@
                             if (status === kakao.maps.services.Status.OK) {
                                 // var detailAddr = !!result[0].road_address ? '<div>도로명주소 : ' + result[0].road_address.address_name + '</div>' : '';
                                 var detailAddrValue = !!result[0].road_address ? result[0].road_address.address_name + " " : "";
-                                var detailAddr = '<div>지번 주소 : ' + result[0].address.address_name + '</div>';
+                                var detailAddr = result[0].address.address_name;
                                 document.getElementById("address_detail").value = result[0].address.address_name + " ";
 
 
-                                var content = '<div class="bAddr">' +
-                                    '<span class="title">주소정보</span>' +
+                                var content = '<div class="bAddr alert alert-primary">' +
+                                    '<span class="title">주소정보<br></span>' +
+                                    '<span style="text-align: center">'+
                                     detailAddr +
+                                    '</span>' +
                                     '</div>';
 
                                 // 마커를 클릭한 위치에 표시합니다
@@ -279,7 +308,7 @@
             <div class="row">
                 <div class="col">
                     <label for="rangeHuman" id="rangeHuman" class="form-label">모집 인원 수</label>
-                    <input style="width:80%;" type="range" class="form-range" min="2" max="99" step="1" id="myRange">
+                    <input style="width:80%;" type="range" class="form-range" min="2" max="20" step="1" id="myRange">
                 </div>
                 <script>
                     var slider = document.getElementById("myRange");
