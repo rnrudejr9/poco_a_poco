@@ -140,7 +140,7 @@ public class CrewService {
 
         // 운동종목 비선택
         if (CollectionUtils.isEmpty(crewSportRequest.getSportsList())) {
-            return findAllCrewsByStrict(crewSportRequest, pageable);
+            return findByDeletedAtIsNullAndStrictContaining(crewSportRequest, pageable);
         }
         // 운동종목 선택
         else {
@@ -164,6 +164,13 @@ public class CrewService {
     }
 
     // 크루 게시물 조회 By 지역 검색어
+    @Transactional
+    public Page<CrewDetailResponse> findByDeletedAtIsNullAndStrictContaining(CrewSportRequest crewSportRequest, Pageable pageable) {
+
+        Page<Crew> crews = crewRepository.findByDeletedAtIsNullAndStrictContaining(pageable, crewSportRequest.getStrict());
+
+        return crews.map(CrewDetailResponse::of);
+    }
     @Transactional
     public Page<CrewDetailResponse> findAllCrewsByStrict(CrewSportRequest crewSportRequest, Pageable pageable) {
 
