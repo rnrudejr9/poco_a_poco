@@ -19,6 +19,8 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
     //지역 검색 By String
     Page<Crew> findByStrictContaining(Pageable pageable, String strict);
 
+    Page<Crew> findByDeletedAtIsNullAndStrictContaining(Pageable pageable, String strict);
+
     //운동 검색 By Enum
     @Query("select s from Crew s where s.sportEnum=:sport or s.sportEnum=:sport2 or s.sportEnum=:sport3")
     Page<Crew> findBySportEnum(Pageable pageable, @Param("sport") SportEnum sport, @Param("sport2") SportEnum sport2, @Param("sport3") SportEnum sport3);
