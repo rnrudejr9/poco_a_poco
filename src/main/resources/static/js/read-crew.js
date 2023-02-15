@@ -1,35 +1,6 @@
 
 
 
-async function findMember(){
-    console.log("findMember()");
-    var crewId = document.getElementById('crewIdJoin').value;
-    let response = await fetch("/api/v1/part/members/"+crewId, {
-        method: "GET",
-        headers: {
-            "Content-Type": "application/json"
-        },
-        credentials: "include"
-    })
-    if(response.ok){
-        var json = await response.json();
-        console.log(json.result);
-        var str = "<ul class='list-group'>";
-        for (var i in json.result) {
-            str += "<li class='list-group-item'>"
-            str += "<span>"
-            str += "참여자 : " + json.result[i].joinUserName;
-            str += "</span>"
-            str += "</li>"
-            str += "<button id=deleteCrew onclick='deleteUserFromCrew("+ json.result[i].crewId + "," + json.result[i].joinUserId +")'>참여자 강퇴</button><br/>";
-
-        }
-        str += "</ul>"
-        document.getElementById("members").innerHTML = str;
-    }
-}
-
-
 async function finishCrew(){
     console.log("finishCrew()");
     var crewId = document.getElementById('crewIdJoin').value;

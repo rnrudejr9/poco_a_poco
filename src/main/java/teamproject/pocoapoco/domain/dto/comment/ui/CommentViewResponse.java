@@ -18,6 +18,7 @@ public class CommentViewResponse {
     private Long id;
     private String comment;
     private String userName;
+    private String nickName;
     private Long crewId;
     private boolean isParent;
     private boolean isDeleted;
@@ -29,6 +30,7 @@ public class CommentViewResponse {
                 .id(comment.getId())
                 .comment(comment.getComment())
                 .userName(comment.getUser().getUsername())
+                .nickName(comment.getUser().getNickName())
                 .crewId(comment.getCrew().getId())
                 .isParent(comment.getParent()==null)    // true라면 부모댓글
                 .isDeleted(comment.isSoftDeleted()==true) // true라면 삭제된 댓글
