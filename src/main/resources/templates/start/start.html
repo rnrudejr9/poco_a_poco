@@ -8,6 +8,13 @@
     <!--폰트 여기어때-->
     <link href="https://webfontworld.github.io/goodchoice/Jalnan.css" rel="stylesheet">
 
+    <!--   sweetalert2 알림 커스텀    -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.4.10/dist/sweetalert2.min.js"></script>
+
+    <!--  알림 js  -->
+    <script type="text/javascript" src="/js/swal.js"></script>
+
 </head>
 
 <body>
@@ -37,7 +44,7 @@
         <form form action="/view/v1/signin" method="post" th:object="${userLoginRequest}">
             <h1>로그인</h1>
             <div class="social-container">
-                <a href="#" th:href="@{/oauth2/authorization/facebook}" class="social"><img src="/images/facebook.png" style="width:25px; height:25px"/><i class="fab fa-facebook-f"></i></a>
+<!--                <a href="#" th:href="@{/oauth2/authorization/facebook}" class="social"><img src="/images/facebook.png" style="width:25px; height:25px"/><i class="fab fa-facebook-f"></i></a>-->
                 <a href="#" th:href="@{/oauth2/authorization/google}" class="social"><img src="/images/google.PNG" style="width:25px; height:25px"/><i class="fab fa-google-plus-g"></i></a>
                 <a href="#" th:href="@{/oauth2/authorization/naver}" class="social"><img src="/images/naver.PNG" style="width:28px; height:28px"/><i class="fab fa-linkedin-in"></i></a>
             </div>
