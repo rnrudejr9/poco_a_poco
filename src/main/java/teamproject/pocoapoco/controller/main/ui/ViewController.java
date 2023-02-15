@@ -36,9 +36,27 @@ public class ViewController {
     private final RedisTemplate<String, String> userTrackingRedisTemplate;
 
     @PostMapping("/view/v1/signup")
-    public String signup(UserJoinRequest userJoinRequest) {
+    public String signup(UserJoinRequest userJoinRequest,HttpServletResponse response) throws IOException {
 
-        userService.saveUser(userJoinRequest);
+        try {
+            userService.saveUser(userJoinRequest);
+        }catch (Exception e) {
+            e.printStackTrace();
+            response.setContentType("text/html; charset=UTF-8");
+            PrintWriter out = response.getWriter();
+
+            out.println("<script>alert('아이디를 다시 확인해 주세요'); history.go(-1); </script>");
+
+            out.flush();
+        }
+
+
+        response.setContentType("text/html; charset=UTF-8");
+        PrintWriter out = response.getWriter();
+
+        out.println("<script>alert('회원가입 성공!'); history.go(-1); </script>");
+
+        out.flush();
         return "redirect:/view/v1/start";
     }
 
