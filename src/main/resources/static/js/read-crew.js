@@ -87,14 +87,12 @@ async function enterCheck(){
             document.getElementById("sendtogle").style.display = "none";
             document.getElementById("signed").style.display = "block";
             document.getElementById("chatroom").style.display = "block";
-            findMember();
             document.getElementById("members").style.display = "block";
         }
         if(json.result.status === 3){
             document.getElementById("sendtogle").style.display = "none";
             document.getElementById("signed").style.display = "none";
             document.getElementById("chatroom").style.display = "none";
-            findMember();
             document.getElementById("members").style.display = "block";
             document.getElementById("finished").style.display = "block";
             document.getElementById("finishCrew").style.display = "none";

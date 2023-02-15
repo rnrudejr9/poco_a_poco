@@ -224,7 +224,7 @@ public class CrewService {
         String strict="";
         if (authentication != null) {
             strict = findByUserName(authentication.getName()).getAddress();
-            if(strict != null)
+            if(strict != null && strict.length() > 2)
                 strict = strict.split(" ")[0].substring(0, 2);
         }
         return strict;
