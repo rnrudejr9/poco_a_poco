@@ -8,6 +8,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import teamproject.pocoapoco.domain.dto.crew.CrewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.CrewRequest;
 import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
@@ -16,10 +17,12 @@ import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.domain.entity.part.Participation;
+import teamproject.pocoapoco.enums.AlarmType;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.enums.UserRole;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
+import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.repository.part.ParticipationRepository;
@@ -29,6 +32,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmitters;
 
 
 @Service
@@ -40,6 +45,7 @@ public class CrewService {
     private final CrewRepository crewRepository;
     private final UserRepository userRepository;
     private final ParticipationRepository participationRepository;
+    private final AlarmRepository alarmRepository;
 
 
     // 크루 게시글 등록
@@ -83,15 +89,35 @@ public class CrewService {
     }
 
     @Transactional
-    public CrewResponse finishCrew(Long crewId,String userName){
+    public CrewResponse finishCrew(Long crewId, String userName) {
         User user = findByUserName(userName);
         Crew crew = findByCrewId(crewId);
-        findByUserAndCrewContaining(user,crew);
+        findByUserAndCrewContaining(user, crew);
+
+        List<Participation> participations = crew.getParticipations();
+        List<String> userList = new ArrayList<>();
+        for (Participation participation : participations) {
+            userList.add(participation.getUser().getUsername());
+            alarmRepository.save(Alarm.toEntityFromFinishCrew(participation.getUser(), crew, AlarmType.LIKE_COMMENT, "모임이 종료되었습니다."));
+            log.info("모임 종류 후 username입니다 = {}",participation.getUser().getUsername());
+        }
+        //sse 로직
+        for (int i = 0; i < userList.size(); i++) {
+            if (sseEmitters.containsKey(userList.get(i))) {
+                log.info("모임 종료 후 작동");
+                SseEmitter sseEmitter = sseEmitters.get(userList.get(i));
+                try {
+                    sseEmitter.send(SseEmitter.event().name("alarm").data(
+                            "모임이 종료되었습니다! 같이 고생한 크루들에게 후기를 남겨보세요!"));
+                } catch (Exception e) {
+                    sseEmitters.remove(userList.get(i));
+                }
+            }
+        }
 
         crew.setFinish(1);
-        return new CrewResponse("Crew 상태변경 완료",crewId);
+        return new CrewResponse("Crew 상태변경 완료", crewId);
     }
-
 
 
     // 크루 게시물 상세 조회
@@ -221,10 +247,10 @@ public class CrewService {
     // 유저 등록된 지역 확인
     public String getUserStrict(Authentication authentication) {
 
-        String strict="";
+        String strict = "";
         if (authentication != null) {
             strict = findByUserName(authentication.getName()).getAddress();
-            if(strict != null && strict.length() > 2)
+            if (strict != null && strict.length() > 2)
                 strict = strict.split(" ")[0].substring(0, 2);
         }
         return strict;
@@ -242,6 +268,7 @@ public class CrewService {
             }
         }
     }
+
     @Transactional
     public void readAlarmsReview(Long reviewId, String username) {
         User user = userRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
@@ -256,9 +283,8 @@ public class CrewService {
     }
 
 
-
     // 내가 참여한 crew list
-    public Page<CrewDetailResponse> findAllCrew(Integer status, String userName,Pageable pageable) {
+    public Page<CrewDetailResponse> findAllCrew(Integer status, String userName, Pageable pageable) {
         User user = userRepository.findByUserName(userName).orElse(null);
         List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
         Page<Crew> crewList = crewRepository.findByParticipationsIn(participations, pageable);
@@ -274,7 +300,7 @@ public class CrewService {
 
     // 강퇴하면 Participation을 지우는 방법 이용
     @Transactional
-    public void deleteUserAtCrew(Long userId, Long crewId, String authenticationName){
+    public void deleteUserAtCrew(Long userId, Long crewId, String authenticationName) {
 
         Optional<User> actingUserOptional = userRepository.findByUserName(authenticationName);
 
@@ -282,15 +308,15 @@ public class CrewService {
 
         Optional<User> userOptional = userRepository.findById(userId);
 
-        if(actingUserOptional.isEmpty()){
+        if (actingUserOptional.isEmpty()) {
             throw new AppException(ErrorCode.FORBIDDEN_REQUEST, ErrorCode.FORBIDDEN_REQUEST.getMessage());
         }
 
-        if(crewOptional.isEmpty()){
+        if (crewOptional.isEmpty()) {
             throw new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage());
         }
 
-        if(userOptional.isEmpty()){
+        if (userOptional.isEmpty()) {
             throw new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage());
         }
 
@@ -302,16 +328,16 @@ public class CrewService {
 
         Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
 
-        if(participationOptional.isEmpty()){
+        if (participationOptional.isEmpty()) {
             throw new AppException(ErrorCode.NOT_FOUND_PARTICIPATION, ErrorCode.NOT_FOUND_PARTICIPATION.getMessage());
         }
 
         Participation befParticipation = participationOptional.get();
 
         // 방장 강퇴 못하도록 막음
-        if(befParticipation.getUser().getId().equals(actingUser.getId())){
+        if (befParticipation.getUser().getId().equals(actingUser.getId())) {
             throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
-        } else{
+        } else {
             participationRepository.delete(befParticipation);
         }
 
