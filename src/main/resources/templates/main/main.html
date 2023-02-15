@@ -383,10 +383,10 @@
                         동네 이웃과 운동 메이트가 되어 보세요.
                     </p>
                     <div class="searchBar">
-                        <form class="row searchBar2" role="search" action="/view/v1/crews" method="get"
-                              name="findAllCrewWithStrict">
-                            <input type="search" name="strict" class="form-control form-control-dark text-bg-blue"
-                                   placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
+                        <form class="row searchBar2" role="search" th:object="${sportRequest}" th:action="@{/view/v1/crews}" method="get" name="findAllCrewWithStrict">
+                            <input type="search" th:field="*{strict}" class="form-control form-control-dark text-bg-blue" placeholder="관심 있는 지역을 검색해 보세요" aria-label="Search">
+                            <input type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}">
+                            <input type="hidden" th:field="*{sportsList}" th:value="${sportRequest.getSportsList()}">
                         </form>
                     </div>
 
@@ -429,7 +429,8 @@
                 <div class="collapse" id="collapseExample">
                     <div class="card card-body collapse-body">
                         <form th:action method="get" th:object="${sportRequest}" id="btn-sports">
-                            <input class="text-muted" type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}">
+                            <input type="hidden" th:field="*{loginStatus}" th:value="${sportRequest.loginStatus}">
+                            <input type="hidden" th:field="*{strict}" th:value="${sportRequest.getStrict()}">
                                 <div class="grid text-center">
                                     <div class="row row-cols-1 row-cols-sm-4 row-cols-md-5 g-4">
                                         <label class="checkBox-sport btn btn-outline-info" th:each="sport : ${sportEnums}">
@@ -710,7 +711,7 @@
         playAnim()
 
         // GetMapping에서 데이터 조회 완료 후 url로 파라미터 삭제
-        history.replaceState({}, null, location.pathname);
+        // history.replaceState({}, null, location.pathname);
 
         // 운동 종목 체크박스 3개 초과 시 알람
         function count_check(obj) {

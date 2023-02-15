@@ -92,7 +92,7 @@ public class CrewViewController {
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
-        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
+        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum2(crewSportRequest, true, pageable);
         // 참여자 인원 정보
         List<ReviewResponse> members = participationService.findAllPartMember(crewId);
         model.addAttribute("members", members);
@@ -206,8 +206,17 @@ public class CrewViewController {
             crewSportRequest.setLoginStatus(true);
         }
 
+        // 유저 등록된 지역 확인
+        if(crewSportRequest.getStrict() == null){
+            crewSportRequest.setStrict(crewService.getUserStrict(authentication));
+            log.info("!!!!!!!!!!!strict : {}", crewSportRequest.getStrict());
+        }
+        else{
+            log.info("!!!!!!!!!!!strict : not empty");
+        }
+
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
-        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, CollectionUtils.isEmpty(userSportsList), pageable);
+        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum2(crewSportRequest, CollectionUtils.isEmpty(userSportsList), pageable);
 
         // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber() + 1;
