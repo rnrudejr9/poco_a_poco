@@ -105,23 +105,6 @@ public class CrewService {
 
     // 크루 게시물 전체조회, 지역조회, 운동종목 조회
     @Transactional
-    public Page<CrewDetailResponse> findAllCrewsByStrictAndSportEnum(CrewSportRequest crewSportRequest, boolean sportsListIsEmpty, Pageable pageable) {
-
-        if (crewSportRequest.getStrict() == null && CollectionUtils.isEmpty(crewSportRequest.getSportsList()) && sportsListIsEmpty) {
-            log.info("service findAllCrews : action");
-            return findAllCrews(pageable);
-        } else if (crewSportRequest.getStrict() != null && crewSportRequest.getStrict() != "") {
-            log.info("service findAllCrewsByStrict : action");
-            return findAllCrewsByStrict(crewSportRequest, pageable);
-        } else {
-            log.info("service findAllCrewsBySport : action");
-            return findAllCrewsBySport(crewSportRequest.getSportsList(), pageable);
-        }
-
-    }
-
-    // 크루 게시물 전체조회, 지역조회, 운동종목 조회
-    @Transactional
     public Page<CrewDetailResponse> findAllCrewsByStrictAndSportEnum2(CrewSportRequest crewSportRequest, boolean sportsListIsEmpty, Pageable pageable) {
 
         //지역검색 null 확인
@@ -139,10 +122,9 @@ public class CrewService {
             for (String s : crewSportRequest.getSportsList()) sportEnums.add(SportEnum.valueOf(s));
 
             log.info("!!!!!!!!!!!!!!!!!SportEnums : {}", sportEnums);
-            return crewRepository.findByStrictContainsAndSportEnumIn(crewSportRequest.getStrict(), sportEnums, pageable).map(CrewDetailResponse::of);
+            return crewRepository.findByDeletedAtIsNullAndStrictContainsAndSportEnumIn(crewSportRequest.getStrict(), sportEnums, pageable).map(CrewDetailResponse::of);
         }
 
-//        return crewRepository.findByStrictContainingAndSportEnumOrSportEnumOrSportEnum(crewSportRequest.getStrict(), SportEnum.SOCCER, SportEnum.FOOTVOLLEYBALL, null, pageable).map(CrewDetailResponse::of);
     }
 
 
@@ -242,7 +224,7 @@ public class CrewService {
         String strict="";
         if (authentication != null) {
             strict = findByUserName(authentication.getName()).getAddress();
-            if(strict != null)
+            if(strict != null && strict.length() > 2)
                 strict = strict.split(" ")[0].substring(0, 2);
         }
         return strict;
@@ -254,12 +236,26 @@ public class CrewService {
         List<Alarm> alarms = user.getAlarms();
         for (Alarm alarm : alarms) {
             boolean readOrNot = alarm.getReadOrNot();
-            if (alarm.getTargetCrewId() == crewId && !readOrNot) {
+            if (alarm.getTargetId() == crewId && !readOrNot) {
                 alarm.setReadOrNot();
                 log.info("알람을 읽었습니다 : {}        알림 : {}", alarm.getId(), alarm.getReadOrNot());
             }
         }
     }
+    @Transactional
+    public void readAlarmsReview(Long reviewId, String username) {
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+        List<Alarm> alarms = user.getAlarms();
+        for (Alarm alarm : alarms) {
+            boolean readOrNot = alarm.getReadOrNot();
+            if (alarm.getTargetId() == reviewId && !readOrNot) {
+                alarm.setReadOrNot();
+                log.info("알람을 읽었습니다 : {}        알림 : {}", alarm.getId(), alarm.getReadOrNot());
+            }
+        }
+    }
+
+
 
     // 내가 참여한 crew list
     public Page<CrewDetailResponse> findAllCrew(Integer status, String userName,Pageable pageable) {
@@ -304,25 +300,42 @@ public class CrewService {
 
         Crew crew = crewOptional.get();
 
-        if((actingUser.getRole() == UserRole.ROLE_ADMIN) || (crew.getUser().getId().equals(actingUser.getId()))){
-            Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
+        Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
 
-            if(participationOptional.isEmpty()){
-                throw new AppException(ErrorCode.NOT_FOUND_PARTICIPATION, ErrorCode.NOT_FOUND_PARTICIPATION.getMessage());
-            }
-
-            Participation befParticipation = participationOptional.get();
-
-            if(befParticipation.getUser().getId().equals(actingUser.getId())){
-                throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
-            } else{
-                participationRepository.delete(befParticipation);
-            }
-
-
-        }else{
-            throw new AppException(ErrorCode.NOT_AUTHORIZED, ErrorCode.NOT_AUTHORIZED.getMessage());
+        if(participationOptional.isEmpty()){
+            throw new AppException(ErrorCode.NOT_FOUND_PARTICIPATION, ErrorCode.NOT_FOUND_PARTICIPATION.getMessage());
         }
+
+        Participation befParticipation = participationOptional.get();
+
+        // 방장 강퇴 못하도록 막음
+        if(befParticipation.getUser().getId().equals(actingUser.getId())){
+            throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
+        } else{
+            participationRepository.delete(befParticipation);
+        }
+
+
+        // 방장이거나 운영자인 경우만 삭제할 수 있는 기능 주석처리
+//        if((actingUser.getRole() == UserRole.ROLE_ADMIN) || (crew.getUser().getId().equals(actingUser.getId()))){
+//            Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
+//
+//            if(participationOptional.isEmpty()){
+//                throw new AppException(ErrorCode.NOT_FOUND_PARTICIPATION, ErrorCode.NOT_FOUND_PARTICIPATION.getMessage());
+//            }
+//
+//            Participation befParticipation = participationOptional.get();
+//
+//            if(befParticipation.getUser().getId().equals(actingUser.getId())){
+//                throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
+//            } else{
+//                participationRepository.delete(befParticipation);
+//            }
+//
+//
+//        }else{
+//            throw new AppException(ErrorCode.NOT_AUTHORIZED, ErrorCode.NOT_AUTHORIZED.getMessage());
+//        }
 
     }
 

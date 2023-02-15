@@ -309,11 +309,12 @@ async function findCrewInfo() {
         var json = await response.json();
         console.log(json.result);
         document.getElementById("crewTitle").innerHTML = json.result.title;
-        document.getElementById("crewContent").innerHTML = json.result.content;
-        document.getElementById("crewStrict").innerHTML = json.result.strict;
+        document.getElementById("crewContent").innerHTML = "내용<br>" + json.result.content;
         document.getElementById("crewSport").innerHTML = json.result.sportEnum;
-        document.getElementById("crewLimit").innerHTML = json.result.crewLimit;
-        document.getElementById("createdAt").innerHTML = json.result.createdAt;
+        document.getElementById("crewLimit").innerHTML = "모집인원 : " + json.result.crewLimit;
+        document.getElementById("createdAt").innerHTML = "모임일자 : " + json.result.date;
+        document.getElementById("crewStrict").innerHTML = json.result.strict;
+
         mapRender();
     }
     {

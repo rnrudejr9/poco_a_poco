@@ -15,6 +15,7 @@ import teamproject.pocoapoco.domain.dto.user.UserProfileResponse;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
 import teamproject.pocoapoco.exception.AppException;
+import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.security.config.EncrypterConfig;
 import teamproject.pocoapoco.service.CrewReviewService;
@@ -23,10 +24,12 @@ import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.text.html.Option;
 import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("/view/v1")
@@ -155,7 +158,7 @@ public class ProfileController {
 
 
     @GetMapping("/users/profile/{userName}")
-    public String getUserProfile(@PathVariable String userName, Model model, HttpServletResponse response) throws IOException {
+    public String getUserProfile(@PathVariable String userName, Model model, HttpServletResponse response, Authentication authentication) throws IOException {
 
         model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
         model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
@@ -163,10 +166,22 @@ public class ProfileController {
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
+        Optional<User> userOptional = userRepository.findByUserName(authentication.getName());
+
+        if(userOptional.isEmpty()){
+            model.addAttribute("myImagePath", null);
+        } else{
+            User myUser = userOptional.get();
+            model.addAttribute("myImagePath", myUser.getImagePath());
+        }
+
+
         try{
+            // 알림 체크
+            if(authentication != null) followService.readAlarmsFollow(authentication.getName());
+
             UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
             model.addAttribute("userProfileResponse", userProfileResponse);
-            //
             // 페이지 연결
             model.addAttribute("userName", userName);
 

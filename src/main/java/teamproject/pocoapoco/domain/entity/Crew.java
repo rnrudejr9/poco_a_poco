@@ -19,7 +19,7 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Where(clause = "deleted_at is null")
+//@Where(clause = "deleted_at is null")
 public class Crew extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

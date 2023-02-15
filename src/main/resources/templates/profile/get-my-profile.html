@@ -210,7 +210,82 @@
                     </h2>
                     <div>
                         <div  class="d-flex text-muted  pt-3" th:each="followingList : ${followingResponse}">
-                            <img th:src="${followingList.imagePath}" class="rounded mx-auto d-block" style="height: 20px; width: 20px;" >
+                            <input type="hidden" th:value="${followingList.imagePath}" th:id="${followingList.userName}+' imgKey'">
+                            <img class="rounded mx-auto d-block" style="height: 20px; width: 20px;" th:id="${followingList.userName}+' imgId'">
+
+
+                            <input hidden th:value="${AWS_ACCESS_KEY}" id="followingAwsAccessKey">
+                            <input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="followingAwsSecretAccessKey">
+                            <input hidden th:value="${AWS_REGION}" id="followingAwsRegion">
+                            <input hidden th:value="${AWS_BUCKET_NAME}" id="followingAwsBucketName">
+                            <input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="followingAwsBucketDirectory">
+
+                            <script type="text/javascript" th:inline="javascript">
+
+                                console.log([[${followingList.userName}]]+' imgKey');
+                                console.log([[${followingList.userName}]]+' imgId');
+
+
+                                var imgKey = document.getElementById([[${followingList.userName}]]+' imgKey').value;
+                                var imgId = [[${followingList.userName}]]+' imgId';
+
+                                profileGet(imgKey, imgId);
+
+                                async function profileGet(imgKey, imgId) {
+
+                                    // let uuidString = Math.random().toString(20).substr(2,8);
+
+                                    const ACCESS_KEY = document.getElementById("followingAwsAccessKey").value;
+                                    const SECRET_ACCESS_KEY = document.getElementById("followingAwsSecretAccessKey").value;
+                                    const REGION = document.getElementById("followingAwsRegion").value;
+                                    const BUCKET_NAME = document.getElementById("followingAwsBucketName").value;
+                                    const BUCKET_DIRECTORY = document.getElementById("followingAwsBucketDirectory").value;
+                                    const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+
+                                    // AWS ACCESS KEY를 세팅합니다.
+
+                                    AWS.config.update({
+                                        accessKeyId: ACCESS_KEY,
+                                        secretAccessKey: SECRET_ACCESS_KEY
+                                    });
+
+                                    var s3 = new AWS.S3({
+                                        region: REGION
+                                    });
+
+                                    // var imgKey = $('input[name=img-key]').val();
+
+                                    if (!imgKey) {
+                                        imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+                                    }
+
+                                    // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+
+
+                                    const params = {
+                                        Bucket: S3_BUCKET,
+                                        Key: imgKey
+                                    };
+
+                                    var url = s3.getSignedUrl(
+                                        "getObject", params
+                                    );
+
+                                    // const img1 = document.getElementById('left-image');
+                                    // img1.src = url;
+
+                                    console.log("imageId:{ }", imgId);
+
+                                    document.getElementById(imgId).src = url;
+
+                                }
+
+
+                            </script>
+
+
+
 
                             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
                             <p  class="pb-3 mb-0 small lh-sm " >
@@ -225,7 +300,82 @@
                     </h2>
                     <div>
                         <div  class="d-flex text-muted  pt-3" th:each="followedList : ${followedResponse}">
-                            <img th:src="${followedList.imagePath}" class="rounded mx-auto d-block" style="height: 20px; width: 20px;">
+
+                            <input type="hidden" th:value="${followedList.imagePath}" th:id="${followedList.userName}+' imgKey'">
+                            <img class="rounded mx-auto d-block" style="height: 20px; width: 20px;" th:id="${followedList.userName}+' imgId'">
+
+                            <input hidden th:value="${AWS_ACCESS_KEY}" id="followedAwsAccessKey">
+                            <input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="followedAwsSecretAccessKey">
+                            <input hidden th:value="${AWS_REGION}" id="followedAwsRegion">
+                            <input hidden th:value="${AWS_BUCKET_NAME}" id="followedAwsBucketName">
+                            <input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="followedAwsBucketDirectory">
+
+                            <script type="text/javascript" th:inline="javascript">
+
+                                console.log([[${followedList.userName}]]+' imgKey');
+                                console.log([[${followedList.userName}]]+' imgId');
+
+
+                                var imgKey = document.getElementById([[${followedList.userName}]]+' imgKey').value;
+                                var imgId = [[${followedList.userName}]]+' imgId';
+
+                                profileGets(imgKey, imgId);
+
+                                async function profileGets(imgKey, imgId) {
+
+                                    // let uuidString = Math.random().toString(20).substr(2,8);
+
+                                    const ACCESS_KEY = document.getElementById("followedAwsAccessKey").value;
+                                    const SECRET_ACCESS_KEY = document.getElementById("followedAwsSecretAccessKey").value;
+                                    const REGION = document.getElementById("followedAwsRegion").value;
+                                    const BUCKET_NAME = document.getElementById("followedAwsBucketName").value;
+                                    const BUCKET_DIRECTORY = document.getElementById("followedAwsBucketDirectory").value;
+                                    const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+
+                                    // AWS ACCESS KEY를 세팅합니다.
+
+                                    AWS.config.update({
+                                        accessKeyId: ACCESS_KEY,
+                                        secretAccessKey: SECRET_ACCESS_KEY
+                                    });
+
+                                    var s3 = new AWS.S3({
+                                        region: REGION
+                                    });
+
+                                    // var imgKey = $('input[name=img-key]').val();
+
+                                    if (!imgKey) {
+                                        imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+                                    }
+
+                                    // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+
+
+                                    const params = {
+                                        Bucket: S3_BUCKET,
+                                        Key: imgKey
+                                    };
+
+                                    var url = s3.getSignedUrl(
+                                        "getObject", params
+                                    );
+
+                                    // const img1 = document.getElementById('left-image');
+                                    // img1.src = url;
+
+                                    console.log("imageId:{ }", imgId);
+
+                                    document.getElementById(imgId).src = url;
+
+                                }
+
+
+                            </script>
+
+
+
                             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
                             <p  class="pb-3 mb-0 small lh-sm " >
                                 <a th:href="@{/view/v1/users/profile/{userName}(userName=${followedList.userName})}"><strong class="d-block text-gray-dark" th:text="|${followedList.nickName}|"></strong></a>
