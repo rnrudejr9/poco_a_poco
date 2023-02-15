@@ -84,6 +84,10 @@ public class ParticipationService {
         User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
         Crew crew = crewRepository.findById(partDto.getCrewId()).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
 
+        if(crew.getFinish() == 1){
+            return Response.success("이미 종료된 모임입니다");
+        }
+
         if (participationRepository.existsByCrewAndAndUser(crew, user)) {
             Participation participation = participationRepository.findByCrewAndUser(crew, user).orElseThrow(() -> new AppException(ErrorCode.DB_ERROR, ErrorCode.DB_ERROR.getMessage()));
             participationRepository.delete(participation);
@@ -115,6 +119,7 @@ public class ParticipationService {
     public PartResponse findParticipate(Long crewId, String userName) {
         User user = userRepository.findByUserName(userName).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
         Crew crew = crewRepository.findById(crewId).orElseThrow(() -> new AppException(ErrorCode.CREW_NOT_FOUND, ErrorCode.CREW_NOT_FOUND.getMessage()));
+
         if (!participationRepository.existsByCrewAndAndUser(crew, user)) {
             return PartResponse.builder().status(0).build();
         }

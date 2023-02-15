@@ -16,7 +16,7 @@ public class Review extends BaseEntity{
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "crew_id")
     private Crew crew;
 

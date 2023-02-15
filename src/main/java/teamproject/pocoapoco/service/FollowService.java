@@ -6,14 +6,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import teamproject.pocoapoco.domain.dto.follow.FollowingResponse;
+import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Follow;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.AlarmType;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.exception.ErrorCode;
+import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.FollowRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
 import javax.transaction.Transactional;
+import java.util.List;
 import java.util.Optional;
 
 import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmitters;
@@ -24,6 +28,7 @@ import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmi
 public class FollowService {
     private final UserRepository userRepository;
     private final FollowRepository followRepository;
+    private final AlarmRepository alarmRepository;
 
     @Transactional
     public FollowingResponse follow(String followingUserId, Long userId){
@@ -44,6 +49,7 @@ public class FollowService {
 
         Optional<Follow> follow = followRepository.findByFollowingUserIdAndFollowedUserId(followingUser.getId(), user.getId());
 
+
         if(followRepository.findByFollowingUserIdAndFollowedUserId(followingUser.getId(),user.getId()).isPresent()){
             followRepository.delete(follow.get());
             //팔로우 취소
@@ -51,6 +57,8 @@ public class FollowService {
         }else{
             //팔로우
             followRepository.save(new Follow(followingUser,user));
+            //알림 저장
+            alarmRepository.save(Alarm.toEntityFromFollow(user, followingUser, AlarmType.FOLLOW_CREW, AlarmType.FOLLOW_CREW.getText()));
             //sse 로직
             if (sseEmitters.containsKey(user.getUsername())) {
                 SseEmitter sseEmitter = sseEmitters.get(user.getUsername());
@@ -129,4 +137,15 @@ public class FollowService {
         return list.map(FollowingResponse::followedResponse);
     }
 
+    @Transactional
+    public void readAlarmsFollow(String username) {
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+        List<Alarm> alarms = user.getAlarms();
+        for (Alarm alarm : alarms) {
+            boolean readOrNot = alarm.getReadOrNot();
+            if (!readOrNot && alarm.getAlarmType().equals(AlarmType.FOLLOW_CREW)) {
+                alarm.setReadOrNot();
+            }
+        }
+    }
 }

@@ -9,50 +9,254 @@
 <main class="container mt-4" style="margin: auto;">
     <div class="container">
         <h2>알림📢</h2>
-        <div>  총 건수 : <span th:text="${alarms.totalElements}"></span></div>
+        <div> 총 건수 : <span th:text="${alarms.totalElements}"></span></div>
     </div>
 
 
-    <div  class="my-3 p-3 bg-body rounded shadow-sm" >
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0 ">Recent updates</h6>
         <!-- 읽지 않은 알림 -->
         <div  th:if="!${alarm.readOrNot}" class="d-flex text-muted  pt-3" th:each="alarm : ${alarms}">
-            <img th:src="${alarm.imagePath}" class="rounded  d-block" style="height: 20px; width: 20px;" >
+            <img class="rounded  d-block" style="height: 20px; width: 20px;" th:id="${alarm.getId()}+' imageId'">
+            <input type="hidden" th:value="${alarm.imagePath}" th:id="${alarm.getId()}+' imageKey'">
+
+            <input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+            <input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+            <input hidden th:value="${AWS_REGION}" id="awsRegion">
+            <input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+            <input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
+            <script type="text/javascript" th:inline="javascript">
+
+                console.log([[${alarm.getId()}]]+' imageKey');
+                console.log([[${alarm.getId()}]]+' imageId');
+
+
+                var imgKey = document.getElementById([[${alarm.getId()}]]+ ' imageKey').value;
+                var imgId = [[${alarm.getId()}]]+ ' imageId';
+
+                profileGet(imgKey, imgId);
+
+                async function profileGet(imgKey, imgId) {
+
+                    // let uuidString = Math.random().toString(20).substr(2,8);
+
+                    const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+                    const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+                    const REGION = document.getElementById("awsRegion").value;
+                    const BUCKET_NAME = document.getElementById("awsBucketName").value;
+                    const BUCKET_DIRECTORY = document.getElementById("awsBucketDirectory").value;
+                    const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+
+                    // AWS ACCESS KEY를 세팅합니다.
+
+                    AWS.config.update({
+                        accessKeyId: ACCESS_KEY,
+                        secretAccessKey: SECRET_ACCESS_KEY
+                    });
+
+                    var s3 = new AWS.S3({
+                        region: REGION
+                    });
+
+                    // var imgKey = $('input[name=img-key]').val();
+
+                    if (!imgKey) {
+                        imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+                    }
+                    console.log("imgkey: ", imgKey);
+
+                    // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+
+
+                    const params = {
+                        Bucket: S3_BUCKET,
+                        Key: imgKey
+                    };
+
+                    var url = s3.getSignedUrl(
+                        "getObject", params
+                    );
+
+                    // const img1 = document.getElementById('left-image');
+                    // img1.src = url;
+
+                    console.log("imageId:{ }", imgId);
+
+                    document.getElementById(imgId).src = url;
+
+                }
+
+
+            </script>
+
             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
-            </p>
+            <div th:switch="${alarm.alarmType.name}">
+                <span th:case="FOLLOW_CREW">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{/view/v1/users/profile/{userName}(userName=${alarm.targetName})}"
+                       th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="REVIEW_CREW">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{/view/v1/crews/{user}/reviewList/{targetId}(user=${alarm.username}, targetId=${alarm.targetId})}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="LIKE_COMMENT">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="LIKE_CREW">
+                     <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="ADD_COMMENT">
+                     <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+
+            </div>
+
         </div>
         <!-- 읽은 알림 -->
         <div  th:if="${alarm.readOrNot}" class="d-flex text-muted opacity-50 pt-3" th:each="alarm : ${alarms}">
-            <img th:src="${alarm.imagePath}" class="rounded  d-block" style="height: 20px; width: 20px;" >
 
-            <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
-                <text>읽음</text>
-            </p>
+            <img class="rounded  d-block" style="height: 20px; width: 20px;" th:id="${alarm.getId()}+' imageId'">
+            <input type="hidden" th:value="${alarm.imagePath}" th:id="${alarm.getId()}+' imageKey'">
 
 
+            <input hidden th:value="${AWS_ACCESS_KEY}" id="readOrNotAwsAccessKey">
+            <input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="readOrNotAwsSecretAccessKey">
+            <input hidden th:value="${AWS_REGION}" id="readOrNotAwsRegion">
+            <input hidden th:value="${AWS_BUCKET_NAME}" id="readOrNotAwsBucketName">
+            <input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="readOrNotAwsBucketDirectory">
+
+            <script type="text/javascript" th:inline="javascript">
+
+                console.log([[${alarm.getId()}]]+' imageKey');
+                console.log([[${alarm.getId()}]]+' imageId');
+
+
+                var imgKey = document.getElementById([[${alarm.getId()}]]+ ' imageKey').value;
+                var imgId = [[${alarm.getId()}]]+ ' imageId';
+
+                profileGet(imgKey, imgId);
+
+                async function profileGet(imgKey, imgId) {
+
+                    // let uuidString = Math.random().toString(20).substr(2,8);
+
+                    const ACCESS_KEY = document.getElementById("readOrNotAwsAccessKey").value;
+                    const SECRET_ACCESS_KEY = document.getElementById("readOrNotAwsSecretAccessKey").value;
+                    const REGION = document.getElementById("readOrNotAwsRegion").value;
+                    const BUCKET_NAME = document.getElementById("readOrNotAwsBucketName").value;
+                    const BUCKET_DIRECTORY = document.getElementById("readOrNotAwsBucketDirectory").value;
+                    const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+
+                    // AWS ACCESS KEY를 세팅합니다.
+
+                    AWS.config.update({
+                        accessKeyId: ACCESS_KEY,
+                        secretAccessKey: SECRET_ACCESS_KEY
+                    });
+
+                    var s3 = new AWS.S3({
+                        region: REGION
+                    });
+
+                    // var imgKey = $('input[name=img-key]').val();
+
+                    if (!imgKey) {
+                        imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+                    }
+                    console.log("imgkey: ", imgKey);
+
+                    // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+
+
+                    const params = {
+                        Bucket: S3_BUCKET,
+                        Key: imgKey
+                    };
+
+                    var url = s3.getSignedUrl(
+                        "getObject", params
+                    );
+
+                    // const img1 = document.getElementById('left-image');
+                    // img1.src = url;
+
+                    console.log("imageId:{ }", imgId);
+
+                    document.getElementById(imgId).src = url;
+
+                }
+
+
+            </script>
+
+            <div th:switch="${alarm.alarmType.name}">
+                <span th:case="FOLLOW_CREW">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{/view/v1/users/profile/{userName}(userName=${alarm.targetName})}"
+                       th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="REVIEW_CREW">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{/view/v1/crews/{user}/reviewList/{targetId}(user=${alarm.username}, targetId=${alarm.targetId})}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="LIKE_COMMENT">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="LIKE_CREW">
+                     <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="ADD_COMMENT">
+                     <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+            </div>
         </div>
-
-        <small class="d-block text-end mt-3">
-            <a href="/view/v1/alarm">All updates</a>
-        </small>
     </div>
+    <small class="d-block text-end mt-3">
+        <a href="/view/v1/alarm">All updates</a>
+    </small>
 
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${1 == alarms.pageable.pageNumber + 1} ? 'disabled'">
                 <a class="page-link" href="#" th:href="@{/view/v1/alarm(page=${alarms.pageable.pageNumber - 1})}">Previous</a>
             </li>
-            <li class="page-item" th:classappend="${i == alarms.pageable.pageNumber + 1} ? 'disabled'" th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <li class="page-item" th:classappend="${i == alarms.pageable.pageNumber + 1} ? 'disabled'"
+                th:each="i : ${#numbers.sequence(startPage, endPage)}">
                 <a class="page-link" href="#" th:href="@{/view/v1/alarm(page=${i - 1})}" th:text="${i}">1</a>
             </li>
             <li class="page-item" th:classappend="${alarms.totalPages == alarms.pageable.pageNumber + 1} ? 'disabled'">
-                <a class="page-link" href="#" th:href="@{/view/v1/alarm(page=${alarms.pageable.pageNumber + 1})}">Next</a>
+                <a class="page-link" href="#"
+                   th:href="@{/view/v1/alarm(page=${alarms.pageable.pageNumber + 1})}">Next</a>
             </li>
         </ul>
     </nav>

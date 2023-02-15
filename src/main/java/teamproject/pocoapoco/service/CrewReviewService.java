@@ -8,16 +8,18 @@ import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
+import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.Review;
 import teamproject.pocoapoco.domain.entity.User;
+import teamproject.pocoapoco.enums.AlarmType;
+import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.CrewReviewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.repository.part.ParticipationRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -29,38 +31,29 @@ public class CrewReviewService {
     private final CrewRepository crewRepository;
 
     private final CrewReviewRepository crewReviewRepository;
+    private final AlarmRepository alarmRepository;
     private final ParticipationRepository participationRepository;
 
     // 리뷰 저장
     @Transactional
     public void addReview(ReviewRequest crewReviewRequest) {
 
-        List<Review> reviewList = new ArrayList<>();
-
         try{
             Crew crew = crewRepository.findById(crewReviewRequest.getCrewId().get(0)).get();
             User fromUser = userRepository.findById(crewReviewRequest.getFromUserId().get(0)).get();
 
             for (int i = 0; i < crewReviewRequest.getCrewId().size(); i++) {
+                log.info("첫번째-----------for 문 도는 횟수");
                 Review review = new Review();
 
                 User toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i)).get();
 
                 review.of(crew, fromUser, toUser,
                         crewReviewRequest.getUserMannerScore().get(i), crewReviewRequest.getUserReview().get(i));
-                reviewList.add(review);
+                crewReviewRepository.save(review);
+                toUser.addReviewScore(review.getReviewScore());
+                alarmRepository.save(Alarm.toEntityFromReview(toUser, fromUser, review, AlarmType.REVIEW_CREW, AlarmType.REVIEW_CREW.getText()));
             }
-            crewReviewRepository.saveAll(reviewList);
-
-            // reviewScore 저장
-            for (int i = 0; i < crewReviewRequest.getCrewId().size(); i++) {
-                User toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i)).get();
-                List<Review> reviews = crewReviewRepository.findAllByCrewAndToUser(crew, toUser);
-                for (Review review : reviews) {
-                    toUser.addReviewScore(review.getReviewScore());
-                }
-            }
-
         }catch (NullPointerException e){
             log.info("이용자 후기 NullPointerException : 작성 가능한 후기 내용이 없습니다.");
         }
@@ -144,6 +137,13 @@ public class CrewReviewService {
     public long getReviewAllCount(String userName) {
         User user = userRepository.findByUserName(userName).get();
         return crewReviewRepository.countReviewByToUser(user);
+    }
+
+
+    @Transactional
+    public boolean isContainReview(Crew crew,User user){
+
+        return crewReviewRepository.existsByCrewAndFromUser(crew,user);
     }
 
 

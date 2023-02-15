@@ -174,7 +174,6 @@ div.card {
 
 
 .scrollBar {
-    width: 25em;
     height: 40em;
     overflow-y: scroll;
     overflow-x: hidden;

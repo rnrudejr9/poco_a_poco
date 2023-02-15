@@ -23,8 +23,7 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
     @Query("select s from Crew s where s.sportEnum=:sport or s.sportEnum=:sport2 or s.sportEnum=:sport3")
     Page<Crew> findBySportEnum(Pageable pageable, @Param("sport") SportEnum sport, @Param("sport2") SportEnum sport2, @Param("sport3") SportEnum sport3);
 
-
-    Page<Crew> findByStrictContainsAndSportEnumIn(String strict, List<SportEnum> sportEnum, Pageable pageable);
+    Page<Crew> findByDeletedAtIsNullAndStrictContainsAndSportEnumIn(String strict, List<SportEnum> sportEnum, Pageable pageable);
 
     Long countBy();
 

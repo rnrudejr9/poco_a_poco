@@ -67,7 +67,7 @@ async function enterCheck(){
     })
     if(response.ok){
         var json = await response.json();
-
+        console.log(json.result);
         if(json.result.status === 0){
             document.getElementById("sendtogle").style.display = "block";
             document.getElementById("notallowed").style.display = "none";
@@ -100,10 +100,6 @@ async function enterCheck(){
             document.getElementById("finishCrew").style.display = "none";
         }
 
-    }else{
-        var json = await response.json();
-        console.log(json);
-        
     }
 }
 
