@@ -147,4 +147,11 @@ public class CrewReviewService {
     }
 
 
+    @Transactional
+    public boolean isContainReview(Crew crew,User user){
+
+        return crewReviewRepository.existsByCrewAndFromUser(crew,user);
+    }
+
+
 }

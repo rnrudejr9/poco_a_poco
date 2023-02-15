@@ -17,4 +17,7 @@ public interface CrewReviewRepository extends JpaRepository<Review, Long> {
 
     long countReviewByToUser(User user);
     List<Review> findAllByCrewAndToUser(Crew crew, User user);
+
+    boolean existsByCrewAndFromUser(Crew crew,User fromUser);
+
 }
