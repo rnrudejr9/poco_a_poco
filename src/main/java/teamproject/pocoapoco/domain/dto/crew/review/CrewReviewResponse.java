@@ -12,6 +12,7 @@ public class CrewReviewResponse {
     private String fromUserName;
     private String crewTitle;
     private String crewImage;
+    private String fromUserImagePath;
 
     public static CrewReviewResponse of(Review review) {
         return CrewReviewResponse.builder()
@@ -19,6 +20,7 @@ public class CrewReviewResponse {
                 .fromUserName(review.getFromUser().getNickName())
                 .crewTitle(review.getCrew().getTitle())
                 .crewImage(review.getCrew().getImagePath())
+                .fromUserImagePath(review.getFromUser().getImagePath())
                 .build();
     }
 
