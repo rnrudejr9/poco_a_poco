@@ -20,10 +20,11 @@ public class Alarm extends BaseEntity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
-    private User user; // Crew의 주인
+    private User user;
 
     private String fromUserName;
-    private Long targetCrewId;
+    private Long targetId; //어디에 팔로우를 했는지
+    private String targetName; //프로필 조회가 userName으로 되어있음
     private String massage;
     private boolean readOrNot;
     private AlarmType alarmType;
@@ -33,7 +34,7 @@ public class Alarm extends BaseEntity {
                 .user(crew.getUser())
                 .alarmType(alarmType)
                 .fromUserName(user.getNickName())
-                .targetCrewId(crew.getId())
+                .targetId(crew.getId())
                 .massage(comment)
                 .build();
         return alarm;
@@ -44,7 +45,31 @@ public class Alarm extends BaseEntity {
                 .user(commentUser.getUser())
                 .alarmType(alarmType)
                 .fromUserName(user.getNickName())
-                .targetCrewId(crew.getId())
+                .targetId(crew.getId())
+                .massage(comment)
+                .build();
+        return alarm;
+    }
+
+    public static Alarm toEntityFromFollow(User user, User followingUser, AlarmType alarmType, String comment) {
+        Alarm alarm = Alarm.builder()
+                .user(user)
+                .alarmType(alarmType)
+                .fromUserName(followingUser.getNickName())
+                .targetId(followingUser.getId())
+                .targetName(followingUser.getUsername())
+                .massage(comment)
+                .build();
+        return alarm;
+    }
+
+    public static Alarm toEntityFromReview(User toUser, User fromUser,Review review ,AlarmType alarmType, String comment) {
+        Alarm alarm = Alarm.builder()
+                .user(toUser)
+                .alarmType(alarmType)
+                .fromUserName(fromUser.getNickName())
+                .targetId(review.getId())
+                .targetName(toUser.getUsername())
                 .massage(comment)
                 .build();
         return alarm;

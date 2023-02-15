@@ -9,11 +9,11 @@
 <main class="container mt-4" style="margin: auto;">
     <div class="container">
         <h2>알림📢</h2>
-        <div>  총 건수 : <span th:text="${alarms.totalElements}"></span></div>
+        <div> 총 건수 : <span th:text="${alarms.totalElements}"></span></div>
     </div>
 
 
-    <div  class="my-3 p-3 bg-body rounded shadow-sm" >
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
         <h6 class="border-bottom pb-2 mb-0 ">Recent updates</h6>
         <!-- 읽지 않은 알림 -->
         <div  th:if="!${alarm.readOrNot}" class="d-flex text-muted  pt-3" th:each="alarm : ${alarms}">
@@ -180,31 +180,66 @@
 
 
 
-            <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
-                <text>읽음</text>
-            </p>
-
+            </div>
 
         </div>
 
-        <small class="d-block text-end mt-3">
-            <a href="/view/v1/alarm">All updates</a>
-        </small>
+        <!-- 읽은 알림 -->
+        <div th:if="${alarm.readOrNot}" class="d-flex text-muted opacity-50 pt-3" th:each="alarm : ${alarms}">
+            <div th:switch="${alarm.alarmType.name}">
+                <img th:src="${alarm.imagePath}" class="rounded  d-block" style="height: 20px; width: 20px;">
+                <span th:case="FOLLOW_CREW">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{/view/v1/users/profile/{userName}(userName=${alarm.targetName})}"
+                       th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="REVIEW_CREW">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{/view/v1/crews/{userName}(userName=${alarm.username})/reviewList/{targetId}(targetId=${alarm.targetId})}"
+                       th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="LIKE_COMMENT">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="LIKE_CREW">
+                     <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="ADD_COMMENT">
+                     <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+            </div>
+        </div>
+
     </div>
+    <small class="d-block text-end mt-3">
+        <a href="/view/v1/alarm">All updates</a>
+    </small>
 
     <nav aria-label="Page navigation example">
         <ul class="pagination justify-content-center">
             <li class="page-item" th:classappend="${1 == alarms.pageable.pageNumber + 1} ? 'disabled'">
                 <a class="page-link" href="#" th:href="@{/view/v1/alarm(page=${alarms.pageable.pageNumber - 1})}">Previous</a>
             </li>
-            <li class="page-item" th:classappend="${i == alarms.pageable.pageNumber + 1} ? 'disabled'" th:each="i : ${#numbers.sequence(startPage, endPage)}">
+            <li class="page-item" th:classappend="${i == alarms.pageable.pageNumber + 1} ? 'disabled'"
+                th:each="i : ${#numbers.sequence(startPage, endPage)}">
                 <a class="page-link" href="#" th:href="@{/view/v1/alarm(page=${i - 1})}" th:text="${i}">1</a>
             </li>
             <li class="page-item" th:classappend="${alarms.totalPages == alarms.pageable.pageNumber + 1} ? 'disabled'">
-                <a class="page-link" href="#" th:href="@{/view/v1/alarm(page=${alarms.pageable.pageNumber + 1})}">Next</a>
+                <a class="page-link" href="#"
+                   th:href="@{/view/v1/alarm(page=${alarms.pageable.pageNumber + 1})}">Next</a>
             </li>
         </ul>
     </nav>

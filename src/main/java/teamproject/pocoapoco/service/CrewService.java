@@ -219,12 +219,26 @@ public class CrewService {
         List<Alarm> alarms = user.getAlarms();
         for (Alarm alarm : alarms) {
             boolean readOrNot = alarm.getReadOrNot();
-            if (alarm.getTargetCrewId() == crewId && !readOrNot) {
+            if (alarm.getTargetId() == crewId && !readOrNot) {
                 alarm.setReadOrNot();
                 log.info("알람을 읽었습니다 : {}        알림 : {}", alarm.getId(), alarm.getReadOrNot());
             }
         }
     }
+    @Transactional
+    public void readAlarmsReview(Long reviewId, String username) {
+        User user = userRepository.findByUserName(username).orElseThrow(() -> new AppException(ErrorCode.USERID_NOT_FOUND, ErrorCode.USERID_NOT_FOUND.getMessage()));
+        List<Alarm> alarms = user.getAlarms();
+        for (Alarm alarm : alarms) {
+            boolean readOrNot = alarm.getReadOrNot();
+            if (alarm.getTargetId() == reviewId && !readOrNot) {
+                alarm.setReadOrNot();
+                log.info("알람을 읽었습니다 : {}        알림 : {}", alarm.getId(), alarm.getReadOrNot());
+            }
+        }
+    }
+
+
 
     // 내가 참여한 crew list
     public Page<CrewDetailResponse> findAllCrew(Integer status, String userName,Pageable pageable) {
