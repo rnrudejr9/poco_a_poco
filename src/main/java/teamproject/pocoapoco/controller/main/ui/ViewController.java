@@ -49,6 +49,7 @@ public class ViewController {
         try {
             tokens = userService.login(userLoginRequest);
         } catch (Exception e) {
+            e.printStackTrace();
             response.setContentType("text/html; charset=UTF-8");
             PrintWriter out = response.getWriter();
 
