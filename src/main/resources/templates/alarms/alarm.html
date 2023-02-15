@@ -92,11 +92,41 @@
             </script>
 
             <!--게시글 상세로 넘어가게 상세 API herf로 넣으면 됨-->
-            <p  class="pb-3 mb-0 small lh-sm border-bottom" >
-                <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
-            </p>
+            <div th:switch="${alarm.alarmType.name}">
+                <span th:case="FOLLOW_CREW">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{/view/v1/users/profile/{userName}(userName=${alarm.targetName})}"
+                       th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="REVIEW_CREW">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{/view/v1/crews/{userName}(userName=${alarm.username})/reviewList/{targetId}(targetId=${alarm.targetId})}"
+                       th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="LIKE_COMMENT">
+                    <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="LIKE_CREW">
+                     <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
+                <span th:case="ADD_COMMENT">
+                     <p class="pb-3 mb-0 small lh-sm border-bottom">
+                    <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
+                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                </p>
+                </span>
 
+            </div>
 
         </div>
         <!-- 읽은 알림 -->
@@ -177,17 +207,7 @@
 
             </script>
 
-
-
-
-            </div>
-
-        </div>
-
-        <!-- 읽은 알림 -->
-        <div th:if="${alarm.readOrNot}" class="d-flex text-muted opacity-50 pt-3" th:each="alarm : ${alarms}">
             <div th:switch="${alarm.alarmType.name}">
-                <img th:src="${alarm.imagePath}" class="rounded  d-block" style="height: 20px; width: 20px;">
                 <span th:case="FOLLOW_CREW">
                     <p class="pb-3 mb-0 small lh-sm border-bottom">
                     <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
@@ -222,7 +242,6 @@
                 </span>
             </div>
         </div>
-
     </div>
     <small class="d-block text-end mt-3">
         <a href="/view/v1/alarm">All updates</a>
