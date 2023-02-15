@@ -62,6 +62,12 @@
 <input type="text" hidden th:value="${crewId}" id="crewIdJoin">
 <input type="text" hidden th:value="${details.title}" id="crewName">
 
+<input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+<input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+<input hidden th:value="${AWS_REGION}" id="awsRegion">
+<input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+<input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
 <section class="bg-gray200 pt-5 pb-5">
     <div class="container">
         <!-- 참여자 명단 -->
@@ -190,6 +196,8 @@
                         <br>
                     </div>
                     <div id="commentList"> 댓글</div>
+
+
 
                     <!--End Comments
                     ================================================== -->
