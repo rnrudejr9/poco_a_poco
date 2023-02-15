@@ -29,7 +29,6 @@ import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
-import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.CrewReviewService;
@@ -279,7 +278,10 @@ public class CrewViewController {
 
     // 리뷰 detail
     @GetMapping("/{userName}/reviewList/{reviewId}")
-    public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model) {
+    public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model, Authentication authentication) {
+
+        //알림 체크
+        if(authentication != null) crewService.readAlarmsReview(reviewId, authentication.getName());
 
         CrewReviewDetailResponse review = crewReviewService.findReviewById(reviewId);
         model.addAttribute("review", review);

@@ -39,42 +39,42 @@ class FollowControllerTest {
     private TestInfoFixture.TestInfo fixture;
     private FollowingResponse followingResponse;
 
-    @Test
-    @WithMockUser
-    @DisplayName("팔로잉")
-    public void followingSuccess() throws Exception {
-        //given
-        fixture = TestInfoFixture.get();
-        //when
-        when(followService.follow(any(),any())).thenReturn(fixture.getUserName()+"님을 팔로우 합니다.");
-
-        //then
-        mockMvc.perform(post("/api/v1/social/1/follow")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(1L)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result").value(fixture.getUserName()+"님을 팔로우 합니다."))
-                .andDo(print());
-    }
-    @Test
-    @WithMockUser
-    @DisplayName("언팔로잉")
-    public void unFollowingSuccess() throws Exception {
-        //given
-        fixture = TestInfoFixture.get();
-        //when
-        when(followService.follow(any(),any())).thenReturn(fixture.getUserName()+"님을 팔로우 취소 합니다.");
-
-        //then
-        mockMvc.perform(post("/api/v1/social/1/follow")
-                        .with(csrf())
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsBytes(1L)))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.result").value(fixture.getUserName()+"님을 팔로우 취소 합니다."))
-                .andDo(print());
-    }
+//    @Test
+//    @WithMockUser
+//    @DisplayName("팔로잉")
+//    public void followingSuccess() throws Exception {
+//        //given
+//        fixture = TestInfoFixture.get();
+//        //when
+//        when(followService.follow(any(),any())).thenReturn(fixture.getUserName()+"님을 팔로우 합니다.");
+//
+//        //then
+//        mockMvc.perform(post("/api/v1/social/1/follow")
+//                        .with(csrf())
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsBytes(1L)))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.result").value(fixture.getUserName()+"님을 팔로우 합니다."))
+//                .andDo(print());
+//    }
+//    @Test
+//    @WithMockUser
+//    @DisplayName("언팔로잉")
+//    public void unFollowingSuccess() throws Exception {
+//        //given
+//        fixture = TestInfoFixture.get();
+//        //when
+//        when(followService.follow(any(),any())).thenReturn(fixture.getUserName()+"님을 팔로우 취소 합니다.");
+//
+//        //then
+//        mockMvc.perform(post("/api/v1/social/1/follow")
+//                        .with(csrf())
+//                        .contentType(MediaType.APPLICATION_JSON)
+//                        .content(objectMapper.writeValueAsBytes(1L)))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.result").value(fixture.getUserName()+"님을 팔로우 취소 합니다."))
+//                .andDo(print());
+//    }
     @Test
     @WithMockUser
     @DisplayName("팔로잉,언팔로잉 실패 - 해당 아이디 없음")

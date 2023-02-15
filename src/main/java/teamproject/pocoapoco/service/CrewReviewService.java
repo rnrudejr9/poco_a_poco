@@ -8,10 +8,12 @@ import org.springframework.stereotype.Service;
 import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
+import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.Review;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.domain.entity.part.Participation;
+import teamproject.pocoapoco.enums.AlarmType;
+import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.CrewReviewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
@@ -20,8 +22,6 @@ import teamproject.pocoapoco.repository.part.ParticipationRepository;
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +31,7 @@ public class CrewReviewService {
     private final CrewRepository crewRepository;
 
     private final CrewReviewRepository crewReviewRepository;
+    private final AlarmRepository alarmRepository;
     private final ParticipationRepository participationRepository;
 
     // 리뷰 저장
@@ -51,6 +52,9 @@ public class CrewReviewService {
                 review.of(crew, fromUser, toUser,
                         crewReviewRequest.getUserMannerScore().get(i), crewReviewRequest.getUserReview().get(i));
                 reviewList.add(review);
+
+                //알림 저장
+                alarmRepository.save(Alarm.toEntityFromReview(toUser, fromUser, review, AlarmType.REVIEW_CREW, AlarmType.REVIEW_CREW.getText()));
             }
             crewReviewRepository.saveAll(reviewList);
 
