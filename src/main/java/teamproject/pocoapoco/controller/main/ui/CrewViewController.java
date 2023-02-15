@@ -298,6 +298,14 @@ public class CrewViewController {
     @GetMapping("/{userName}/active")
     public String getActiveCrewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
                                             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
+
         // list
         Page<CrewDetailResponse> crewList = crewService.findAllCrew(2,userName, pageable); // 2: 참여 완료
         model.addAttribute("crewList",crewList);
@@ -315,6 +323,14 @@ public class CrewViewController {
     @GetMapping("/{userName}/end")
     public String getEndCrewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
+
         // list
         Page<CrewDetailResponse> crewList = crewService.findAllCrew(3, userName, pageable); // 3: 모집 종료
         model.addAttribute("crewList",crewList);
