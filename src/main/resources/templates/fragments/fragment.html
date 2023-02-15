@@ -86,6 +86,19 @@
             font-weight: 550;
         }
 
+        #alarmMark {
+            width: 5px;
+            height: 5px;
+            font-size:3px;
+            font-family: 'Nanum Gothic';
+            color: white;
+            line-height: 50px;
+            text-align: center;
+            background: red;
+            border: solid 2px grey;
+            border-radius: 12px;
+        }
+
     </style>
 
 </head>
@@ -113,8 +126,10 @@
             <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="/view/v1/crews/" class="mainText nav-link px-2 text-white" >💪운동메&emsp;&emsp;</a></li>
                 <li><a href="/view/v1/crews/" class="textSize nav-link px-2 text-white">모집글&emsp;&emsp;</a></li>
-                <li><a href="/view/v1/alarm/" sec:authorize="isAuthenticated()" th:href="@{/view/v1/alarm}" class="textSize nav-link px-2 text-white">알림&emsp;&emsp;
+                <li><a href="/view/v1/alarm/" sec:authorize="isAuthenticated()" th:href="@{/view/v1/alarm}" class="textSize nav-link px-2 text-white">
+                    알림
                 </a></li>
+                <p style="display: none" id="alarmMark"></p>
                 <li><a href="/view/v1/users/profile/my" sec:authorize="isAuthenticated()" th:href="@{/view/v1/users/profile/my}"
                        class="textSize nav-link px-2 text-white">My프로필</a></li>
                 <li><a href="/view/v1/users/profile/my" sec:authorize ="hasRole('ROLE_ADMIN')" th:href="@{/view/v1/manage/users}"

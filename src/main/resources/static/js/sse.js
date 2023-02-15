@@ -14,7 +14,8 @@ if (userId.length > 0) {
             showConfirmButton: false,
             timer: 1500
         });
-
+        let alarmMark = document.getElementById("alarmMark");
+        alarmMark.style.display = 'block';
     });
 
 
