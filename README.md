@@ -24,6 +24,12 @@
 <br>
 <p align="center"> <img src="img.png"></p>
 
+## 🤾‍ 프로젝트 시연 영상
+
+<div align="center"><a href="">오늘부터 운동메💪 시연 영상</a></div>
+
+<br>
+
 
 ## 🏋️‍♀️ 개발 환경
 
@@ -37,11 +43,17 @@
 * **필수 라이브러리** : Spring Data JPA, Lombok, Spring Security, thymeleaf, JWT, WebSocket, OAuth2.0, Email
 * **ETC** : Git, IntelliJ, JS, KakaoMap API
 
-<br>
 
-## 🤾‍ 프로젝트 시연 영상
 
-<div align="center"><a href="">오늘부터 운동메💪 시연 영상</a></div>
+## 🚴‍♀️ 시스템 아키텍쳐
+
+![image](https://user-images.githubusercontent.com/49141751/218945679-0d0e1bb6-0655-4313-80e5-9e264bafa0c7.png)
+
+
+
+## 🤸‍♀ ERD
+
+![img_1.png](img_1.png)
 
 <br>
 
@@ -206,15 +218,6 @@
 
 <br>
 
-## 🚴‍♀️ 시스템 아키텍쳐
-
-![image](https://user-images.githubusercontent.com/49141751/218945679-0d0e1bb6-0655-4313-80e5-9e264bafa0c7.png)
-
-<br>
-
-## 🤸‍♀ ERD
-
-![img_1.png](img_1.png)
 
 
 ## 🦁 ETC
