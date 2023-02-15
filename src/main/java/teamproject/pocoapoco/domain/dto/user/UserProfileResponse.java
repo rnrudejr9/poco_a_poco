@@ -15,6 +15,7 @@ public class UserProfileResponse {
     private String sportValue2;
     private String sportValue3;
     private double mannerScore;
+    private String imagePath;
 
     public static UserProfileResponse fromEntity(User user){
 
@@ -42,6 +43,7 @@ public class UserProfileResponse {
                 .sportValue2(sport2)
                 .sportValue3(sport3)
                 .mannerScore(user.getMannerScore())
+                .imagePath(user.getImagePath())
                 .build();
     }
 }

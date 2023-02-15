@@ -204,10 +204,10 @@
 
         let uuidString = Math.random().toString(20).substr(2,8);
 
-        const ACCESS_KEY = 'AKIA44KXB4KHWH22K4HD';
-        const SECRET_ACCESS_KEY = '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';
-        const REGION = 'ap-northeast-2';
-        const BUCKET_NAME = 'poco-bucket-2';
+        const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+        const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+        const REGION = document.getElementById("awsRegion").value;
+        const BUCKET_NAME = document.getElementById("awsBucketName").value;
         const BUCKET_CREW_IMAGE_DIRECTORY = '/crewimages';
         const BUCKET_PROFILE_IMAGE_DIRECTORY = '/profileimages';
 
@@ -383,6 +383,7 @@
             $(".ucommentContentCheck").css("color", "green");
         }
     });
+
     // 부모댓글 리스트 출력
     function getComment(){
 
@@ -402,7 +403,6 @@
                         html += "<li class='list-group-item comments'>";
                         html += "<div class='comment' id='"+this.id+"comment'>";
                         html += "<a href='javascript:; class='userImg'>";
-                        html += "<img width='35px' height='35px' alt='userImg' class='userImg' th:id='${'"+this.id+'imgId'+"'}'>";
                         html += "</a>";
                         html += "<a href='javascript:;' class='writer' style='display:inline'>" + this.userName + "</a>";
                         html += "<div class='comment-info'>";
@@ -429,7 +429,6 @@
                         html += "</div>";
                         html += "</li>";
                         html += "<div id='"+this.id+"children' class='children'></div>";
-
                     }
 
                 });
@@ -774,3 +773,4 @@
     }
 
 </script>
+</html>
