@@ -294,7 +294,7 @@ public class CrewService {
     public Page<CrewDetailResponse> findAllCrew(Integer status, String userName, Pageable pageable) {
         User user = userRepository.findByUserName(userName).orElse(null);
         List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
-        Page<Crew> crewList = crewRepository.findByParticipationsIn(participations, pageable);
+        Page<Crew> crewList = crewRepository.findByDeletedAtIsNullAndParticipationsIn(participations, pageable);
         return crewList.map(CrewDetailResponse::of);
     }
 
@@ -302,7 +302,7 @@ public class CrewService {
     public long getCrewByUserAndStatus(Integer status, String userName) {
         User user = userRepository.findByUserName(userName).orElse(null);
         List<Participation> participations = participationRepository.findByStatusAndUser(status, user);
-        return crewRepository.countByParticipationsIn(participations);
+        return crewRepository.countByDeletedAtNullAndParticipationsIn(participations);
     }
 
     // 강퇴하면 Participation을 지우는 방법 이용
