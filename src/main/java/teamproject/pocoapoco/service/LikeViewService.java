@@ -25,6 +25,7 @@ import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmi
 @Service
 @Slf4j
 @RequiredArgsConstructor
+@Transactional
 public class LikeViewService {
     private final LikeRepository likeRepository;
     private final CrewRepository crewRepository;

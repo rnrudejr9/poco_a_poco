@@ -5,39 +5,41 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 import teamproject.pocoapoco.domain.dto.Review.ReviewRequest;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewDetailResponse;
 import teamproject.pocoapoco.domain.dto.crew.review.CrewReviewResponse;
+import teamproject.pocoapoco.domain.entity.Alarm;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.Review;
 import teamproject.pocoapoco.domain.entity.User;
-import teamproject.pocoapoco.domain.entity.part.Participation;
+import teamproject.pocoapoco.enums.AlarmType;
+import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.CrewReviewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.repository.part.ParticipationRepository;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+
+import static teamproject.pocoapoco.controller.main.api.sse.SseController.sseEmitters;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 @Slf4j
 public class CrewReviewService {
     private final UserRepository userRepository;
     private final CrewRepository crewRepository;
 
     private final CrewReviewRepository crewReviewRepository;
+    private final AlarmRepository alarmRepository;
     private final ParticipationRepository participationRepository;
 
     // 리뷰 저장
     @Transactional
     public void addReview(ReviewRequest crewReviewRequest) {
-
-        List<Review> reviewList = new ArrayList<>();
 
         try{
             Crew crew = crewRepository.findById(crewReviewRequest.getCrewId().get(0)).get();
@@ -50,22 +52,29 @@ public class CrewReviewService {
 
                 review.of(crew, fromUser, toUser,
                         crewReviewRequest.getUserMannerScore().get(i), crewReviewRequest.getUserReview().get(i));
-                reviewList.add(review);
-            }
-            crewReviewRepository.saveAll(reviewList);
-
-            // reviewScore 저장
-            for (int i = 0; i < crewReviewRequest.getCrewId().size(); i++) {
-                User toUser = userRepository.findById(crewReviewRequest.getToUserId().get(i)).get();
-                Review review = crewReviewRepository.findReviewByCrewAndToUser(crew, toUser);
+                crewReviewRepository.save(review);
                 toUser.addReviewScore(review.getReviewScore());
-            }
+                alarmRepository.save(Alarm.toEntityFromReview(toUser, fromUser, review, AlarmType.REVIEW_CREW, AlarmType.REVIEW_CREW.getText()));
 
+                //sse 로직
+                if (sseEmitters.containsKey(toUser.getUsername())) {
+                    log.info("모임 종료 후 작동");
+                    SseEmitter sseEmitter = sseEmitters.get(toUser.getUsername());
+                    try {
+                        sseEmitter.send(SseEmitter.event().name("alarm").data(
+                                "리뷰가 등록되었어요! 확인해 보세요!"));
+                    } catch (Exception e) {
+                        sseEmitters.remove(toUser.getUsername());
+                    }
+                }
+                
+            }
         }catch (NullPointerException e){
             log.info("이용자 후기 NullPointerException : 작성 가능한 후기 내용이 없습니다.");
         }
     }
 
+    @Transactional
     // 리뷰 작성 여부 확인
     public boolean findReviewedUser(Long crewId, User nowUser) {
 
@@ -78,6 +87,7 @@ public class CrewReviewService {
         return false;
     }
 
+    @Transactional
     public Page<CrewReviewResponse> findAllReviewList(String userName, Pageable pageable) {
         User ToUser = userRepository.findByUserName(userName).get();
         Page<Review> allReviewList = crewReviewRepository.findByToUser(ToUser, pageable);
@@ -85,6 +95,7 @@ public class CrewReviewService {
     }
 
     // 리뷰 detail
+    @Transactional
     public CrewReviewDetailResponse findReviewById(Long reviewId) {
         Review review = crewReviewRepository.findById(reviewId).get();
 
@@ -141,6 +152,13 @@ public class CrewReviewService {
     public long getReviewAllCount(String userName) {
         User user = userRepository.findByUserName(userName).get();
         return crewReviewRepository.countReviewByToUser(user);
+    }
+
+
+    @Transactional
+    public boolean isContainReview(Crew crew,User user){
+
+        return crewReviewRepository.existsByCrewAndFromUser(crew,user);
     }
 
 

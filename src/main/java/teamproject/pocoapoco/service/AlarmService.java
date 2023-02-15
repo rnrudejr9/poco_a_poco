@@ -12,9 +12,12 @@ import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.repository.AlarmRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 
+import javax.transaction.Transactional;
+
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class AlarmService {
 
     private final AlarmRepository alarmRepository;
@@ -23,7 +26,9 @@ public class AlarmService {
     public Page<AlarmResponse> getAlarms(Pageable pageable, String username) {
         User user = findByUserName(username);
         Page<Alarm> alarms = alarmRepository.findByUser(user, pageable);
-        return alarms.map(AlarmResponse::fromEntity);
+
+        Page<AlarmResponse> alarmResponses = alarms.map(alarm -> AlarmResponse.fromEntity(alarm, userRepository.findByUserName(alarm.getFromUserName()).get().getImagePath()));
+        return alarmResponses;
     }
 
     public User findByUserName(String userName) {

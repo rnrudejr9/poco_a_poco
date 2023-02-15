@@ -22,7 +22,84 @@
                         <th:block th:each="review : ${reviewList}">
                             <a th:href="@{/view/v1/crews/{userName}/reviewList/{reviewId}(reviewId=${review.id}, userName=${userName})}" class="list-group-item list-group-item-action">
                                 <div style="float: left">
-                                    <img th:src="${review.crewImage}" style="width: 80px; height: 80px; float: left; display: inline-block">
+
+                                    <input type="hidden" name="img-key" th:id="${review.id}+' imageKey'" th:value="${review.getFromUserImagePath()}">
+
+                                    <img style="width: 80px; height: 80px; float: left; display: inline-block" th:id="${review.id}+' imageId'">
+
+
+                                    <input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+                                    <input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+                                    <input hidden th:value="${AWS_REGION}" id="awsRegion">
+                                    <input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+                                    <input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
+                                    <script type="text/javascript" th:inline="javascript">
+
+                                        console.log([[${review.id}]]+' imageKey');
+                                        console.log([[${review.id}]]+' imageId');
+                                        console.log([[${review.getFromUserImagePath()}]]);
+
+
+                                        var imgKey = document.getElementById([[${review.id}]]+ ' imageKey').value;
+                                        var imgId = [[${review.id}]]+ ' imageId';
+
+                                        profileGet(imgKey, imgId);
+
+                                        async function profileGet(imgKey, imgId) {
+
+                                            // let uuidString = Math.random().toString(20).substr(2,8);
+
+                                            const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+                                            const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+                                            const REGION = document.getElementById("awsRegion").value;
+                                            const BUCKET_NAME = document.getElementById("awsBucketName").value;
+                                            const BUCKET_DIRECTORY = document.getElementById("awsBucketDirectory").value;
+                                            const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+
+                                            // AWS ACCESS KEY를 세팅합니다.
+
+                                            AWS.config.update({
+                                                accessKeyId: ACCESS_KEY,
+                                                secretAccessKey: SECRET_ACCESS_KEY
+                                            });
+
+                                            var s3 = new AWS.S3({
+                                                region: REGION
+                                            });
+
+                                            // var imgKey = $('input[name=img-key]').val();
+
+                                            if (!imgKey) {
+                                                imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+                                            }
+
+                                            // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+
+
+                                            const params = {
+                                                Bucket: S3_BUCKET,
+                                                Key: imgKey
+                                            };
+
+                                            var url = s3.getSignedUrl(
+                                                "getObject", params
+                                            );
+
+                                            // const img1 = document.getElementById('left-image');
+                                            // img1.src = url;
+
+                                            console.log("imageId:{ }", imgId);
+
+                                            document.getElementById(imgId).src = url;
+
+                                        }
+
+
+                                    </script>
+
+
                                     <div style="margin-top: 10px; margin-left: 20px; display: inline-block">
                                         <span style="color: orange; font-family: 'Jua', sans-serif; font-size: 20px; font-weight: bold;" th:text="|${review.fromUserName}님이 보낸  후기입니다.|"></span><br>
                                         <small style="color: darkgray; font-family: 'Jua', sans-serif; font-weight: bold;" th:text="|${review.fromUserName}님과 ${review.crewTitle}모임을 함께했어요. 클릭하여 상세 후기를 확인해보세요.|"></small>

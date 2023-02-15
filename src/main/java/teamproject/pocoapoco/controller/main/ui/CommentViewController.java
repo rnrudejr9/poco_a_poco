@@ -10,17 +10,18 @@ import org.springframework.web.bind.annotation.*;
 import teamproject.pocoapoco.domain.dto.comment.CommentRequest;
 import teamproject.pocoapoco.domain.dto.comment.CommentResponse;
 import teamproject.pocoapoco.domain.dto.comment.ui.CommentViewResponse;
-import teamproject.pocoapoco.domain.entity.Comment;
 import teamproject.pocoapoco.exception.ErrorCode;
 import teamproject.pocoapoco.service.CommentService;
 import teamproject.pocoapoco.service.CommentViewService;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class CommentViewController {
 
     private final CommentService commentService;

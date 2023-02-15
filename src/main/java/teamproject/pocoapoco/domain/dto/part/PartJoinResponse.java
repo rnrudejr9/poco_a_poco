@@ -20,5 +20,7 @@ public class PartJoinResponse {
     private String body;
     private String joinUserName;
     private String writerUserName;
+    private String writerUserNickName;
+    private String joinUserNickName;
     private Long joinUserId;
 }

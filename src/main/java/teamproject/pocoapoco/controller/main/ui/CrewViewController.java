@@ -29,7 +29,6 @@ import teamproject.pocoapoco.domain.dto.like.LikeViewResponse;
 import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.enums.SportEnum;
-import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.repository.CrewRepository;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.CrewReviewService;
@@ -39,12 +38,14 @@ import teamproject.pocoapoco.service.part.ParticipationService;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.io.PrintWriter;
 import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 @RequestMapping("/view/v1/crews")
 @Slf4j
+@Transactional
 @Api(tags = {"Crew Controller"})
 public class CrewViewController {
 
@@ -84,8 +85,16 @@ public class CrewViewController {
     public String detailCrew(@PathVariable Long crewId, Model model, @ModelAttribute("sportRequest") CrewSportRequest crewSportRequest,
                              @PageableDefault(page = 0, size = 1, sort = "lastModifiedAt", direction = Sort.Direction.DESC) Pageable pageable, Authentication authentication) {
 
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
-        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, true, pageable);
+        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum2(crewSportRequest, true, pageable);
+        crewId = list.getContent().get(0).getId();
+
         // 참여자 인원 정보
         List<ReviewResponse> members = participationService.findAllPartMember(crewId);
         model.addAttribute("members", members);
@@ -199,8 +208,17 @@ public class CrewViewController {
             crewSportRequest.setLoginStatus(true);
         }
 
+        // 유저 등록된 지역 확인
+        if(crewSportRequest.getStrict() == null){
+            crewSportRequest.setStrict(crewService.getUserStrict(authentication));
+            log.info("!!!!!!!!!!!strict : {}", crewSportRequest.getStrict());
+        }
+        else{
+            log.info("!!!!!!!!!!!strict : not empty");
+        }
+
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
-        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum(crewSportRequest, CollectionUtils.isEmpty(userSportsList), pageable);
+        Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum2(crewSportRequest, CollectionUtils.isEmpty(userSportsList), pageable);
 
         // 페이징 처리 변수
         int nowPage = list.getPageable().getPageNumber() + 1;
@@ -243,6 +261,11 @@ public class CrewViewController {
         List<ReviewResponse> members = participationService.findAllPartMember(crewId);
         model.addAttribute("members", members);
 
+        if(crewReviewService.isContainReview(crew,nowUser)){
+            return "redirect:/";
+        }
+
+
         ReviewRequest crewReviewRequest = new ReviewRequest();
         model.addAttribute("reviewRequest", crewReviewRequest);
 
@@ -260,6 +283,13 @@ public class CrewViewController {
     @GetMapping("/{userName}/reviewList")
     public String findReviewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", "/profileimages");
+
 
         Page<CrewReviewResponse> reviewList = crewReviewService.findAllReviewList(userName, pageable);
         model.addAttribute("reviewList", reviewList);
@@ -279,7 +309,10 @@ public class CrewViewController {
 
     // 리뷰 detail
     @GetMapping("/{userName}/reviewList/{reviewId}")
-    public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model) {
+    public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model, Authentication authentication) {
+
+        //알림 체크
+        if(authentication != null) crewService.readAlarmsReview(reviewId, authentication.getName());
 
         CrewReviewDetailResponse review = crewReviewService.findReviewById(reviewId);
         model.addAttribute("review", review);
@@ -298,6 +331,14 @@ public class CrewViewController {
     @GetMapping("/{userName}/active")
     public String getActiveCrewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
                                             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
+
         // list
         Page<CrewDetailResponse> crewList = crewService.findAllCrew(2,userName, pageable); // 2: 참여 완료
         model.addAttribute("crewList",crewList);
@@ -315,6 +356,14 @@ public class CrewViewController {
     @GetMapping("/{userName}/end")
     public String getEndCrewList(@PathVariable String userName, Model model, @PageableDefault(page = 0, size = 5) @SortDefault.SortDefaults({
             @SortDefault(sort = "createdAt", direction = Sort.Direction.DESC)}) Pageable pageable) {
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
+
         // list
         Page<CrewDetailResponse> crewList = crewService.findAllCrew(3, userName, pageable); // 3: 모집 종료
         model.addAttribute("crewList",crewList);
