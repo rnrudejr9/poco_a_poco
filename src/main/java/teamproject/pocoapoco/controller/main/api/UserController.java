@@ -4,18 +4,19 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import teamproject.pocoapoco.domain.dto.response.Response;
 import teamproject.pocoapoco.domain.dto.user.*;
 import teamproject.pocoapoco.domain.entity.User;
 import teamproject.pocoapoco.repository.UserRepository;
 import teamproject.pocoapoco.service.UserService;
 
+import javax.transaction.Transactional;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/users")
+@Transactional
 @Api(value = "회원가입, 로그인, 프로필 조회 등 사용자와 관련된 기능이 있는 controller 입니다.")
 public class UserController {
 

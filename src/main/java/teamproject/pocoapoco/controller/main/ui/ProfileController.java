@@ -23,6 +23,7 @@ import teamproject.pocoapoco.service.UserPhotoService;
 import teamproject.pocoapoco.service.UserService;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.transaction.Transactional;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.List;
@@ -31,6 +32,7 @@ import java.util.List;
 @RequestMapping("/view/v1")
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class ProfileController {
 
     private final UserService userService;
@@ -256,7 +258,7 @@ public class ProfileController {
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
-        return "/profile/upload-form";
+        return "profile/upload-form";
     }
 
 
