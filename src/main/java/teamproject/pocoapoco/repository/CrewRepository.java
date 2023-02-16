@@ -35,7 +35,6 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
     @Query("select count(s.id) from Crew s where s.sportEnum=:sport")
     Long countBySportEnum(@Param("sport") SportEnum sport);
 
-    List<Crew> findByDeletedAt(@Nullable LocalDateTime deletedAt, Pageable pageable);
 
 
     List<Crew> findByDeletedAtAndStrictContaining(@Nullable LocalDateTime deletedAt, String strict, Pageable pageable);
@@ -47,4 +46,6 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
 
 
     Optional<Crew> findByChatRoom(ChatRoom room);
+
+    Page<Crew> findByDeletedAtNull(Pageable pageable);
 }
