@@ -113,8 +113,13 @@ public class ProfileController {
         model.addAttribute("AWS_REGION", AWS_REGION);
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
-
-        String userName = authentication.getName();
+        String userName = "";
+        try {
+            userName = authentication.getName();
+        }catch (NullPointerException e){
+            log.error("null Error");
+            return "redirect:/";
+        }
 
         UserProfileResponse userProfileResponse = userService.getUserInfoByUserName(userName);
 
@@ -137,7 +142,13 @@ public class ProfileController {
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
-        String userName = authentication.getName();
+        String userName = "";
+        try {
+            userName = authentication.getName();
+        }catch (NullPointerException e){
+            log.error("null Error");
+            return "redirect:/";
+        }
         User user = userRepository.findByUserName(userName).get();
         String userProfileImagePath = userService.getProfilePathByUserName(userName);
 
@@ -165,8 +176,13 @@ public class ProfileController {
         model.addAttribute("AWS_REGION", AWS_REGION);
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
-
-        Optional<User> userOptional = userRepository.findByUserName(authentication.getName());
+        Optional<User> userOptional = null;
+        try {
+            userOptional = userRepository.findByUserName(authentication.getName());
+        }catch (Exception e){
+            log.error("null Error");
+            return "redirect:/";
+        }
 
         if(userOptional.isEmpty()){
             model.addAttribute("myImagePath", null);
@@ -249,8 +265,13 @@ public class ProfileController {
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
 
         log.info(imagePath);
-
-        String userName = authentication.getName();
+        String userName = "";
+        try {
+            userName = authentication.getName();
+        }catch (NullPointerException e){
+            log.error("null Error");
+            return "redirect:/";
+        }
 
 
         UserProfileResponse userProfileResponse = userPhotoService.editUserImage(userName, imagePath);

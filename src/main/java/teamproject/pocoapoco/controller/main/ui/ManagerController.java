@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import teamproject.pocoapoco.domain.dto.crew.CrewResponse;
 import teamproject.pocoapoco.domain.dto.manage.CrewManageResponse;
 import teamproject.pocoapoco.domain.dto.manage.UserManageResponse;
+import teamproject.pocoapoco.domain.entity.Crew;
 import teamproject.pocoapoco.exception.AppException;
 import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.manage.DashboardService;
@@ -72,7 +73,13 @@ public class ManagerController {
 
 
         try{
-            CrewResponse crewResponse = crewService.deleteCrew(crewId, authentication.getName());
+            CrewResponse crewResponse = null;
+            try {
+                crewResponse = crewService.deleteCrew(crewId, authentication.getName());
+            }catch (NullPointerException e){
+                log.error("null Error");
+                return "redirect:/";
+            }
             model.addAttribute("message", crewResponse.getCrewId() + "번 모임을 삭제했습니다.");
             return "redirect:/view/v1/manage/crews";
 
