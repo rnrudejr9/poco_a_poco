@@ -18,8 +18,16 @@
 
     <!--  알림 js  -->
     <script type="text/javascript" src="/js/swal.js"></script>
-
+    <!--폰트 여기어때-->
+    <link href="https://webfontworld.github.io/goodchoice/Jalnan.css" rel="stylesheet">
+    <!--button-->
+    <link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
     <style>
+        /*폰트 적용*/
+        * {
+            font-family: 'Jalnan';
+            font-size: medium;
+        }
 
         #container-profile {
             max-width: 600px;
@@ -111,6 +119,38 @@
             box-shadow: 2px 3px 3px 2px rgba(101, 130, 138, 0.71), 0 5px 5px rgba(0, 0, 0, 0.22);
             font-weight: 550;
         }
+        /* 16 */
+        .btn-16 {
+            border: none;
+            color: #000;
+        }
+        .btn-16:after {
+            position: absolute;
+            content: "";
+            width: 0;
+            height: 100%;
+            top: 0;
+            left: 0;
+            direction: rtl;
+            z-index: -1;
+            box-shadow:
+                    -7px -7px 20px 0px #fff9,
+                    -4px -4px 5px 0px #fff9,
+                    7px 7px 20px 0px #0002,
+                    4px 4px 5px 0px #0001;
+            transition: all 0.3s ease;
+        }
+        .btn-16:hover {
+            color: #000;
+        }
+        .btn-16:hover:after {
+            left: auto;
+            right: 0;
+            width: 100%;
+        }
+        .btn-16:active {
+            top: 2px;
+        }
 
     </style>
 
@@ -172,13 +212,15 @@
                     <div class="col-md-7">
                         <div class="container-profile" style="padding:20px;">
                             <h4 th:text = "${userProfileResponse.nickName}"></h4>
-                            <label class="col-sm-3 col-form-label" style="display: inline-block; vertical-align:middle;">선호 종목</label>
+                            <label style="display: inline-block; vertical-align:middle;">선호 종목</label>
+                            <br>
                                 <text th:text="${userProfileResponse.getSportValue1()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
                                 <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;">|</span>
                                 <text th:text="${userProfileResponse.getSportValue2()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
                                 <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;">|</span>
                                 <text th:text="${userProfileResponse.getSportValue3()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text>
                             </label>
+                            <br>
                             <label>활동 지역 </label>
                                 <text th:text="${userProfileResponse.getAddress()}" style="color: dimgray; font-family: 'Jua', sans-serif; font-size: 15px; font-weight: bold;"></text></label>
                         </div>
@@ -196,7 +238,7 @@
                 <span style="color: gray; position: relative; left: 40.5%; bottom:3px">▴</span>
                 <span style="color: gray; font-family: 'Jua', sans-serif; font-size: 5px; font-weight: bold; position: relative; left: 36%; bottom:10px">첫 온도 36.5°C</span>
             </div>
-            <button id="follow">follow</button>
+            <button id="follow" class="custom-btn btn-16">follow</button>
             <input type="hidden" id="userId" th:value="${userProfileResponse.userId}">
         </div>
     </div>
