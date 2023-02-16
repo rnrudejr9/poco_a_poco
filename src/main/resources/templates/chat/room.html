@@ -22,6 +22,12 @@
 
 <input type="hidden" id="roomId" th:value="${room.roomId}">
 <input type="hidden" id="crewId" th:value="${crewId}">
+<input hidden th:value="${AWS_ACCESS_KEY}" id="awsAccessKey">
+<input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="awsSecretAccessKey">
+<input hidden th:value="${AWS_REGION}" id="awsRegion">
+<input hidden th:value="${AWS_BUCKET_NAME}" id="awsBucketName">
+<input hidden th:value="${AWS_BUCKET_DIRECTORY}" id="awsBucketDirectory">
+
 <div >
     <div class="row">
         <div class='containerA col-7' ng-cloak ng-app="chatApp">
@@ -74,9 +80,11 @@
             <article class="card">
         <span class="card-title">
             <span id="crewSport" style="text-align: center">여긴타이틀</span></span>
-                <img class="card-img-top mb-2"
-                     src=https://user-images.githubusercontent.com/73879325/214769088-0db6fd43-002a-4492-940a-9decd66d74a9.png
-                     alt="Card image">
+
+                <input type="hidden" name="img-key" th:id="${crewId}+' imgKey'" th:value="${crewImageKey}">
+                <img class="card-img-top mb-2" th:id="${crewId}+ ' imgId'" alt="Card image">
+
+
                 <div class="card-body">
                     <div class="row justify-content-center" id="crewTitle">
                         여긴 타이틀
@@ -139,6 +147,69 @@
     findCrewInfo();
 </script>
 
+<script type="text/javascript" th:inline="javascript">
+
+    console.log([[${crewId}]]+' imgKey');
+    console.log([[${crewId}]]+' imgId');
+
+
+    var imgKey = document.getElementById([[${crewId}]]+ ' imgKey').value;
+    var imgId = [[${crewId}]]+ ' imgId';
+
+    window.onload = profileGet(imgKey, imgId);
+
+    async function profileGet(imgKey, imgId) {
+
+        // let uuidString = Math.random().toString(20).substr(2,8);
+
+        const ACCESS_KEY = document.getElementById("awsAccessKey").value;
+        const SECRET_ACCESS_KEY = document.getElementById("awsSecretAccessKey").value;
+        const REGION = document.getElementById("awsRegion").value;
+        const BUCKET_NAME = document.getElementById("awsBucketName").value;
+        const BUCKET_DIRECTORY = document.getElementById("awsBucketDirectory").value;
+        const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
+
+        // AWS ACCESS KEY를 세팅합니다.
+
+        AWS.config.update({
+            accessKeyId: ACCESS_KEY,
+            secretAccessKey: SECRET_ACCESS_KEY
+        });
+
+        var s3 = new AWS.S3({
+            region: REGION
+        });
+
+        // var imgKey = $('input[name=img-key]').val();
+
+        if (!imgKey) {
+            imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
+        }
+
+        // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
+
+
+        const params = {
+            Bucket: S3_BUCKET,
+            Key: imgKey
+        };
+
+        var url = s3.getSignedUrl(
+            "getObject", params
+        );
+
+        // const img1 = document.getElementById('left-image');
+        // img1.src = url;
+
+        console.log("imageId:{ }", imgId);
+
+        document.getElementById(imgId).src = url;
+
+    }
+
+
+</script>
 
 </body>
 

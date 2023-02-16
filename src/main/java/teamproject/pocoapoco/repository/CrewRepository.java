@@ -7,12 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.lang.Nullable;
 import teamproject.pocoapoco.domain.entity.Crew;
+import teamproject.pocoapoco.domain.entity.chat.ChatRoom;
 import teamproject.pocoapoco.domain.entity.part.Participation;
 import teamproject.pocoapoco.enums.SportEnum;
-import teamproject.pocoapoco.enums.StrictEnum;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface CrewRepository extends JpaRepository<Crew, Long> {
 
@@ -42,4 +43,8 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
     // 참여 중인 모임
     Page<Crew> findByDeletedAtIsNullAndParticipationsIn(List<Participation> participation, Pageable pageable);
     long countByDeletedAtNullAndParticipationsIn(List<Participation> participation);
+
+
+
+    Optional<Crew> findByChatRoom(ChatRoom room);
 }
