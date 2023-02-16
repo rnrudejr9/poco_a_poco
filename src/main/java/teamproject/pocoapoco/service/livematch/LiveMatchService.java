@@ -175,6 +175,7 @@ public class LiveMatchService {
     private Crew makeCrew(User fistUser, User secondUser, User thirdUser, String sport) {
         // 방을 만들고 채팅방을 생성
         Crew crew = Crew.builder()
+                .imagePath("67id36j0-디폴트.jpg")
                 .strict("청진동 246 D1동 16층, 17층 ")
                 .roadName("서울 종로구 종로3길 17 D1동 16층, 17층")
                 .title(sport + "실시간 매칭🔥")

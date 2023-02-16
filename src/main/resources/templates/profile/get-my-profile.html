@@ -222,8 +222,8 @@
 
                             <script type="text/javascript" th:inline="javascript">
 
-                                console.log([[${followingList.userName}]]+' imgKey');
-                                console.log([[${followingList.userName}]]+' imgId');
+                                // console.log([[${followingList.userName}]]+' imgKey');
+                                // console.log([[${followingList.userName}]]+' imgId');
 
 
                                 var imgKey = document.getElementById([[${followingList.userName}]]+' imgKey').value;
@@ -294,6 +294,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div >
                     <h2>
                         팔로워
@@ -301,8 +302,8 @@
                     <div>
                         <div  class="d-flex text-muted  pt-3" th:each="followedList : ${followedResponse}">
 
-                            <input type="hidden" th:value="${followedList.imagePath}" th:id="${followedList.userName}+' imgKey'">
-                            <img class="rounded mx-auto d-block" style="height: 20px; width: 20px;" th:id="${followedList.userName}+' imgId'">
+                            <input type="hidden" th:value="${followedList.imagePath}" th:id="${followedList.userName}+' imgKey1'">
+                            <img class="rounded mx-auto d-block" style="height: 20px; width: 20px;" th:id="${followedList.userName}+' imgId1'">
 
                             <input hidden th:value="${AWS_ACCESS_KEY}" id="followedAwsAccessKey">
                             <input hidden th:value="${AWS_SECRET_ACCESS_KEY}" id="followedAwsSecretAccessKey">
@@ -312,12 +313,12 @@
 
                             <script type="text/javascript" th:inline="javascript">
 
-                                console.log([[${followedList.userName}]]+' imgKey');
-                                console.log([[${followedList.userName}]]+' imgId');
+                                console.log([[${followedList.userName}]]+' imgKey1');
+                                console.log([[${followedList.userName}]]+' imgId1');
 
 
-                                var imgKey = document.getElementById([[${followedList.userName}]]+' imgKey').value;
-                                var imgId = [[${followedList.userName}]]+' imgId';
+                                var imgKey = document.getElementById([[${followedList.userName}]]+' imgKey1').value;
+                                var imgId = [[${followedList.userName}]]+' imgId1';
 
                                 profileGets(imgKey, imgId);
 
@@ -331,6 +332,7 @@
                                     const BUCKET_NAME = document.getElementById("followedAwsBucketName").value;
                                     const BUCKET_DIRECTORY = document.getElementById("followedAwsBucketDirectory").value;
                                     const S3_BUCKET = BUCKET_NAME + BUCKET_DIRECTORY;
+
 
 
                                     // AWS ACCESS KEY를 세팅합니다.
@@ -350,6 +352,8 @@
                                         imgKey = '4f9e2be2-7e04-4aa8-bde0-ac2c4df64fcd-blank-profile-picture-g7d902ce67_1280.png'
                                     }
 
+                                    console.log("imgKey: ", imgKey);
+
                                     // 'e44091b4-4c0a-439c-98b1-086773f65f85-lighthouse.png'
 
 
@@ -365,13 +369,12 @@
                                     // const img1 = document.getElementById('left-image');
                                     // img1.src = url;
 
-                                    console.log("imageId:{ }", imgId);
+                                    console.log("imageId: ", imgId);
+                                    console.log("url: ", url);
 
                                     document.getElementById(imgId).src = url;
 
                                 }
-
-
                             </script>
 
 
