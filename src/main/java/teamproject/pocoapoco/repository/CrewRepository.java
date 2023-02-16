@@ -40,6 +40,6 @@ public interface CrewRepository extends JpaRepository<Crew, Long> {
     List<Crew> findByDeletedAtAndStrictContaining(@Nullable LocalDateTime deletedAt, String strict, Pageable pageable);
 
     // 참여 중인 모임
-    Page<Crew> findByParticipationsIn(List<Participation> participation, Pageable pageable);
-    long countByParticipationsIn(List<Participation> participation);
+    Page<Crew> findByDeletedAtIsNullAndParticipationsIn(List<Participation> participation, Pageable pageable);
+    long countByDeletedAtNullAndParticipationsIn(List<Participation> participation);
 }

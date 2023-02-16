@@ -93,7 +93,9 @@ public class CrewViewController {
 
         // 크루 게시물 검색 필터(전체조회, 지역조회, 운동종목 조회)
         Page<CrewDetailResponse> list = crewService.findAllCrewsByStrictAndSportEnum2(crewSportRequest, true, pageable);
-        crewId = list.getContent().get(0).getId();
+//        if(crewId == null)
+//            crewId = list.getContent().get(0).getId();
+        log.info("!!!!!!!!!!!!!! crewId : {}", crewId);
 
         // 참여자 인원 정보
         List<ReviewResponse> members = participationService.findAllPartMember(crewId);
@@ -136,6 +138,55 @@ public class CrewViewController {
         model.addAttribute("lastPage", lastPage);
 
         return "crew/read-crew";
+    }
+
+
+    @GetMapping("/detail/{crewId}")
+    public String detailCrew2(@PathVariable Long crewId, Model model, Authentication authentication) {
+
+        model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
+        model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
+        model.addAttribute("AWS_REGION", AWS_REGION);
+        model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
+        model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
+        // 크루 게시물 조회
+        Crew crew = crewService.findByCrewId(crewId);
+
+        // 참여자 인원 정보
+        List<ReviewResponse> members = participationService.findAllPartMember(crewId);
+        model.addAttribute("members", members);
+        ReviewRequest crewReviewRequest = new ReviewRequest();
+        model.addAttribute("reviewRequest", crewReviewRequest);
+
+        try {
+            //알림 체크
+            if(authentication != null) crewService.readAlarms(crewId, authentication.getName());
+
+            // 좋아요
+            int count = likeViewService.getLikeCrew(crewId);
+            model.addAttribute("likeCnt", count);
+
+            // 상세게시글 정보
+            CrewDetailResponse details = CrewDetailResponse.of(crew);
+            model.addAttribute("details", details);
+
+            // 후기 작성여부 파악
+            User nowUser = crewService.findByUserName(authentication.getName());
+            boolean userReviewed = crewReviewService.findReviewedUser(crewId, nowUser);
+            model.addAttribute("userReviewed", userReviewed);
+
+            // 참여자 확인
+            boolean isPartUser = participationService.isPartUser(crewId, nowUser);
+            model.addAttribute("isPartUser", isPartUser);
+
+
+        } catch (EntityNotFoundException e) {
+            return "redirect:/index";
+        }
+
+
+        return "crew/read-crew2";
     }
 
     // 크루 게시글 수정

@@ -109,19 +109,19 @@
                 <span th:case="LIKE_COMMENT">
                     <p class="pb-3 mb-0 small lh-sm border-bottom">
                     <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                    <a th:href="@{'/view/v1/crews/detail/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
                 </p>
                 </span>
                 <span th:case="LIKE_CREW">
                      <p class="pb-3 mb-0 small lh-sm border-bottom">
                     <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                    <a th:href="@{'/view/v1/crews/detail/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
                 </p>
                 </span>
                 <span th:case="ADD_COMMENT">
                      <p class="pb-3 mb-0 small lh-sm border-bottom">
                     <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                    <a th:href="@{'/view/v1/crews/detail/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
                 </p>
                 </span>
 
@@ -223,19 +223,19 @@
                 <span th:case="LIKE_COMMENT">
                     <p class="pb-3 mb-0 small lh-sm border-bottom">
                     <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                    <a th:href="@{'/view/v1/crews/detail/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
                 </p>
                 </span>
                 <span th:case="LIKE_CREW">
                      <p class="pb-3 mb-0 small lh-sm border-bottom">
                     <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                    <a th:href="@{'/view/v1/crews/detail/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
                 </p>
                 </span>
                 <span th:case="ADD_COMMENT">
                      <p class="pb-3 mb-0 small lh-sm border-bottom">
                     <strong class="d-block text-gray-dark" th:text="|${alarm.fromUserName} 님이|">alarm.title</strong>
-                    <a th:href="@{'/view/v1/crews/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
+                    <a th:href="@{'/view/v1/crews/detail/' + *{alarm.targetId}}" th:text="${alarm.text}">alarm.content</a>
                 </p>
                 </span>
             </div>
