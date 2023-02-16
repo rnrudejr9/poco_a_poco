@@ -26,7 +26,7 @@
 
 ## 🤾‍ 프로젝트 시연 영상
 
-<div align="center"><a href="">오늘부터 운동메💪 시연 영상</a></div>
+<div align="center"><a href="https://www.youtube.com/watch?v=VC1-2shIez8">오늘부터 운동메💪 시연 영상</a></div>
 
 <br>
 
