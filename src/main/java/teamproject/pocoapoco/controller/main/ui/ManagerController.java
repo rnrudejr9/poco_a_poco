@@ -55,12 +55,27 @@ public class ManagerController {
 
 
     @GetMapping("/manage/crews")
-    public String manageCrews(Model model,String strict, @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
-        Long crewCountByStrict = dashboardService.getCrewCountByStrict(strict);
+    public String manageCrews(Model model, @PageableDefault(page = 0, size = 9, sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+        Long crewCountByStrict = dashboardService.getCrewCount();
         model.addAttribute("crewCountByStrict", crewCountByStrict);
 
-        Page<CrewManageResponse> crewManageResponsePage = managerService.getCrewInfo(strict, pageable);
+        Page<CrewManageResponse> crewManageResponsePage = managerService.getCrewInfo(pageable);
         model.addAttribute("crewManageResponsePage", crewManageResponsePage);
+
+        log.info("pageable:{}", crewManageResponsePage.getPageable());
+        log.info("pagesize: {}", crewManageResponsePage.getPageable().getPageSize());
+        log.info("nowpage: {}", crewManageResponsePage.getPageable().getPageNumber());
+
+
+        int nowPage = crewManageResponsePage.getPageable().getPageNumber() + 1;
+        int startNumPage = Math.max(nowPage - 4, 1);
+        int endNumPage = Math.min(nowPage + 5, crewManageResponsePage.getTotalPages());
+        int lastPage = crewManageResponsePage.getTotalPages();
+
+        model.addAttribute("nowPage", nowPage);
+        model.addAttribute("startNumPage", startNumPage);
+        model.addAttribute("endNumPage", endNumPage);
+        model.addAttribute("lastPage", lastPage);
 
 
         return "dashboard/crew-manage";

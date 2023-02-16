@@ -2,6 +2,7 @@ package teamproject.pocoapoco.service.manage;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.MergedAnnotations;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -20,6 +21,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class ManagerService {
 
     private final UserRepository userRepository;
@@ -40,22 +42,15 @@ public class ManagerService {
 
 
     @Transactional
-    public Page<CrewManageResponse> getCrewInfo(String strict, Pageable pageable){
+    public Page<CrewManageResponse> getCrewInfo(Pageable pageable){
 
-        List<Crew> crewList;
-
-        if(strict == null){
-            crewList = crewRepository.findByDeletedAt(null, pageable);
-        } else{
-            crewList = crewRepository.findByDeletedAtAndStrictContaining(null, strict, pageable);
-        }
+        Page<Crew> crewPage = crewRepository.findByDeletedAtNull(pageable);
 
 
-        List<CrewManageResponse> crewManageResponses = crewList.stream()
-                .map(crew -> CrewManageResponse.fromEntity(crew))
-                .collect(Collectors.toList());
+        log.info("전체 모임 size: {}", crewPage.getPageable().getPageSize());
 
-        Page<CrewManageResponse> crewManageResponsePage = new PageImpl<>(crewManageResponses);
+
+        Page<CrewManageResponse> crewManageResponsePage = crewPage.map(crew -> CrewManageResponse.fromEntity(crew));
 
 
         return crewManageResponsePage;

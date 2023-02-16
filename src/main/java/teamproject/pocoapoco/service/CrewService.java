@@ -341,12 +341,12 @@ public class CrewService {
 
         Participation befParticipation = participationOptional.get();
 
-        // 방장 강퇴 못하도록 막음
-        if (befParticipation.getUser().getId().equals(actingUser.getId())) {
-            throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
-        } else {
-            participationRepository.delete(befParticipation);
-        }
+//        // 방장 강퇴 못하도록 막음
+//        if (befParticipation.getUser().getId().equals(actingUser.getId())) {
+//            throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
+//        } else {
+//            participationRepository.delete(befParticipation);
+//        }
 
 
         // 방장이거나 운영자인 경우만 삭제할 수 있는 기능 주석처리
