@@ -36,9 +36,7 @@ import teamproject.pocoapoco.service.CrewService;
 import teamproject.pocoapoco.service.LikeViewService;
 import teamproject.pocoapoco.service.part.ParticipationService;
 
-import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.io.PrintWriter;
 import java.util.List;
 
 @Controller
@@ -116,16 +114,17 @@ public class CrewViewController {
             model.addAttribute("details", details);
 
             // 후기 작성여부 파악
-            User nowUser = crewService.findByUserName(authentication.getName());
-            boolean userReviewed = crewReviewService.findReviewedUser(crewId, nowUser);
-            model.addAttribute("userReviewed", userReviewed);
+            if (authentication != null) {
+                User nowUser = crewService.findByUserName(authentication.getName());
+                boolean userReviewed = crewReviewService.findReviewedUser(crewId, nowUser);
+                model.addAttribute("userReviewed", userReviewed);
+                // 참여자 확인
+                boolean isPartUser = participationService.isPartUser(crewId, nowUser);
+                model.addAttribute("isPartUser", isPartUser);
 
-            // 참여자 확인
-            boolean isPartUser = participationService.isPartUser(crewId, nowUser);
-            model.addAttribute("isPartUser", isPartUser);
+            }
 
-
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             return "redirect:/index";
         }
 
@@ -181,7 +180,7 @@ public class CrewViewController {
             model.addAttribute("isPartUser", isPartUser);
 
 
-        } catch (EntityNotFoundException e) {
+        } catch (Exception e) {
             return "redirect:/index";
         }
 

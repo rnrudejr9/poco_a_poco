@@ -45,6 +45,7 @@ public class WebSecurityConfig {
                 .and()
                 .oauth2Login()
                 .loginPage("/view/v1/start")
+                .failureUrl("/view/v1/start")
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService)
                 .and()
