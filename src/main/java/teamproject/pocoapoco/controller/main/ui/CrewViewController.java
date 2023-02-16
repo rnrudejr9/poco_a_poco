@@ -115,9 +115,11 @@ public class CrewViewController {
 
             // 후기 작성여부 파악
             if (authentication != null) {
+
                 User nowUser = crewService.findByUserName(authentication.getName());
                 boolean userReviewed = crewReviewService.findReviewedUser(crewId, nowUser);
                 model.addAttribute("userReviewed", userReviewed);
+
                 // 참여자 확인
                 boolean isPartUser = participationService.isPartUser(crewId, nowUser);
                 model.addAttribute("isPartUser", isPartUser);
