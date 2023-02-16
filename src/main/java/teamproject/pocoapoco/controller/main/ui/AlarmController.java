@@ -50,6 +50,11 @@ public class AlarmController {
             @SortDefault(sort = "readOrNot", direction = Sort.Direction.DESC)
     }) Pageable pageable, Authentication authentication){
 
+        if(authentication == null){
+            log.error("null pointer Error");
+            return "redirect:/";
+        }
+
         model.addAttribute("AWS_ACCESS_KEY", AWS_ACCESS_KEY);
         model.addAttribute("AWS_SECRET_ACCESS_KEY", AWS_SECRET_ACCESS_KEY);
         model.addAttribute("AWS_REGION", AWS_REGION);

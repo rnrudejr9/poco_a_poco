@@ -172,6 +172,7 @@ public class CrewViewController {
             CrewDetailResponse details = CrewDetailResponse.of(crew);
             model.addAttribute("details", details);
 
+
             // 후기 작성여부 파악
             User nowUser = crewService.findByUserName(authentication.getName());
             boolean userReviewed = crewReviewService.findReviewedUser(crewId, nowUser);
@@ -193,6 +194,10 @@ public class CrewViewController {
     // 크루 게시글 수정
     @PutMapping("/{crewId}")
     public String modifyCrew(@PathVariable Long crewId, @ModelAttribute CrewRequest crewRequest, Authentication authentication) {
+        if(authentication == null){
+            log.error("null error");
+            return "redirect:/";
+        }
         crewService.modifyCrew(crewId, crewRequest, authentication.getName());
         return "redirect:/view/v1/crews/{crewId}";
     }
@@ -301,6 +306,11 @@ public class CrewViewController {
     @GetMapping("/review/{crewId}")
     public String reviewCrew(@PathVariable Long crewId, Authentication authentication, Model model) {
 
+        if(authentication == null){
+            log.error("null pointer Error");
+            return "redirect:/";
+        }
+
         //현재 유저 정보
         User nowUser = crewService.findByUserName(authentication.getName());
         model.addAttribute("nowUser", nowUser.getId());
@@ -363,6 +373,11 @@ public class CrewViewController {
     @GetMapping("/{userName}/reviewList/{reviewId}")
     public String findReview(@PathVariable String userName, @PathVariable Long reviewId, Model model, Authentication authentication) {
 
+        if(authentication == null){
+            log.error("null pointer Error");
+            return "redirect:/";
+        }
+
         //알림 체크
         if(authentication != null) crewService.readAlarmsReview(reviewId, authentication.getName());
 
@@ -389,6 +404,7 @@ public class CrewViewController {
         model.addAttribute("AWS_REGION", AWS_REGION);
         model.addAttribute("AWS_BUCKET_NAME", AWS_BUCKET_NAME);
         model.addAttribute("AWS_BUCKET_DIRECTORY", AWS_BUCKET_DIRECTORY);
+
 
 
         // list
