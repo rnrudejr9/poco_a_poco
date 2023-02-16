@@ -348,8 +348,10 @@ public class CrewService {
 //            participationRepository.delete(befParticipation);
 //        }
 
+        participationRepository.delete(befParticipation);
 
-        // 방장이거나 운영자인 경우만 삭제할 수 있는 기능 주석처리
+//
+//         방장이거나 운영자인 경우만 삭제할 수 있는 기능 주석처리
 //        if((actingUser.getRole() == UserRole.ROLE_ADMIN) || (crew.getUser().getId().equals(actingUser.getId()))){
 //            Optional<Participation> participationOptional = participationRepository.findByCrewAndUser(crew, user);
 //
@@ -362,7 +364,7 @@ public class CrewService {
 //            if(befParticipation.getUser().getId().equals(actingUser.getId())){
 //                throw new AppException(ErrorCode.NOT_AUTHORIZED, "방장은 강퇴할 수 없습니다.");
 //            } else{
-//                participationRepository.delete(befParticipation);
+//
 //            }
 //
 //
