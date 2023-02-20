@@ -3,6 +3,8 @@
 
 # 오늘부터 운동메💪
 
+## 🕹 서비스 개요
+
 * **운동은 선택이 아닌 필수! 혼자가 아닌 다같이 하자~!**
 * **사용자에게 쉽고 간단한 운동메이트를 찾을 수 있게 하는 서비스 제공!**
 * **새로운 지역에서도 운동으로 이웃들과 친해지고 생활체육 활성화 기대!**
@@ -42,6 +44,70 @@
 * **필수 라이브러리** : Spring Data JPA, Lombok, Spring Security, thymeleaf, JWT, WebSocket, OAuth2.0, Email
 * **ETC** : Git, IntelliJ, JS, KakaoMap API
 
+## ⛳ 기술 스택
+
+### FrontEnd
+
+| <div align="center"><img src="assets/readme/html.png" alt="HTML5" width="50px" height="50px"/> </div> | <div align="center"><img src="assets/readme/css.png" alt="CSS3" width="50px" height="50px" /></div> |  <div align="center"><img src="assets/readme/js.png" alt="JavaScript" height="50px" /></div>   | <div align="center"><img src="assets/readme/thymeleaf.png" alt="thymeleaf" height="50px" /></div> |
+|:-----------------------------------------------------------------------------------------------------:|:---------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------:|
+|                                                 HTML5                                                 |                                                CSS3                                                 |                                           JavaScript                                           |                                             Thymeleaf                                             |
+
+### BackEnd
+
+| <div align="center"><img src="assets/readme/java.jpg" alt="java" height="50px" /> </div> |       <div align="center"><img src="assets/readme/springboot.png" alt="springboot" height="50px" /> </div>        | <div align="center"><img src="assets/readme/springsecurity.png" alt="springsecurity" height="50px" /></div> | <div align="center"><img src="assets/readme/gradle.png" alt="gradle" height="50px" /></div> | <div align="center"><img src="assets/readme/hibernate.png" alt="hibernate" height="50px" /></div> |
+|:------------------------------------------------------------------------------------------------------:|:-----------------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------------------:| :-------------------------------------------------------------------------------------------------------: |:--------------------------------------------------------------------------------------------------------------:|
+|                                                  Java                                                  |                                                    Spring-Boot                                                    |                                                      Spring-Security                                                      |                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Gradle&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;                     |                                 &nbsp;&nbsp;&nbsp;Hibernate&nbsp;&nbsp;&nbsp;                                  |
+
+| <div align="center"><img src="assets/readme/mysql.png" alt="mysql" width="70px" height="50px" /> </div> | <div align="center"><img src="assets/readme/postman.jpg" alt="postman" height="50px" /></div> |       <div align="center"><img src="assets/readme/websocket.jpg" alt="websocket" height="50px" /></div>       | <div align="center"><img src="assets/readme/redis.png" alt="redis" width="70px" height="50px" /></div> | <div align="center"><img src="assets/readme/jwt.png" alt="jwt" height="50px" /></div> |
+|:-------------------------------------------------------------------------------------------------------:|:----------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------------:|:-------------------------------------------------------------------------------------:|
+|                                                  MySQL                                                  |                                                  Postman                                                   |                                                   Websocket                                                   |                                                 Redis                                                  |                                          JWT                                          |
+
+### DevOps
+
+| <div align="center"><img src="assets/readme/docker.png" alt="docker" height="50px" /> </div> | <div align="center"><img src="assets/readme/ec2.png" alt="EC2" height="50px" /></div> | <div align="center"><img src="assets/readme/s3.png" alt="S3"  height="50px" /></div> |  <div align="center"><img src="assets/readme/gitlab.png" alt="S3"  height="50px" /></div>  |
+| :--------------------------------------------------------------------------------------------------------: |:-------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------------:|:------------------------------------------------------------------------------------------:|
+|                                                   Docker                                                   |                                        AWS EC2                                        |                                              AWS S3                                              |                                           GitLab                                           |
+
+### ETC
+| <div align="center"><img src="assets/readme/kakaomap.png" alt="kakaomap" height="50px" /> </div> |
+|:----------------------------------------------------------------------------------------------:|
+|                                            Kakaomap                                            |
+
+
+
+## 🎨 환경 설정
+
+* Deploy 관련 환경 변수 설정
+
+```
+docker run -p 8080:8080 --name [컨테이너 이름] 
+-v /etc/localtime:/etc/localtime:ro 
+-e TZ=Asia/Seoul 
+-e SPRING_DATASOURCE_URL=jdbc:mysql:[rds 서버 주소] 
+-e SPRING_DATASOURCE_USERNAME=[username]
+-e SPRING_DATASOURCE_PASSWORD=[password] 
+-e SPRING_JPA_DATABASE=[mysql] 
+-e SPRING_JPA_DATABASEPLATFORM=org.hibernate.dialect.MySQL5InnoDBDialect 
+-e AWS_ACCESS_KEY=[...] 
+-e AWS_BUCKET_NAME=[...] 
+-e AWS_REGION=ap-northeast-2 
+-e AWS_SECRET_ACCESS_KEY=[...] 
+-e JWT_TOKEN_SECRET=[...] 
+-e SPRING_JPA_OPEN-IN-VIEW=false 
+-e SPRING_MAIL_PASSWORD=[네이버 비밀번호] 
+-e SPRING_MAIL_PERSONAL=운동메 
+-e SPRING_MAIL_USERNAME=[네이버 아이디] 
+-e SPRING_MVC_PATHMATCH_MATCHING-STRATEGY=ant_path_matcher 
+-e SPRING_REDIS_HOST=[redis 호스트] 
+-e SPRING_REDIS_PORT=6379 
+-e SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_FACEBOOK_CLIENT-ID=[...] 
+-e SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_FACEBOOK_CLIENT-SECRET=[...] 
+-e SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT-ID=[...] 
+-e SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_GOOGLE_CLIENT-SECRET=[...] 
+-e SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NAVER_CLIENT-ID=[...] 
+-e SPRING_SECURITY_OAUTH2_CLIENT_REGISTRATION_NAVER_CLIENT-SECRET=[...] 
+-d registry.gitlab.com/solkim/pocoapoco_teamproject
+```
 
 
 ## 🚴‍♀️ 시스템 아키텍쳐
