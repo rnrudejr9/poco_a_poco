@@ -11,7 +11,7 @@
 * **멋쟁이사자처럼🦁 백엔드스쿨 2기 팀프로젝트**
 
 ##### <div align = "center"> "동네 운동 메이트를 찾아 함께 스포츠를 즐기는 서비스" </div>
-##### <div align = "center"> <h2><a href="http://ec2-52-79-236-51.ap-northeast-2.compute.amazonaws.com:8080/view/v1/start">오늘부터 운동메 함께하기</a></h2> </div>
+##### <div align = "center"> <h2><a href="https://www.youtube.com/watch?v=VC1-2shIez8">오늘부터 운동메 함께하기</a></h2> </div>
 
 
 > * 노션페이지 : <a href="https://www.notion.so/b8ea6992ef3b4cc4896edf2079378234">팀 노션페이지</a>
